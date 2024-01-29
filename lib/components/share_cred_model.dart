@@ -1,12 +1,8 @@
 import '/flutter_flow/flutter_flow_util.dart';
-import 'share_widget.dart' show ShareWidget;
+import 'share_cred_widget.dart' show ShareCredWidget;
 import 'package:flutter/material.dart';
 
-class ShareModel extends FlutterFlowModel<ShareWidget> {
-  ///  Local state fields for this component.
-
-  int? count;
-
+class ShareCredModel extends FlutterFlowModel<ShareCredWidget> {
   /// Initialization and disposal methods.
 
   @override

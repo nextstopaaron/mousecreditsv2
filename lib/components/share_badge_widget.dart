@@ -1,32 +1,29 @@
+import '/components/shareconfirm_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'share_model.dart';
-export 'share_model.dart';
+import 'share_badge_model.dart';
+export 'share_badge_model.dart';
 
-class ShareWidget extends StatefulWidget {
-  const ShareWidget({
+class ShareBadgeWidget extends StatefulWidget {
+  const ShareBadgeWidget({
     super.key,
-    required this.credit,
-    required this.timeStamp,
-    required this.location,
-    required this.count,
+    required this.badge,
+    required this.description,
   });
 
-  final String? credit;
-  final DateTime? timeStamp;
-  final String? location;
-  final int? count;
+  final String? badge;
+  final DateTime? description;
 
   @override
-  State<ShareWidget> createState() => _ShareWidgetState();
+  State<ShareBadgeWidget> createState() => _ShareBadgeWidgetState();
 }
 
-class _ShareWidgetState extends State<ShareWidget> {
-  late ShareModel _model;
+class _ShareBadgeWidgetState extends State<ShareBadgeWidget> {
+  late ShareBadgeModel _model;
 
   @override
   void setState(VoidCallback callback) {
@@ -37,7 +34,7 @@ class _ShareWidgetState extends State<ShareWidget> {
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => ShareModel());
+    _model = createModel(context, () => ShareBadgeModel());
 
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
@@ -112,7 +109,7 @@ class _ShareWidgetState extends State<ShareWidget> {
           Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(16.0, 8.0, 16.0, 16.0),
             child: Text(
-              'You\'ve added Mouse Credit "${widget.credit}" at ${widget.location} and now have ${widget.count?.toString()} Mouse Credits!',
+              'You\'ve added Mouse Credit badge"${widget.badge}" by " ${widget.description?.toString()}"!',
               style: FlutterFlowTheme.of(context).labelLarge,
             ),
           ),
@@ -120,7 +117,7 @@ class _ShareWidgetState extends State<ShareWidget> {
             padding: const EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 0.0),
             child: Row(
               mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
@@ -128,9 +125,6 @@ class _ShareWidgetState extends State<ShareWidget> {
                     alignment: const AlignmentDirectional(0.0, 0.0),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        await Clipboard.setData(ClipboardData(
-                            text:
-                                'I just collected Mouse Credit "${widget.credit}" in the ${widget.location} and now have ${widget.count?.toString()} Mouse Credits!'));
                         Navigator.pop(context);
                       },
                       text: 'Add More',
@@ -165,10 +159,24 @@ class _ShareWidgetState extends State<ShareWidget> {
                       onPressed: () async {
                         await Clipboard.setData(ClipboardData(
                             text:
-                                'I just collected Mouse Credit "${widget.credit}" in the ${widget.location} and now have ${widget.count?.toString()} Mouse Credits!'));
+                                'I just collected Mouse Credit badge "${widget.badge}" by ${widget.description?.toString()}"!'));
+                        await showModalBottomSheet(
+                          isScrollControlled: true,
+                          backgroundColor:
+                              FlutterFlowTheme.of(context).primaryBackground,
+                          enableDrag: false,
+                          context: context,
+                          builder: (context) {
+                            return Padding(
+                              padding: MediaQuery.viewInsetsOf(context),
+                              child: const ShareconfirmWidget(),
+                            );
+                          },
+                        ).then((value) => safeSetState(() {}));
+
                         Navigator.pop(context);
                       },
-                      text: 'Copy to Clipboard',
+                      text: 'Share',
                       options: FFButtonOptions(
                         width: 165.0,
                         height: 50.0,

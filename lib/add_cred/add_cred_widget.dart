@@ -1,7 +1,7 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/nonetoshow_widget.dart';
-import '/components/share_widget.dart';
+import '/components/share_cred_widget.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_autocomplete_options_list.dart';
 import '/flutter_flow/flutter_flow_choice_chips.dart';
@@ -806,7 +806,7 @@ class _AddCredWidgetState extends State<AddCredWidget>
                                                                           : FocusScope.of(context)
                                                                               .unfocus(),
                                                                       child:
-                                                                          ShareWidget(
+                                                                          ShareCredWidget(
                                                                         credit:
                                                                             credSearchItem.name,
                                                                         timeStamp:
@@ -1244,141 +1244,189 @@ class _AddCredWidgetState extends State<AddCredWidget>
                                                                   credSearchItem
                                                                       .reference) ==
                                                           false)
-                                                        FFButtonWidget(
-                                                          onPressed: () async {
-                                                            // Add User
-
-                                                            await credSearchItem
-                                                                .reference
-                                                                .update({
-                                                              ...mapToFirestore(
-                                                                {
-                                                                  'Users':
-                                                                      FieldValue
-                                                                          .arrayUnion([
-                                                                    currentUserReference
-                                                                  ]),
-                                                                },
-                                                              ),
-                                                            });
-                                                            // Add Credit
-
-                                                            await currentUserReference!
-                                                                .update({
-                                                              ...mapToFirestore(
-                                                                {
-                                                                  'Credits':
-                                                                      FieldValue
-                                                                          .arrayUnion([
-                                                                    credSearchItem
-                                                                        .reference
-                                                                  ]),
-                                                                },
-                                                              ),
-                                                            });
-                                                            // Update Popularity
-
-                                                            await credSearchItem
-                                                                .reference
-                                                                .update({
-                                                              ...mapToFirestore(
-                                                                {
-                                                                  'Popularity':
-                                                                      FieldValue
-                                                                          .increment(
-                                                                              1),
-                                                                },
-                                                              ),
-                                                            });
-                                                            // Remove Favorite
-
-                                                            await currentUserReference!
-                                                                .update({
-                                                              ...mapToFirestore(
-                                                                {
-                                                                  'Favorites':
-                                                                      FieldValue
-                                                                          .arrayRemove([
-                                                                    credSearchItem
-                                                                        .reference
-                                                                  ]),
-                                                                },
-                                                              ),
-                                                            });
-                                                            // Remove Credit from Favorite
-
-                                                            await credSearchItem
-                                                                .reference
-                                                                .update({
-                                                              ...mapToFirestore(
-                                                                {
-                                                                  'Favorites':
-                                                                      FieldValue
-                                                                          .arrayRemove([
-                                                                    currentUserReference
-                                                                  ]),
-                                                                },
-                                                              ),
-                                                            });
-
-                                                            await currentUserReference!
-                                                                .update({
-                                                              ...mapToFirestore(
-                                                                {
-                                                                  'CreditCount':
-                                                                      FieldValue
-                                                                          .increment(
-                                                                              1),
-                                                                },
-                                                              ),
-                                                            });
-                                                            setState(() => _model
-                                                                    .firestoreRequestCompleter =
-                                                                null);
-                                                          },
-                                                          text: 'Add Credit',
-                                                          options:
-                                                              FFButtonOptions(
-                                                            height: 40.0,
-                                                            padding:
-                                                                const EdgeInsetsDirectional
-                                                                    .fromSTEB(
-                                                                        5.0,
-                                                                        0.0,
-                                                                        5.0,
-                                                                        0.0),
-                                                            iconPadding:
-                                                                const EdgeInsetsDirectional
-                                                                    .fromSTEB(
-                                                                        0.0,
-                                                                        0.0,
-                                                                        0.0,
-                                                                        0.0),
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .primary,
-                                                            textStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .labelSmall
-                                                                    .override(
-                                                                      fontFamily:
-                                                                          'Readex Pro',
-                                                                      color: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .primaryBackground,
+                                                        Builder(
+                                                          builder: (context) =>
+                                                              FFButtonWidget(
+                                                            onPressed:
+                                                                () async {
+                                                              await showDialog(
+                                                                context:
+                                                                    context,
+                                                                builder:
+                                                                    (dialogContext) {
+                                                                  return Dialog(
+                                                                    elevation:
+                                                                        0,
+                                                                    insetPadding:
+                                                                        EdgeInsets
+                                                                            .zero,
+                                                                    backgroundColor:
+                                                                        Colors
+                                                                            .transparent,
+                                                                    alignment: const AlignmentDirectional(
+                                                                            0.0,
+                                                                            0.0)
+                                                                        .resolve(
+                                                                            Directionality.of(context)),
+                                                                    child:
+                                                                        GestureDetector(
+                                                                      onTap: () => _model
+                                                                              .unfocusNode
+                                                                              .canRequestFocus
+                                                                          ? FocusScope.of(context).requestFocus(_model
+                                                                              .unfocusNode)
+                                                                          : FocusScope.of(context)
+                                                                              .unfocus(),
+                                                                      child:
+                                                                          ShareCredWidget(
+                                                                        credit:
+                                                                            credSearchItem.name,
+                                                                        timeStamp:
+                                                                            getCurrentTimestamp,
+                                                                        location:
+                                                                            credSearchItem.location,
+                                                                        count: (currentUserDocument?.credits.toList() ??
+                                                                                [])
+                                                                            .length,
+                                                                      ),
                                                                     ),
-                                                            elevation: 3.0,
-                                                            borderSide:
-                                                                const BorderSide(
-                                                              color: Colors
-                                                                  .transparent,
-                                                              width: 1.0,
+                                                                  );
+                                                                },
+                                                              ).then((value) =>
+                                                                  setState(
+                                                                      () {}));
+
+                                                              // Add User
+
+                                                              await credSearchItem
+                                                                  .reference
+                                                                  .update({
+                                                                ...mapToFirestore(
+                                                                  {
+                                                                    'Users':
+                                                                        FieldValue
+                                                                            .arrayUnion([
+                                                                      currentUserReference
+                                                                    ]),
+                                                                  },
+                                                                ),
+                                                              });
+                                                              // Add Credit
+
+                                                              await currentUserReference!
+                                                                  .update({
+                                                                ...mapToFirestore(
+                                                                  {
+                                                                    'Credits':
+                                                                        FieldValue
+                                                                            .arrayUnion([
+                                                                      credSearchItem
+                                                                          .reference
+                                                                    ]),
+                                                                  },
+                                                                ),
+                                                              });
+                                                              // Update Popularity
+
+                                                              await credSearchItem
+                                                                  .reference
+                                                                  .update({
+                                                                ...mapToFirestore(
+                                                                  {
+                                                                    'Popularity':
+                                                                        FieldValue
+                                                                            .increment(1),
+                                                                  },
+                                                                ),
+                                                              });
+                                                              // Remove Favorite
+
+                                                              await currentUserReference!
+                                                                  .update({
+                                                                ...mapToFirestore(
+                                                                  {
+                                                                    'Favorites':
+                                                                        FieldValue
+                                                                            .arrayRemove([
+                                                                      credSearchItem
+                                                                          .reference
+                                                                    ]),
+                                                                  },
+                                                                ),
+                                                              });
+                                                              // Remove Credit from Favorite
+
+                                                              await credSearchItem
+                                                                  .reference
+                                                                  .update({
+                                                                ...mapToFirestore(
+                                                                  {
+                                                                    'Favorites':
+                                                                        FieldValue
+                                                                            .arrayRemove([
+                                                                      currentUserReference
+                                                                    ]),
+                                                                  },
+                                                                ),
+                                                              });
+
+                                                              await currentUserReference!
+                                                                  .update({
+                                                                ...mapToFirestore(
+                                                                  {
+                                                                    'CreditCount':
+                                                                        FieldValue
+                                                                            .increment(1),
+                                                                  },
+                                                                ),
+                                                              });
+                                                              setState(() =>
+                                                                  _model.firestoreRequestCompleter =
+                                                                      null);
+                                                            },
+                                                            text: 'Add Credit',
+                                                            options:
+                                                                FFButtonOptions(
+                                                              height: 40.0,
+                                                              padding:
+                                                                  const EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          5.0,
+                                                                          0.0,
+                                                                          5.0,
+                                                                          0.0),
+                                                              iconPadding:
+                                                                  const EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          0.0,
+                                                                          0.0,
+                                                                          0.0,
+                                                                          0.0),
+                                                              color: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .primary,
+                                                              textStyle:
+                                                                  FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .labelSmall
+                                                                      .override(
+                                                                        fontFamily:
+                                                                            'Readex Pro',
+                                                                        color: FlutterFlowTheme.of(context)
+                                                                            .primaryBackground,
+                                                                      ),
+                                                              elevation: 3.0,
+                                                              borderSide:
+                                                                  const BorderSide(
+                                                                color: Colors
+                                                                    .transparent,
+                                                                width: 1.0,
+                                                              ),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8.0),
                                                             ),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8.0),
                                                           ),
                                                         ),
                                                     ],
@@ -1633,152 +1681,199 @@ class _AddCredWidgetState extends State<AddCredWidget>
                                                       ),
                                                     ),
                                                   ),
-                                                  AuthUserStreamWidget(
+                                                  Builder(
                                                     builder: (context) =>
-                                                        FFButtonWidget(
-                                                      onPressed: ((currentUserDocument
-                                                                          ?.credits
-                                                                          .toList() ??
-                                                                      [])
-                                                                  .contains(
-                                                                      credSearchItem
-                                                                          .reference) ==
-                                                              true)
-                                                          ? null
-                                                          : () async {
-                                                              // Add User
+                                                        AuthUserStreamWidget(
+                                                      builder: (context) =>
+                                                          FFButtonWidget(
+                                                        onPressed: ((currentUserDocument
+                                                                            ?.credits
+                                                                            .toList() ??
+                                                                        [])
+                                                                    .contains(
+                                                                        credSearchItem
+                                                                            .reference) ==
+                                                                true)
+                                                            ? null
+                                                            : () async {
+                                                                // Add User
 
-                                                              await credSearchItem
-                                                                  .reference
-                                                                  .update({
-                                                                ...mapToFirestore(
-                                                                  {
-                                                                    'Users':
-                                                                        FieldValue
-                                                                            .arrayUnion([
-                                                                      currentUserReference
-                                                                    ]),
+                                                                await credSearchItem
+                                                                    .reference
+                                                                    .update({
+                                                                  ...mapToFirestore(
+                                                                    {
+                                                                      'Users':
+                                                                          FieldValue
+                                                                              .arrayUnion([
+                                                                        currentUserReference
+                                                                      ]),
+                                                                    },
+                                                                  ),
+                                                                });
+                                                                await showDialog(
+                                                                  context:
+                                                                      context,
+                                                                  builder:
+                                                                      (dialogContext) {
+                                                                    return Dialog(
+                                                                      elevation:
+                                                                          0,
+                                                                      insetPadding:
+                                                                          EdgeInsets
+                                                                              .zero,
+                                                                      backgroundColor:
+                                                                          Colors
+                                                                              .transparent,
+                                                                      alignment: const AlignmentDirectional(
+                                                                              0.0,
+                                                                              0.0)
+                                                                          .resolve(
+                                                                              Directionality.of(context)),
+                                                                      child:
+                                                                          GestureDetector(
+                                                                        onTap: () => _model.unfocusNode.canRequestFocus
+                                                                            ? FocusScope.of(context).requestFocus(_model.unfocusNode)
+                                                                            : FocusScope.of(context).unfocus(),
+                                                                        child:
+                                                                            ShareCredWidget(
+                                                                          credit:
+                                                                              credSearchItem.name,
+                                                                          timeStamp:
+                                                                              getCurrentTimestamp,
+                                                                          location:
+                                                                              credSearchItem.location,
+                                                                          count:
+                                                                              (currentUserDocument?.credits.toList() ?? []).length,
+                                                                        ),
+                                                                      ),
+                                                                    );
                                                                   },
-                                                                ),
-                                                              });
-                                                              // Add Credit
+                                                                ).then((value) =>
+                                                                    setState(
+                                                                        () {}));
 
-                                                              await currentUserReference!
-                                                                  .update({
-                                                                ...mapToFirestore(
-                                                                  {
-                                                                    'Credits':
-                                                                        FieldValue
-                                                                            .arrayUnion([
-                                                                      credSearchItem
-                                                                          .reference
-                                                                    ]),
-                                                                  },
-                                                                ),
-                                                              });
-                                                              // Update Popularity
+                                                                // Add Credit
 
-                                                              await credSearchItem
-                                                                  .reference
-                                                                  .update({
-                                                                ...mapToFirestore(
-                                                                  {
-                                                                    'Popularity':
-                                                                        FieldValue
-                                                                            .increment(1),
-                                                                  },
-                                                                ),
-                                                              });
-                                                              // Remove Favorite
+                                                                await currentUserReference!
+                                                                    .update({
+                                                                  ...mapToFirestore(
+                                                                    {
+                                                                      'Credits':
+                                                                          FieldValue
+                                                                              .arrayUnion([
+                                                                        credSearchItem
+                                                                            .reference
+                                                                      ]),
+                                                                    },
+                                                                  ),
+                                                                });
+                                                                // Update Popularity
 
-                                                              await currentUserReference!
-                                                                  .update({
-                                                                ...mapToFirestore(
-                                                                  {
-                                                                    'Favorites':
-                                                                        FieldValue
-                                                                            .arrayRemove([
-                                                                      credSearchItem
-                                                                          .reference
-                                                                    ]),
-                                                                  },
-                                                                ),
-                                                              });
-                                                              // Remove Credit from Favorite
+                                                                await credSearchItem
+                                                                    .reference
+                                                                    .update({
+                                                                  ...mapToFirestore(
+                                                                    {
+                                                                      'Popularity':
+                                                                          FieldValue.increment(
+                                                                              1),
+                                                                    },
+                                                                  ),
+                                                                });
+                                                                // Remove Favorite
 
-                                                              await credSearchItem
-                                                                  .reference
-                                                                  .update({
-                                                                ...mapToFirestore(
-                                                                  {
-                                                                    'Favorites':
-                                                                        FieldValue
-                                                                            .arrayRemove([
-                                                                      currentUserReference
-                                                                    ]),
-                                                                  },
-                                                                ),
-                                                              });
+                                                                await currentUserReference!
+                                                                    .update({
+                                                                  ...mapToFirestore(
+                                                                    {
+                                                                      'Favorites':
+                                                                          FieldValue
+                                                                              .arrayRemove([
+                                                                        credSearchItem
+                                                                            .reference
+                                                                      ]),
+                                                                    },
+                                                                  ),
+                                                                });
+                                                                // Remove Credit from Favorite
 
-                                                              await currentUserReference!
-                                                                  .update({
-                                                                ...mapToFirestore(
-                                                                  {
-                                                                    'CreditCount':
-                                                                        FieldValue
-                                                                            .increment(1),
-                                                                  },
-                                                                ),
-                                                              });
-                                                              setState(() =>
-                                                                  _model.firestoreRequestCompleter =
-                                                                      null);
-                                                            },
-                                                      text: 'Add Credit',
-                                                      options: FFButtonOptions(
-                                                        height: 40.0,
-                                                        padding:
-                                                            const EdgeInsetsDirectional
-                                                                .fromSTEB(
-                                                                    5.0,
-                                                                    0.0,
-                                                                    5.0,
-                                                                    0.0),
-                                                        iconPadding:
-                                                            const EdgeInsetsDirectional
-                                                                .fromSTEB(
-                                                                    0.0,
-                                                                    0.0,
-                                                                    0.0,
-                                                                    0.0),
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primary,
-                                                        textStyle:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .labelSmall
-                                                                .override(
-                                                                  fontFamily:
-                                                                      'Readex Pro',
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .primaryBackground,
-                                                                ),
-                                                        elevation: 3.0,
-                                                        borderSide: const BorderSide(
-                                                          color: Colors
-                                                              .transparent,
-                                                          width: 1.0,
+                                                                await credSearchItem
+                                                                    .reference
+                                                                    .update({
+                                                                  ...mapToFirestore(
+                                                                    {
+                                                                      'Favorites':
+                                                                          FieldValue
+                                                                              .arrayRemove([
+                                                                        currentUserReference
+                                                                      ]),
+                                                                    },
+                                                                  ),
+                                                                });
+
+                                                                await currentUserReference!
+                                                                    .update({
+                                                                  ...mapToFirestore(
+                                                                    {
+                                                                      'CreditCount':
+                                                                          FieldValue.increment(
+                                                                              1),
+                                                                    },
+                                                                  ),
+                                                                });
+                                                                setState(() =>
+                                                                    _model.firestoreRequestCompleter =
+                                                                        null);
+                                                              },
+                                                        text: 'Add Credit',
+                                                        options:
+                                                            FFButtonOptions(
+                                                          height: 40.0,
+                                                          padding:
+                                                              const EdgeInsetsDirectional
+                                                                  .fromSTEB(
+                                                                      5.0,
+                                                                      0.0,
+                                                                      5.0,
+                                                                      0.0),
+                                                          iconPadding:
+                                                              const EdgeInsetsDirectional
+                                                                  .fromSTEB(
+                                                                      0.0,
+                                                                      0.0,
+                                                                      0.0,
+                                                                      0.0),
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primary,
+                                                          textStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .labelSmall
+                                                                  .override(
+                                                                    fontFamily:
+                                                                        'Readex Pro',
+                                                                    color: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .primaryBackground,
+                                                                  ),
+                                                          elevation: 3.0,
+                                                          borderSide:
+                                                              const BorderSide(
+                                                            color: Colors
+                                                                .transparent,
+                                                            width: 1.0,
+                                                          ),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      8.0),
+                                                          disabledColor:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .lineColor,
                                                         ),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(8.0),
-                                                        disabledColor:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .lineColor,
                                                       ),
                                                     ),
                                                   ),
