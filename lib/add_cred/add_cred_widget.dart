@@ -262,6 +262,7 @@ class _AddCredWidgetState extends State<AddCredWidget>
                               () => setState(() {}),
                             ),
                             autofocus: true,
+                            textInputAction: TextInputAction.search,
                             obscureText: false,
                             decoration: InputDecoration(
                               labelText: 'Enter Experience...',
