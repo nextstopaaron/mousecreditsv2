@@ -3,6 +3,10 @@ import 'share_widget.dart' show ShareWidget;
 import 'package:flutter/material.dart';
 
 class ShareModel extends FlutterFlowModel<ShareWidget> {
+  ///  Local state fields for this component.
+
+  int? count;
+
   /// Initialization and disposal methods.
 
   @override

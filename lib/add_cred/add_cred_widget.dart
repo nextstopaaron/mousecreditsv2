@@ -1,5 +1,6 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
+import '/components/nonetoshow_widget.dart';
 import '/components/share_widget.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_autocomplete_options_list.dart';
@@ -502,6 +503,9 @@ class _AddCredWidgetState extends State<AddCredWidget>
                           builder: (context) {
                             final credSearch =
                                 _model.simpleSearchResults1.toList();
+                            if (credSearch.isEmpty) {
+                              return const NonetoshowWidget();
+                            }
                             return ListView.builder(
                               padding: EdgeInsets.zero,
                               primary: false,
@@ -801,6 +805,9 @@ class _AddCredWidgetState extends State<AddCredWidget>
                                                                             getCurrentTimestamp,
                                                                         location:
                                                                             credSearchItem.location,
+                                                                        count: (currentUserDocument?.credits.toList() ??
+                                                                                [])
+                                                                            .length,
                                                                       ),
                                                                     ),
                                                                   );
@@ -968,6 +975,9 @@ class _AddCredWidgetState extends State<AddCredWidget>
                           builder: (context) {
                             final credSearch =
                                 _model.simpleSearchResults2.toList();
+                            if (credSearch.isEmpty) {
+                              return const NonetoshowWidget();
+                            }
                             return ListView.builder(
                               padding: EdgeInsets.zero,
                               primary: false,

@@ -13,11 +13,13 @@ class ShareWidget extends StatefulWidget {
     required this.credit,
     required this.timeStamp,
     required this.location,
+    required this.count,
   });
 
   final String? credit;
   final DateTime? timeStamp;
   final String? location;
+  final int? count;
 
   @override
   State<ShareWidget> createState() => _ShareWidgetState();
@@ -110,7 +112,7 @@ class _ShareWidgetState extends State<ShareWidget> {
           Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(16.0, 8.0, 16.0, 16.0),
             child: Text(
-              'You\'ve added Mouse Credit "${widget.credit}" at ${widget.location}!',
+              'You\'ve added Mouse Credit "${widget.credit}" at ${widget.location} and now have ${widget.count?.toString()} Mouse Credits!',
               style: FlutterFlowTheme.of(context).labelLarge,
             ),
           ),
@@ -127,7 +129,7 @@ class _ShareWidgetState extends State<ShareWidget> {
                       onPressed: () async {
                         await Clipboard.setData(ClipboardData(
                             text:
-                                'I  just collected Mouse Credit "${widget.credit}" in the ${widget.location}! I now have 56 Mouse Credits. How many do you have?'));
+                                'I just collected Mouse Credit "${widget.credit}" in the ${widget.location} and now have ${widget.count?.toString()} Mouse Credits!'));
                         Navigator.pop(context);
                       },
                       text: 'Copy to Clipboard',
