@@ -1,0 +1,98 @@
+{
+  "project_info": {
+    "project_number": "315267496378",
+    "project_id": "mouse-credits-v06eyn",
+    "storage_bucket": "mouse-credits-v06eyn.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:315267496378:android:a6c2474fb0ff422021c583",
+        "android_client_info": {
+          "package_name": "com.mycompany.mousecredits"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "315267496378-kdn7g1mt7d1i52vgh6h2al54klf5eje5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mycompany.mousecredits",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "315267496378-hh6efnesja5ocnqhripj30qmbg9bj4t8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB48rJ48gbBtHW0bGemzHmrsHTqpmy-GB8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "315267496378-hh6efnesja5ocnqhripj30qmbg9bj4t8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "315267496378-8v2s7aufngil5vr4m9uk566au9hgdc72.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "Robin.Do"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:315267496378:android:87d564f8b46835e621c583",
+        "android_client_info": {
+          "package_name": "com.mycompany.mousecreditsfinaltry"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "315267496378-t4tqu0idtn2phdrk378iinknhm52lfbe.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mycompany.mousecreditsfinaltry",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "315267496378-hh6efnesja5ocnqhripj30qmbg9bj4t8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB48rJ48gbBtHW0bGemzHmrsHTqpmy-GB8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "315267496378-hh6efnesja5ocnqhripj30qmbg9bj4t8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "315267496378-8v2s7aufngil5vr4m9uk566au9hgdc72.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "Robin.Do"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

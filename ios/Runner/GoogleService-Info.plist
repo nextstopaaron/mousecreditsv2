@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>315267496378-p9o0sk1mqih3orrla3snievvkq361sku.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.315267496378-p9o0sk1mqih3orrla3snievvkq361sku</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>315267496378-btt2c4mo6mmr46o4ag7sr8vojpji3gc5.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyB0L8LrrOGN_wkcoDT32tL6G3zWqVugTNw</string>
+	<key>GCM_SENDER_ID</key>
+	<string>315267496378</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.mycompany.mousecredits</string>
+	<key>PROJECT_ID</key>
+	<string>mouse-credits-v06eyn</string>
+	<key>STORAGE_BUCKET</key>
+	<string>mouse-credits-v06eyn.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:315267496378:ios:9b19f90a0391e34421c583</string>
+</dict>
+</plist>
