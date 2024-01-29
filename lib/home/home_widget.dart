@@ -526,8 +526,12 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                               .toList()
                               .map((label) => ChipData(label))
                               .toList(),
-                          onChanged: (val) => setState(
-                              () => _model.choiceChipsValue = val?.first),
+                          onChanged: (val) async {
+                            setState(
+                                () => _model.choiceChipsValue = val?.first);
+                            setState(
+                                () => _model.firestoreRequestCompleter = null);
+                          },
                           selectedChipStyle: ChipStyle(
                             backgroundColor: FlutterFlowTheme.of(context)
                                 .secondaryBackground,
