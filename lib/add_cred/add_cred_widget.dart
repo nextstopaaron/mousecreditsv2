@@ -1679,227 +1679,197 @@ class _AddCredWidgetState extends State<AddCredWidget>
                                                       ),
                                                     ),
                                                   ),
-                                                  Builder(
+                                                  AuthUserStreamWidget(
                                                     builder: (context) =>
-                                                        AuthUserStreamWidget(
-                                                      builder: (context) =>
-                                                          FFButtonWidget(
-                                                        onPressed: ((currentUserDocument
-                                                                            ?.credits
-                                                                            .toList() ??
-                                                                        [])
-                                                                    .contains(
-                                                                        credSearchItem
-                                                                            .reference) ==
-                                                                true)
-                                                            ? null
-                                                            : () async {
-                                                                await showModalBottomSheet(
-                                                                  isScrollControlled:
-                                                                      true,
-                                                                  backgroundColor:
-                                                                      FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .primaryBackground,
-                                                                  enableDrag:
-                                                                      false,
-                                                                  context:
-                                                                      context,
-                                                                  builder:
-                                                                      (context) {
-                                                                    return GestureDetector(
-                                                                      onTap: () => _model
-                                                                              .unfocusNode
-                                                                              .canRequestFocus
-                                                                          ? FocusScope.of(context).requestFocus(_model
-                                                                              .unfocusNode)
-                                                                          : FocusScope.of(context)
-                                                                              .unfocus(),
-                                                                      child:
-                                                                          Padding(
-                                                                        padding:
-                                                                            MediaQuery.viewInsetsOf(context),
-                                                                        child:
-                                                                            ShareCredWidget(
-                                                                          credit:
-                                                                              credSearchItem.name,
-                                                                          timeStamp:
-                                                                              getCurrentTimestamp,
-                                                                          location:
-                                                                              credSearchItem.location,
-                                                                          count:
-                                                                              (currentUserDocument?.credits.toList() ?? []).length,
-                                                                        ),
-                                                                      ),
-                                                                    );
-                                                                  },
-                                                                ).then((value) =>
-                                                                    safeSetState(
-                                                                        () {}));
-
-                                                                await showDialog(
-                                                                  context:
-                                                                      context,
-                                                                  builder:
-                                                                      (dialogContext) {
-                                                                    return Dialog(
-                                                                      elevation:
-                                                                          0,
-                                                                      insetPadding:
-                                                                          EdgeInsets
-                                                                              .zero,
-                                                                      backgroundColor:
-                                                                          Colors
-                                                                              .transparent,
-                                                                      alignment: const AlignmentDirectional(
-                                                                              0.0,
-                                                                              0.0)
-                                                                          .resolve(
-                                                                              Directionality.of(context)),
-                                                                      child:
-                                                                          GestureDetector(
-                                                                        onTap: () => _model.unfocusNode.canRequestFocus
-                                                                            ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-                                                                            : FocusScope.of(context).unfocus(),
-                                                                        child:
-                                                                            ShareCredWidget(
-                                                                          credit:
-                                                                              credSearchItem.name,
-                                                                          timeStamp:
-                                                                              getCurrentTimestamp,
-                                                                          location:
-                                                                              credSearchItem.location,
-                                                                          count:
-                                                                              (currentUserDocument?.credits.toList() ?? []).length,
-                                                                        ),
-                                                                      ),
-                                                                    );
-                                                                  },
-                                                                ).then((value) =>
-                                                                    setState(
-                                                                        () {}));
-
-                                                                // Add Credit
-
-                                                                await currentUserReference!
-                                                                    .update({
-                                                                  ...mapToFirestore(
-                                                                    {
-                                                                      'Credits':
-                                                                          FieldValue
-                                                                              .arrayUnion([
-                                                                        credSearchItem
-                                                                            .reference
-                                                                      ]),
-                                                                    },
-                                                                  ),
-                                                                });
-                                                                // Update Popularity
-
-                                                                await credSearchItem
-                                                                    .reference
-                                                                    .update({
-                                                                  ...mapToFirestore(
-                                                                    {
-                                                                      'Popularity':
-                                                                          FieldValue.increment(
-                                                                              1),
-                                                                    },
-                                                                  ),
-                                                                });
-                                                                // Remove Favorite
-
-                                                                await currentUserReference!
-                                                                    .update({
-                                                                  ...mapToFirestore(
-                                                                    {
-                                                                      'Favorites':
-                                                                          FieldValue
-                                                                              .arrayRemove([
-                                                                        credSearchItem
-                                                                            .reference
-                                                                      ]),
-                                                                    },
-                                                                  ),
-                                                                });
-                                                                // Remove Credit from Favorite
-
-                                                                await credSearchItem
-                                                                    .reference
-                                                                    .update({
-                                                                  ...mapToFirestore(
-                                                                    {
-                                                                      'Favorites':
-                                                                          FieldValue
-                                                                              .arrayRemove([
-                                                                        currentUserReference
-                                                                      ]),
-                                                                    },
-                                                                  ),
-                                                                });
-
-                                                                await currentUserReference!
-                                                                    .update({
-                                                                  ...mapToFirestore(
-                                                                    {
-                                                                      'CreditCount':
-                                                                          FieldValue.increment(
-                                                                              1),
-                                                                    },
-                                                                  ),
-                                                                });
-                                                                setState(() =>
-                                                                    _model.firestoreRequestCompleter =
-                                                                        null);
-                                                              },
-                                                        text: 'Add Credit',
-                                                        options:
-                                                            FFButtonOptions(
-                                                          height: 40.0,
-                                                          padding:
-                                                              const EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                      5.0,
-                                                                      0.0,
-                                                                      5.0,
-                                                                      0.0),
-                                                          iconPadding:
-                                                              const EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                      0.0,
-                                                                      0.0,
-                                                                      0.0,
-                                                                      0.0),
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .primary,
-                                                          textStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .labelSmall
-                                                                  .override(
-                                                                    fontFamily:
-                                                                        'Readex Pro',
-                                                                    color: FlutterFlowTheme.of(
+                                                        FFButtonWidget(
+                                                      onPressed: ((currentUserDocument
+                                                                          ?.credits
+                                                                          .toList() ??
+                                                                      [])
+                                                                  .contains(
+                                                                      credSearchItem
+                                                                          .reference) ==
+                                                              true)
+                                                          ? null
+                                                          : () async {
+                                                              await showModalBottomSheet(
+                                                                isScrollControlled:
+                                                                    true,
+                                                                backgroundColor:
+                                                                    FlutterFlowTheme.of(
                                                                             context)
                                                                         .primaryBackground,
-                                                                  ),
-                                                          elevation: 3.0,
-                                                          borderSide:
-                                                              const BorderSide(
-                                                            color: Colors
-                                                                .transparent,
-                                                            width: 1.0,
-                                                          ),
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      8.0),
-                                                          disabledColor:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .lineColor,
+                                                                enableDrag:
+                                                                    false,
+                                                                context:
+                                                                    context,
+                                                                builder:
+                                                                    (context) {
+                                                                  return GestureDetector(
+                                                                    onTap: () => _model
+                                                                            .unfocusNode
+                                                                            .canRequestFocus
+                                                                        ? FocusScope.of(context).requestFocus(_model
+                                                                            .unfocusNode)
+                                                                        : FocusScope.of(context)
+                                                                            .unfocus(),
+                                                                    child:
+                                                                        Padding(
+                                                                      padding: MediaQuery
+                                                                          .viewInsetsOf(
+                                                                              context),
+                                                                      child:
+                                                                          ShareCredWidget(
+                                                                        credit:
+                                                                            credSearchItem.name,
+                                                                        timeStamp:
+                                                                            getCurrentTimestamp,
+                                                                        location:
+                                                                            credSearchItem.location,
+                                                                        count: (currentUserDocument?.credits.toList() ??
+                                                                                [])
+                                                                            .length,
+                                                                      ),
+                                                                    ),
+                                                                  );
+                                                                },
+                                                              ).then((value) =>
+                                                                  safeSetState(
+                                                                      () {}));
+
+                                                              // Add User
+
+                                                              await credSearchItem
+                                                                  .reference
+                                                                  .update({
+                                                                ...mapToFirestore(
+                                                                  {
+                                                                    'Users':
+                                                                        FieldValue
+                                                                            .arrayUnion([
+                                                                      currentUserReference
+                                                                    ]),
+                                                                  },
+                                                                ),
+                                                              });
+                                                              // Add Credit
+
+                                                              await currentUserReference!
+                                                                  .update({
+                                                                ...mapToFirestore(
+                                                                  {
+                                                                    'Credits':
+                                                                        FieldValue
+                                                                            .arrayUnion([
+                                                                      credSearchItem
+                                                                          .reference
+                                                                    ]),
+                                                                  },
+                                                                ),
+                                                              });
+                                                              // Update Popularity
+
+                                                              await credSearchItem
+                                                                  .reference
+                                                                  .update({
+                                                                ...mapToFirestore(
+                                                                  {
+                                                                    'Popularity':
+                                                                        FieldValue
+                                                                            .increment(1),
+                                                                  },
+                                                                ),
+                                                              });
+                                                              // Remove Favorite
+
+                                                              await currentUserReference!
+                                                                  .update({
+                                                                ...mapToFirestore(
+                                                                  {
+                                                                    'Favorites':
+                                                                        FieldValue
+                                                                            .arrayRemove([
+                                                                      credSearchItem
+                                                                          .reference
+                                                                    ]),
+                                                                  },
+                                                                ),
+                                                              });
+                                                              // Remove Credit from Favorite
+
+                                                              await credSearchItem
+                                                                  .reference
+                                                                  .update({
+                                                                ...mapToFirestore(
+                                                                  {
+                                                                    'Favorites':
+                                                                        FieldValue
+                                                                            .arrayRemove([
+                                                                      currentUserReference
+                                                                    ]),
+                                                                  },
+                                                                ),
+                                                              });
+
+                                                              await currentUserReference!
+                                                                  .update({
+                                                                ...mapToFirestore(
+                                                                  {
+                                                                    'CreditCount':
+                                                                        FieldValue
+                                                                            .increment(1),
+                                                                  },
+                                                                ),
+                                                              });
+                                                              setState(() =>
+                                                                  _model.firestoreRequestCompleter =
+                                                                      null);
+                                                            },
+                                                      text: 'Add Credit',
+                                                      options: FFButtonOptions(
+                                                        height: 40.0,
+                                                        padding:
+                                                            const EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    5.0,
+                                                                    0.0,
+                                                                    5.0,
+                                                                    0.0),
+                                                        iconPadding:
+                                                            const EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0),
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primary,
+                                                        textStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .labelSmall
+                                                                .override(
+                                                                  fontFamily:
+                                                                      'Readex Pro',
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .primaryBackground,
+                                                                ),
+                                                        elevation: 3.0,
+                                                        borderSide: const BorderSide(
+                                                          color: Colors
+                                                              .transparent,
+                                                          width: 1.0,
                                                         ),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8.0),
+                                                        disabledColor:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .lineColor,
                                                       ),
                                                     ),
                                                   ),
