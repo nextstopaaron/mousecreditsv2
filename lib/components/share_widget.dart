@@ -54,7 +54,7 @@ class _ShareWidgetState extends State<ShareWidget> {
     return Container(
       height: 250.0,
       decoration: BoxDecoration(
-        color: FlutterFlowTheme.of(context).primaryBackground,
+        color: FlutterFlowTheme.of(context).accent1,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.max,
@@ -110,39 +110,52 @@ class _ShareWidgetState extends State<ShareWidget> {
           Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(16.0, 8.0, 16.0, 16.0),
             child: Text(
-              'You have added Mouse Credit "${widget.credit}" in ${widget.location} on ${dateTimeFormat('yMMMd', widget.timeStamp)}!',
+              'You\'ve added Mouse Credit "${widget.credit}" at ${widget.location}!',
               style: FlutterFlowTheme.of(context).labelLarge,
             ),
           ),
-          Align(
-            alignment: const AlignmentDirectional(0.0, 0.0),
-            child: Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(16.0, 24.0, 16.0, 0.0),
-              child: FFButtonWidget(
-                onPressed: () async {
-                  await Clipboard.setData(const ClipboardData(text: 'Test'));
-                  Navigator.pop(context);
-                },
-                text: 'Copy to Clipboard',
-                options: FFButtonOptions(
-                  width: double.infinity,
-                  height: 50.0,
-                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                  iconPadding:
-                      const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                  color: FlutterFlowTheme.of(context).primary,
-                  textStyle: FlutterFlowTheme.of(context).titleSmall.override(
-                        fontFamily: 'Readex Pro',
-                        color: FlutterFlowTheme.of(context).primaryBackground,
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 10.0, 0.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Align(
+                    alignment: const AlignmentDirectional(0.0, 0.0),
+                    child: FFButtonWidget(
+                      onPressed: () async {
+                        await Clipboard.setData(ClipboardData(
+                            text:
+                                'I  just collected Mouse Credit "${widget.credit}" in the ${widget.location}! I now have 56 Mouse Credits. How many do you have?'));
+                        Navigator.pop(context);
+                      },
+                      text: 'Copy to Clipboard',
+                      options: FFButtonOptions(
+                        width: double.infinity,
+                        height: 50.0,
+                        padding:
+                            const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                        iconPadding:
+                            const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                        color: FlutterFlowTheme.of(context).primary,
+                        textStyle:
+                            FlutterFlowTheme.of(context).titleSmall.override(
+                                  fontFamily: 'Readex Pro',
+                                  color: FlutterFlowTheme.of(context)
+                                      .primaryBackground,
+                                ),
+                        elevation: 3.0,
+                        borderSide: const BorderSide(
+                          color: Colors.transparent,
+                          width: 1.0,
+                        ),
+                        borderRadius: BorderRadius.circular(12.0),
                       ),
-                  elevation: 3.0,
-                  borderSide: const BorderSide(
-                    color: Colors.transparent,
-                    width: 1.0,
+                    ),
                   ),
-                  borderRadius: BorderRadius.circular(12.0),
                 ),
-              ),
+              ],
             ),
           ),
         ],
