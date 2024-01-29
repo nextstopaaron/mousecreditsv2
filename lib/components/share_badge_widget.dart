@@ -16,7 +16,7 @@ class ShareBadgeWidget extends StatefulWidget {
   });
 
   final String? badge;
-  final DateTime? description;
+  final String? description;
 
   @override
   State<ShareBadgeWidget> createState() => _ShareBadgeWidgetState();
@@ -109,7 +109,7 @@ class _ShareBadgeWidgetState extends State<ShareBadgeWidget> {
           Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(16.0, 8.0, 16.0, 16.0),
             child: Text(
-              'You\'ve added Mouse Credit badge"${widget.badge}" by " ${widget.description?.toString()}"!',
+              'You\'ve added Mouse Credit badge"${widget.badge}" by " ${widget.description}"!',
               style: FlutterFlowTheme.of(context).labelLarge,
             ),
           ),
@@ -159,7 +159,7 @@ class _ShareBadgeWidgetState extends State<ShareBadgeWidget> {
                       onPressed: () async {
                         await Clipboard.setData(ClipboardData(
                             text:
-                                'I just collected Mouse Credit badge "${widget.badge}" by ${widget.description?.toString()}"!'));
+                                'I just collected Mouse Credit badge "${widget.badge}" by ${widget.description}"!'));
                         await showModalBottomSheet(
                           isScrollControlled: true,
                           backgroundColor:
