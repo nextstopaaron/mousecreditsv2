@@ -471,19 +471,6 @@ class _AddBadgeWidgetState extends State<AddBadgeWidget>
                                                               },
                                                             ),
                                                           });
-
-                                                          await listViewBadgesRecord
-                                                              .reference
-                                                              .update({
-                                                            ...mapToFirestore(
-                                                              {
-                                                                'Popularity':
-                                                                    FieldValue
-                                                                        .increment(
-                                                                            1),
-                                                              },
-                                                            ),
-                                                          });
                                                           await showModalBottomSheet(
                                                             isScrollControlled:
                                                                 true,
@@ -524,6 +511,19 @@ class _AddBadgeWidgetState extends State<AddBadgeWidget>
                                                           ).then((value) =>
                                                               safeSetState(
                                                                   () {}));
+
+                                                          await listViewBadgesRecord
+                                                              .reference
+                                                              .update({
+                                                            ...mapToFirestore(
+                                                              {
+                                                                'Popularity':
+                                                                    FieldValue
+                                                                        .increment(
+                                                                            1),
+                                                              },
+                                                            ),
+                                                          });
                                                         },
                                                   text: 'Add Badge',
                                                   options: FFButtonOptions(

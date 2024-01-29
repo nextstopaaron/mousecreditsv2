@@ -77,7 +77,7 @@ class _SubmitCreditWidgetState extends State<SubmitCreditWidget>
 
     return Container(
       width: MediaQuery.sizeOf(context).width * 1.0,
-      height: 230.0,
+      height: 275.0,
       decoration: BoxDecoration(
         color: FlutterFlowTheme.of(context).primaryBackground,
       ),

@@ -45,9 +45,9 @@ class _DeleteWidgetState extends State<DeleteWidget> {
 
     return Container(
       width: double.infinity,
-      height: 270.0,
+      height: 210.0,
       decoration: BoxDecoration(
-        color: FlutterFlowTheme.of(context).secondaryBackground,
+        color: FlutterFlowTheme.of(context).primaryBackground,
         boxShadow: const [
           BoxShadow(
             blurRadius: 5.0,
@@ -92,8 +92,11 @@ class _DeleteWidgetState extends State<DeleteWidget> {
                   padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                   iconPadding:
                       const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                  color: FlutterFlowTheme.of(context).primaryBackground,
-                  textStyle: FlutterFlowTheme.of(context).bodyLarge,
+                  color: FlutterFlowTheme.of(context).secondary,
+                  textStyle: FlutterFlowTheme.of(context).bodyLarge.override(
+                        fontFamily: 'Readex Pro',
+                        color: FlutterFlowTheme.of(context).primaryBackground,
+                      ),
                   elevation: 2.0,
                   borderSide: const BorderSide(
                     color: Colors.transparent,
@@ -115,10 +118,10 @@ class _DeleteWidgetState extends State<DeleteWidget> {
                   padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                   iconPadding:
                       const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                  color: FlutterFlowTheme.of(context).secondaryBackground,
+                  color: FlutterFlowTheme.of(context).secondary,
                   textStyle: FlutterFlowTheme.of(context).titleSmall.override(
                         fontFamily: 'Lexend Deca',
-                        color: FlutterFlowTheme.of(context).secondaryText,
+                        color: FlutterFlowTheme.of(context).primaryBackground,
                         fontSize: 16.0,
                         fontWeight: FontWeight.normal,
                       ),

@@ -9,7 +9,7 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/form_field_controller.dart';
 import '/pages/components/nonetoshow/nonetoshow_widget.dart';
-import '/pages/components/share_cred/share_cred_widget.dart';
+import '/pages/share_cred/share_cred_widget.dart';
 import 'dart:async';
 import 'package:aligned_tooltip/aligned_tooltip.dart';
 import 'package:easy_debounce/easy_debounce.dart';

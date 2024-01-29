@@ -53,7 +53,7 @@ class _ShareStatsWidgetState extends State<ShareStatsWidget> {
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
       child: Container(
-        height: 250.0,
+        height: 275.0,
         decoration: BoxDecoration(
           color: FlutterFlowTheme.of(context).primaryBackground,
         ),

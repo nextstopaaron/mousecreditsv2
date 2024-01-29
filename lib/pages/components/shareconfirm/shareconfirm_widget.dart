@@ -42,7 +42,7 @@ class _ShareconfirmWidgetState extends State<ShareconfirmWidget> {
     context.watch<FFAppState>();
 
     return Container(
-      height: 250.0,
+      height: 275.0,
       decoration: BoxDecoration(
         color: FlutterFlowTheme.of(context).primaryBackground,
       ),
