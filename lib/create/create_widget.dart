@@ -1,4 +1,5 @@
 import '/auth/firebase_auth/auth_util.dart';
+import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -26,6 +27,9 @@ class _CreateWidgetState extends State<CreateWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => CreateModel());
+
+    _model.nameController ??= TextEditingController();
+    _model.nameFocusNode ??= FocusNode();
 
     _model.emailAddressController ??= TextEditingController();
     _model.emailAddressFocusNode ??= FocusNode();
@@ -132,7 +136,7 @@ class _CreateWidgetState extends State<CreateWidget> {
                                       alignment: const AlignmentDirectional(0.0, 0.0),
                                       child: Padding(
                                         padding: const EdgeInsetsDirectional.fromSTEB(
-                                            0.0, 20.0, 0.0, 25.0),
+                                            0.0, 20.0, 0.0, 20.0),
                                         child: RichText(
                                           textScaleFactor:
                                               MediaQuery.of(context)
@@ -176,6 +180,79 @@ class _CreateWidgetState extends State<CreateWidget> {
                                             style: FlutterFlowTheme.of(context)
                                                 .bodyMedium,
                                           ),
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsetsDirectional.fromSTEB(
+                                          0.0, 0.0, 0.0, 16.0),
+                                      child: SizedBox(
+                                        width: double.infinity,
+                                        child: TextFormField(
+                                          controller: _model.nameController,
+                                          focusNode: _model.nameFocusNode,
+                                          autofocus: true,
+                                          autofillHints: const [AutofillHints.name],
+                                          textCapitalization:
+                                              TextCapitalization.words,
+                                          obscureText: false,
+                                          decoration: InputDecoration(
+                                            labelText: 'Name',
+                                            labelStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .labelLarge,
+                                            enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .alternate,
+                                                width: 2.0,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(12.0),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primary,
+                                                width: 2.0,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(12.0),
+                                            ),
+                                            errorBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .alternate,
+                                                width: 2.0,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(12.0),
+                                            ),
+                                            focusedErrorBorder:
+                                                OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .alternate,
+                                                width: 2.0,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(12.0),
+                                            ),
+                                            filled: true,
+                                            fillColor:
+                                                FlutterFlowTheme.of(context)
+                                                    .primaryBackground,
+                                          ),
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyLarge,
+                                          keyboardType: TextInputType.name,
+                                          validator: _model
+                                              .nameControllerValidator
+                                              .asValidator(context),
                                         ),
                                       ),
                                     ),
@@ -464,12 +541,19 @@ class _CreateWidgetState extends State<CreateWidget> {
                                           final user = await authManager
                                               .createAccountWithEmail(
                                             context,
-                                            _model.emailAddressController.text,
+                                            _model.nameController.text,
                                             _model.passwordController.text,
                                           );
                                           if (user == null) {
                                             return;
                                           }
+
+                                          await UsersRecord.collection
+                                              .doc(user.uid)
+                                              .update(createUsersRecordData(
+                                                displayName:
+                                                    _model.nameController.text,
+                                              ));
 
                                           context.goNamedAuth(
                                               'Home', context.mounted);
@@ -505,7 +589,7 @@ class _CreateWidgetState extends State<CreateWidget> {
                                     ),
                                     Padding(
                                       padding: const EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 0.0, 0.0, 24.0),
+                                          0.0, 0.0, 0.0, 16.0),
                                       child: SizedBox(
                                         width: 370.0,
                                         child: Stack(

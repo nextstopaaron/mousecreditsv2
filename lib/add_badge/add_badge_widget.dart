@@ -88,7 +88,7 @@ class _AddBadgeWidgetState extends State<AddBadgeWidget>
           : FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
+        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         appBar: AppBar(
           backgroundColor: FlutterFlowTheme.of(context).primary,
           automaticallyImplyLeading: false,
@@ -154,7 +154,8 @@ class _AddBadgeWidgetState extends State<AddBadgeWidget>
                                 ),
                             iconColor: FlutterFlowTheme.of(context).primaryText,
                             iconSize: 10.0,
-                            elevation: 4.0,
+                            elevation: 0.0,
+                            borderColor: FlutterFlowTheme.of(context).lineColor,
                             borderRadius: BorderRadius.circular(14.0),
                           ),
                           unselectedChipStyle: ChipStyle(
@@ -445,6 +446,44 @@ class _AddBadgeWidgetState extends State<AddBadgeWidget>
                                                               .toList())!
                                                       ? null
                                                       : () async {
+                                                          await listViewBadgesRecord
+                                                              .reference
+                                                              .update({
+                                                            ...mapToFirestore(
+                                                              {
+                                                                'Users': FieldValue
+                                                                    .arrayUnion([
+                                                                  currentUserReference
+                                                                ]),
+                                                              },
+                                                            ),
+                                                          });
+
+                                                          await currentUserReference!
+                                                              .update({
+                                                            ...mapToFirestore(
+                                                              {
+                                                                'Badges': FieldValue
+                                                                    .arrayUnion([
+                                                                  listViewBadgesRecord
+                                                                      .reference
+                                                                ]),
+                                                              },
+                                                            ),
+                                                          });
+
+                                                          await listViewBadgesRecord
+                                                              .reference
+                                                              .update({
+                                                            ...mapToFirestore(
+                                                              {
+                                                                'Popularity':
+                                                                    FieldValue
+                                                                        .increment(
+                                                                            1),
+                                                              },
+                                                            ),
+                                                          });
                                                           await showModalBottomSheet(
                                                             isScrollControlled:
                                                                 true,
@@ -485,45 +524,6 @@ class _AddBadgeWidgetState extends State<AddBadgeWidget>
                                                           ).then((value) =>
                                                               safeSetState(
                                                                   () {}));
-
-                                                          await listViewBadgesRecord
-                                                              .reference
-                                                              .update({
-                                                            ...mapToFirestore(
-                                                              {
-                                                                'Users': FieldValue
-                                                                    .arrayUnion([
-                                                                  currentUserReference
-                                                                ]),
-                                                              },
-                                                            ),
-                                                          });
-
-                                                          await currentUserReference!
-                                                              .update({
-                                                            ...mapToFirestore(
-                                                              {
-                                                                'Badges': FieldValue
-                                                                    .arrayUnion([
-                                                                  listViewBadgesRecord
-                                                                      .reference
-                                                                ]),
-                                                              },
-                                                            ),
-                                                          });
-
-                                                          await listViewBadgesRecord
-                                                              .reference
-                                                              .update({
-                                                            ...mapToFirestore(
-                                                              {
-                                                                'Popularity':
-                                                                    FieldValue
-                                                                        .increment(
-                                                                            1),
-                                                              },
-                                                            ),
-                                                          });
                                                         },
                                                   text: 'Add Badge',
                                                   options: FFButtonOptions(

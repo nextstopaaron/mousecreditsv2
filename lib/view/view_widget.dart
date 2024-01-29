@@ -22,7 +22,7 @@ class ViewWidget extends StatefulWidget {
   const ViewWidget({
     super.key,
     String? initialChipSelect,
-  }) : initialChipSelect = initialChipSelect ?? 'Favorites';
+  }) : initialChipSelect = initialChipSelect ?? 'Credits';
 
   final String initialChipSelect;
 
@@ -261,7 +261,9 @@ class _ViewWidgetState extends State<ViewWidget> with TickerProviderStateMixin {
                                 iconColor:
                                     FlutterFlowTheme.of(context).primaryText,
                                 iconSize: 10.0,
-                                elevation: 4.0,
+                                elevation: 0.0,
+                                borderColor:
+                                    FlutterFlowTheme.of(context).lineColor,
                                 borderRadius: BorderRadius.circular(14.0),
                               ),
                               unselectedChipStyle: ChipStyle(
@@ -484,13 +486,13 @@ class _ViewWidgetState extends State<ViewWidget> with TickerProviderStateMixin {
                                                     },
                                                     text: 'Remove Favorite',
                                                     options: FFButtonOptions(
-                                                      height: 40.0,
+                                                      height: 30.0,
                                                       padding:
                                                           const EdgeInsetsDirectional
                                                               .fromSTEB(
-                                                                  5.0,
+                                                                  10.0,
                                                                   0.0,
-                                                                  5.0,
+                                                                  10.0,
                                                                   0.0),
                                                       iconPadding:
                                                           const EdgeInsetsDirectional
@@ -643,13 +645,13 @@ class _ViewWidgetState extends State<ViewWidget> with TickerProviderStateMixin {
                                                         text: 'Add Credit',
                                                         options:
                                                             FFButtonOptions(
-                                                          height: 40.0,
+                                                          height: 30.0,
                                                           padding:
                                                               const EdgeInsetsDirectional
                                                                   .fromSTEB(
-                                                                      23.0,
+                                                                      28.0,
                                                                       0.0,
-                                                                      23.0,
+                                                                      28.0,
                                                                       0.0),
                                                           iconPadding:
                                                               const EdgeInsetsDirectional
@@ -925,13 +927,13 @@ class _ViewWidgetState extends State<ViewWidget> with TickerProviderStateMixin {
                                                     },
                                                     text: 'Remove Credit',
                                                     options: FFButtonOptions(
-                                                      height: 40.0,
+                                                      height: 30.0,
                                                       padding:
                                                           const EdgeInsetsDirectional
                                                               .fromSTEB(
-                                                                  5.0,
+                                                                  10.0,
                                                                   0.0,
-                                                                  5.0,
+                                                                  10.0,
                                                                   0.0),
                                                       iconPadding:
                                                           const EdgeInsetsDirectional
@@ -1198,13 +1200,13 @@ class _ViewWidgetState extends State<ViewWidget> with TickerProviderStateMixin {
                                                     },
                                                     text: 'Remove Badge',
                                                     options: FFButtonOptions(
-                                                      height: 40.0,
+                                                      height: 30.0,
                                                       padding:
                                                           const EdgeInsetsDirectional
                                                               .fromSTEB(
-                                                                  5.0,
+                                                                  10.0,
                                                                   0.0,
-                                                                  5.0,
+                                                                  10.0,
                                                                   0.0),
                                                       iconPadding:
                                                           const EdgeInsetsDirectional

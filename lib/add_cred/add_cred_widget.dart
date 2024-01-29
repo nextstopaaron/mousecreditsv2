@@ -774,6 +774,93 @@ class _AddCredWidgetState extends State<AddCredWidget>
                                                           false)
                                                         FFButtonWidget(
                                                           onPressed: () async {
+                                                            // Add User
+
+                                                            await credSearchItem
+                                                                .reference
+                                                                .update({
+                                                              ...mapToFirestore(
+                                                                {
+                                                                  'Users':
+                                                                      FieldValue
+                                                                          .arrayUnion([
+                                                                    currentUserReference
+                                                                  ]),
+                                                                },
+                                                              ),
+                                                            });
+                                                            // Add Credit
+
+                                                            await currentUserReference!
+                                                                .update({
+                                                              ...mapToFirestore(
+                                                                {
+                                                                  'Credits':
+                                                                      FieldValue
+                                                                          .arrayUnion([
+                                                                    credSearchItem
+                                                                        .reference
+                                                                  ]),
+                                                                },
+                                                              ),
+                                                            });
+                                                            // Remove Favorite
+
+                                                            await currentUserReference!
+                                                                .update({
+                                                              ...mapToFirestore(
+                                                                {
+                                                                  'Favorites':
+                                                                      FieldValue
+                                                                          .arrayRemove([
+                                                                    credSearchItem
+                                                                        .reference
+                                                                  ]),
+                                                                },
+                                                              ),
+                                                            });
+                                                            // Update Popularity
+
+                                                            await credSearchItem
+                                                                .reference
+                                                                .update({
+                                                              ...mapToFirestore(
+                                                                {
+                                                                  'Popularity':
+                                                                      FieldValue
+                                                                          .increment(
+                                                                              1),
+                                                                },
+                                                              ),
+                                                            });
+                                                            // Remove Credit from Favorite
+
+                                                            await credSearchItem
+                                                                .reference
+                                                                .update({
+                                                              ...mapToFirestore(
+                                                                {
+                                                                  'Favorites':
+                                                                      FieldValue
+                                                                          .arrayRemove([
+                                                                    currentUserReference
+                                                                  ]),
+                                                                },
+                                                              ),
+                                                            });
+                                                            // Increase credit count
+
+                                                            await currentUserReference!
+                                                                .update({
+                                                              ...mapToFirestore(
+                                                                {
+                                                                  'CreditCount':
+                                                                      FieldValue
+                                                                          .increment(
+                                                                              1),
+                                                                },
+                                                              ),
+                                                            });
                                                             await showModalBottomSheet(
                                                               isScrollControlled:
                                                                   true,
@@ -821,93 +908,6 @@ class _AddCredWidgetState extends State<AddCredWidget>
                                                                 safeSetState(
                                                                     () {}));
 
-                                                            // Add User
-
-                                                            await credSearchItem
-                                                                .reference
-                                                                .update({
-                                                              ...mapToFirestore(
-                                                                {
-                                                                  'Users':
-                                                                      FieldValue
-                                                                          .arrayUnion([
-                                                                    currentUserReference
-                                                                  ]),
-                                                                },
-                                                              ),
-                                                            });
-                                                            // Add Credit
-
-                                                            await currentUserReference!
-                                                                .update({
-                                                              ...mapToFirestore(
-                                                                {
-                                                                  'Credits':
-                                                                      FieldValue
-                                                                          .arrayUnion([
-                                                                    credSearchItem
-                                                                        .reference
-                                                                  ]),
-                                                                },
-                                                              ),
-                                                            });
-                                                            // Update Popularity
-
-                                                            await credSearchItem
-                                                                .reference
-                                                                .update({
-                                                              ...mapToFirestore(
-                                                                {
-                                                                  'Popularity':
-                                                                      FieldValue
-                                                                          .increment(
-                                                                              1),
-                                                                },
-                                                              ),
-                                                            });
-                                                            // Remove Favorite
-
-                                                            await currentUserReference!
-                                                                .update({
-                                                              ...mapToFirestore(
-                                                                {
-                                                                  'Favorites':
-                                                                      FieldValue
-                                                                          .arrayRemove([
-                                                                    credSearchItem
-                                                                        .reference
-                                                                  ]),
-                                                                },
-                                                              ),
-                                                            });
-                                                            // Remove Credit from Favorite
-
-                                                            await credSearchItem
-                                                                .reference
-                                                                .update({
-                                                              ...mapToFirestore(
-                                                                {
-                                                                  'Favorites':
-                                                                      FieldValue
-                                                                          .arrayRemove([
-                                                                    currentUserReference
-                                                                  ]),
-                                                                },
-                                                              ),
-                                                            });
-                                                            // Increase credit count
-
-                                                            await currentUserReference!
-                                                                .update({
-                                                              ...mapToFirestore(
-                                                                {
-                                                                  'CreditCount':
-                                                                      FieldValue
-                                                                          .increment(
-                                                                              1),
-                                                                },
-                                                              ),
-                                                            });
                                                             setState(() => _model
                                                                     .firestoreRequestCompleter =
                                                                 null);
@@ -1245,53 +1245,6 @@ class _AddCredWidgetState extends State<AddCredWidget>
                                                           false)
                                                         FFButtonWidget(
                                                           onPressed: () async {
-                                                            await showModalBottomSheet(
-                                                              isScrollControlled:
-                                                                  true,
-                                                              backgroundColor:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .primaryBackground,
-                                                              enableDrag: false,
-                                                              context: context,
-                                                              builder:
-                                                                  (context) {
-                                                                return GestureDetector(
-                                                                  onTap: () => _model
-                                                                          .unfocusNode
-                                                                          .canRequestFocus
-                                                                      ? FocusScope.of(
-                                                                              context)
-                                                                          .requestFocus(_model
-                                                                              .unfocusNode)
-                                                                      : FocusScope.of(
-                                                                              context)
-                                                                          .unfocus(),
-                                                                  child:
-                                                                      Padding(
-                                                                    padding: MediaQuery
-                                                                        .viewInsetsOf(
-                                                                            context),
-                                                                    child:
-                                                                        ShareCredWidget(
-                                                                      credit: credSearchItem
-                                                                          .name,
-                                                                      timeStamp:
-                                                                          getCurrentTimestamp,
-                                                                      location:
-                                                                          credSearchItem
-                                                                              .location,
-                                                                      count: (currentUserDocument?.credits.toList() ??
-                                                                              [])
-                                                                          .length,
-                                                                    ),
-                                                                  ),
-                                                                );
-                                                              },
-                                                            ).then((value) =>
-                                                                safeSetState(
-                                                                    () {}));
-
                                                             // Add User
 
                                                             await credSearchItem
@@ -1378,6 +1331,53 @@ class _AddCredWidgetState extends State<AddCredWidget>
                                                                 },
                                                               ),
                                                             });
+                                                            await showModalBottomSheet(
+                                                              isScrollControlled:
+                                                                  true,
+                                                              backgroundColor:
+                                                                  FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .primaryBackground,
+                                                              enableDrag: false,
+                                                              context: context,
+                                                              builder:
+                                                                  (context) {
+                                                                return GestureDetector(
+                                                                  onTap: () => _model
+                                                                          .unfocusNode
+                                                                          .canRequestFocus
+                                                                      ? FocusScope.of(
+                                                                              context)
+                                                                          .requestFocus(_model
+                                                                              .unfocusNode)
+                                                                      : FocusScope.of(
+                                                                              context)
+                                                                          .unfocus(),
+                                                                  child:
+                                                                      Padding(
+                                                                    padding: MediaQuery
+                                                                        .viewInsetsOf(
+                                                                            context),
+                                                                    child:
+                                                                        ShareCredWidget(
+                                                                      credit: credSearchItem
+                                                                          .name,
+                                                                      timeStamp:
+                                                                          getCurrentTimestamp,
+                                                                      location:
+                                                                          credSearchItem
+                                                                              .location,
+                                                                      count: (currentUserDocument?.credits.toList() ??
+                                                                              [])
+                                                                          .length,
+                                                                    ),
+                                                                  ),
+                                                                );
+                                                              },
+                                                            ).then((value) =>
+                                                                safeSetState(
+                                                                    () {}));
+
                                                             setState(() => _model
                                                                     .firestoreRequestCompleter =
                                                                 null);
@@ -1583,14 +1583,18 @@ class _AddCredWidgetState extends State<AddCredWidget>
                                                     child: AuthUserStreamWidget(
                                                       builder: (context) =>
                                                           FFButtonWidget(
-                                                        onPressed: ((currentUserDocument
-                                                                            ?.credits
+                                                        onPressed: (((currentUserDocument?.credits.toList() ??
+                                                                            [])
+                                                                        .contains(credSearchItem
+                                                                            .reference) ==
+                                                                    true) ||
+                                                                (currentUserDocument
+                                                                            ?.favorites
                                                                             .toList() ??
                                                                         [])
                                                                     .contains(
                                                                         credSearchItem
-                                                                            .reference) ==
-                                                                true)
+                                                                            .reference))
                                                             ? null
                                                             : () async {
                                                                 // Add User
@@ -1692,51 +1696,6 @@ class _AddCredWidgetState extends State<AddCredWidget>
                                                               true)
                                                           ? null
                                                           : () async {
-                                                              await showModalBottomSheet(
-                                                                isScrollControlled:
-                                                                    true,
-                                                                backgroundColor:
-                                                                    FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .primaryBackground,
-                                                                enableDrag:
-                                                                    false,
-                                                                context:
-                                                                    context,
-                                                                builder:
-                                                                    (context) {
-                                                                  return GestureDetector(
-                                                                    onTap: () => _model
-                                                                            .unfocusNode
-                                                                            .canRequestFocus
-                                                                        ? FocusScope.of(context).requestFocus(_model
-                                                                            .unfocusNode)
-                                                                        : FocusScope.of(context)
-                                                                            .unfocus(),
-                                                                    child:
-                                                                        Padding(
-                                                                      padding: MediaQuery
-                                                                          .viewInsetsOf(
-                                                                              context),
-                                                                      child:
-                                                                          ShareCredWidget(
-                                                                        credit:
-                                                                            credSearchItem.name,
-                                                                        timeStamp:
-                                                                            getCurrentTimestamp,
-                                                                        location:
-                                                                            credSearchItem.location,
-                                                                        count: (currentUserDocument?.credits.toList() ??
-                                                                                [])
-                                                                            .length,
-                                                                      ),
-                                                                    ),
-                                                                  );
-                                                                },
-                                                              ).then((value) =>
-                                                                  safeSetState(
-                                                                      () {}));
-
                                                               // Add User
 
                                                               await credSearchItem
@@ -1821,6 +1780,51 @@ class _AddCredWidgetState extends State<AddCredWidget>
                                                                   },
                                                                 ),
                                                               });
+                                                              await showModalBottomSheet(
+                                                                isScrollControlled:
+                                                                    true,
+                                                                backgroundColor:
+                                                                    FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .primaryBackground,
+                                                                enableDrag:
+                                                                    false,
+                                                                context:
+                                                                    context,
+                                                                builder:
+                                                                    (context) {
+                                                                  return GestureDetector(
+                                                                    onTap: () => _model
+                                                                            .unfocusNode
+                                                                            .canRequestFocus
+                                                                        ? FocusScope.of(context).requestFocus(_model
+                                                                            .unfocusNode)
+                                                                        : FocusScope.of(context)
+                                                                            .unfocus(),
+                                                                    child:
+                                                                        Padding(
+                                                                      padding: MediaQuery
+                                                                          .viewInsetsOf(
+                                                                              context),
+                                                                      child:
+                                                                          ShareCredWidget(
+                                                                        credit:
+                                                                            credSearchItem.name,
+                                                                        timeStamp:
+                                                                            getCurrentTimestamp,
+                                                                        location:
+                                                                            credSearchItem.location,
+                                                                        count: (currentUserDocument?.credits.toList() ??
+                                                                                [])
+                                                                            .length,
+                                                                      ),
+                                                                    ),
+                                                                  );
+                                                                },
+                                                              ).then((value) =>
+                                                                  safeSetState(
+                                                                      () {}));
+
                                                               setState(() =>
                                                                   _model.firestoreRequestCompleter =
                                                                       null);
