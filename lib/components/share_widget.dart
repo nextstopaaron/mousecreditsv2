@@ -54,7 +54,7 @@ class _ShareWidgetState extends State<ShareWidget> {
     return Container(
       height: 250.0,
       decoration: BoxDecoration(
-        color: FlutterFlowTheme.of(context).secondaryBackground,
+        color: FlutterFlowTheme.of(context).primaryBackground,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.max,
