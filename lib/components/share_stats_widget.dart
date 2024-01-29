@@ -179,7 +179,7 @@ class _ShareStatsWidgetState extends State<ShareStatsWidget> {
                         onPressed: () async {
                           await Clipboard.setData(ClipboardData(
                               text:
-                                  'As of ${dateTimeFormat('yMMMd', getCurrentTimestamp)}, you have ${(currentUserDocument?.credits.toList() ?? []).length.toString()} credits and ${(currentUserDocument?.badges.toList() ?? []).length.toString()} badges. You\'re credit progress is ${formatNumber(
+                                  'As of ${dateTimeFormat('yMMMd', getCurrentTimestamp)}, you have ${(currentUserDocument?.credits.toList() ?? []).length.toString()} credits and ${(currentUserDocument?.badges.toList() ?? []).length.toString()} badges. Your credit progress is ${formatNumber(
                             functions.calPercentage(
                                 (currentUserDocument?.credits.toList() ?? [])
                                     .length

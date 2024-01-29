@@ -137,38 +137,6 @@ class _ShareCredWidgetState extends State<ShareCredWidget> {
                       alignment: const AlignmentDirectional(0.0, 0.0),
                       child: FFButtonWidget(
                         onPressed: () async {
-                          Navigator.pop(context);
-                        },
-                        text: 'Add More',
-                        options: FFButtonOptions(
-                          width: 150.0,
-                          height: 50.0,
-                          padding: const EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          iconPadding: const EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color: FlutterFlowTheme.of(context).primary,
-                          textStyle:
-                              FlutterFlowTheme.of(context).titleSmall.override(
-                                    fontFamily: 'Readex Pro',
-                                    color: FlutterFlowTheme.of(context)
-                                        .primaryBackground,
-                                  ),
-                          elevation: 3.0,
-                          borderSide: const BorderSide(
-                            color: Colors.transparent,
-                            width: 1.0,
-                          ),
-                          borderRadius: BorderRadius.circular(12.0),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Align(
-                      alignment: const AlignmentDirectional(0.0, 0.0),
-                      child: FFButtonWidget(
-                        onPressed: () async {
                           await Clipboard.setData(ClipboardData(
                               text:
                                   'I just collected Mouse Credit "${widget.credit}" in the ${widget.location}. My Mouse Credit count is now ${widget.count?.toString()}!'));
