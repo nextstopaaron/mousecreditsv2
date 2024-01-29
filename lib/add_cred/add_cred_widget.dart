@@ -14,6 +14,7 @@ import 'dart:async';
 import 'package:aligned_tooltip/aligned_tooltip.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
@@ -101,6 +102,13 @@ class _AddCredWidgetState extends State<AddCredWidget>
   void initState() {
     super.initState();
     _model = createModel(context, () => AddCredModel());
+
+    // On page load action.
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      setState(() {
+        FFAppState().Searchview = 'Initialview';
+      });
+    });
 
     _model.textController ??= TextEditingController();
 

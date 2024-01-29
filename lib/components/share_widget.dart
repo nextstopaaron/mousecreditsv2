@@ -56,7 +56,7 @@ class _ShareWidgetState extends State<ShareWidget> {
     return Container(
       height: 250.0,
       decoration: BoxDecoration(
-        color: FlutterFlowTheme.of(context).accent1,
+        color: FlutterFlowTheme.of(context).primaryBackground,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.max,
@@ -117,9 +117,10 @@ class _ShareWidgetState extends State<ShareWidget> {
             ),
           ),
           Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 10.0, 0.0),
+            padding: const EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 0.0),
             child: Row(
               mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
@@ -132,15 +133,50 @@ class _ShareWidgetState extends State<ShareWidget> {
                                 'I just collected Mouse Credit "${widget.credit}" in the ${widget.location} and now have ${widget.count?.toString()} Mouse Credits!'));
                         Navigator.pop(context);
                       },
-                      text: 'Copy to Clipboard',
+                      text: 'Add More',
                       options: FFButtonOptions(
-                        width: double.infinity,
+                        width: 150.0,
                         height: 50.0,
                         padding:
                             const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                         iconPadding:
                             const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                         color: FlutterFlowTheme.of(context).primary,
+                        textStyle:
+                            FlutterFlowTheme.of(context).titleSmall.override(
+                                  fontFamily: 'Readex Pro',
+                                  color: FlutterFlowTheme.of(context)
+                                      .primaryBackground,
+                                ),
+                        elevation: 3.0,
+                        borderSide: const BorderSide(
+                          color: Colors.transparent,
+                          width: 1.0,
+                        ),
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Align(
+                    alignment: const AlignmentDirectional(0.0, 0.0),
+                    child: FFButtonWidget(
+                      onPressed: () async {
+                        await Clipboard.setData(ClipboardData(
+                            text:
+                                'I just collected Mouse Credit "${widget.credit}" in the ${widget.location} and now have ${widget.count?.toString()} Mouse Credits!'));
+                        Navigator.pop(context);
+                      },
+                      text: 'Copy to Clipboard',
+                      options: FFButtonOptions(
+                        width: 165.0,
+                        height: 50.0,
+                        padding:
+                            const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                        iconPadding:
+                            const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                        color: FlutterFlowTheme.of(context).secondary,
                         textStyle:
                             FlutterFlowTheme.of(context).titleSmall.override(
                                   fontFamily: 'Readex Pro',
