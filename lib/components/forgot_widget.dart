@@ -49,7 +49,7 @@ class _ForgotWidgetState extends State<ForgotWidget> {
     return Container(
       height: 350.0,
       decoration: BoxDecoration(
-        color: FlutterFlowTheme.of(context).tertiary,
+        color: FlutterFlowTheme.of(context).primaryBackground,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.max,
