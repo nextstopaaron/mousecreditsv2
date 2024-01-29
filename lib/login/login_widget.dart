@@ -514,7 +514,9 @@ class _LoginWidgetState extends State<LoginWidget>
                                       onTap: () async {
                                         await showModalBottomSheet(
                                           isScrollControlled: true,
-                                          backgroundColor: Colors.transparent,
+                                          backgroundColor:
+                                              FlutterFlowTheme.of(context)
+                                                  .primaryBackground,
                                           enableDrag: false,
                                           context: context,
                                           builder: (context) {

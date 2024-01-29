@@ -766,6 +766,10 @@ class _AddCredWidgetState extends State<AddCredWidget>
                                                             onPressed:
                                                                 () async {
                                                               await showDialog(
+                                                                barrierColor:
+                                                                    FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .primaryBackground,
                                                                 context:
                                                                     context,
                                                                 builder:
@@ -1380,6 +1384,10 @@ class _AddCredWidgetState extends State<AddCredWidget>
                           },
                         ),
                       ),
+                    Text(
+                      FFAppState().Searchview,
+                      style: FlutterFlowTheme.of(context).bodyMedium,
+                    ),
                     if (FFAppState().Searchview == 'Initialview')
                       Padding(
                         padding:

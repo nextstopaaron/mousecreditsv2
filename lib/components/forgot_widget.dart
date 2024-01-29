@@ -47,6 +47,7 @@ class _ForgotWidgetState extends State<ForgotWidget> {
     context.watch<FFAppState>();
 
     return Container(
+      height: 350.0,
       decoration: BoxDecoration(
         color: FlutterFlowTheme.of(context).secondaryBackground,
       ),
@@ -95,7 +96,7 @@ class _ForgotWidgetState extends State<ForgotWidget> {
               ),
             ),
           Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 0.0, 0.0),
+            padding: const EdgeInsetsDirectional.fromSTEB(16.0, 20.0, 0.0, 10.0),
             child: Text(
               'Reset Password',
               style: FlutterFlowTheme.of(context).headlineMedium,
