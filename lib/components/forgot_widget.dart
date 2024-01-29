@@ -47,7 +47,7 @@ class _ForgotWidgetState extends State<ForgotWidget> {
     context.watch<FFAppState>();
 
     return Container(
-      height: 350.0,
+      height: 400.0,
       decoration: BoxDecoration(
         color: FlutterFlowTheme.of(context).primaryBackground,
       ),
