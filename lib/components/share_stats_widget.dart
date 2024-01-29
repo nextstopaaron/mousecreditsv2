@@ -1,20 +1,29 @@
+import '/auth/firebase_auth/auth_util.dart';
+import '/components/shareconfirm_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/flutter_flow/custom_functions.dart' as functions;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'shareconfirm_model.dart';
-export 'shareconfirm_model.dart';
+import 'share_stats_model.dart';
+export 'share_stats_model.dart';
 
-class ShareconfirmWidget extends StatefulWidget {
-  const ShareconfirmWidget({super.key});
+class ShareStatsWidget extends StatefulWidget {
+  const ShareStatsWidget({
+    super.key,
+    required this.creditCount,
+  });
+
+  final int? creditCount;
 
   @override
-  State<ShareconfirmWidget> createState() => _ShareconfirmWidgetState();
+  State<ShareStatsWidget> createState() => _ShareStatsWidgetState();
 }
 
-class _ShareconfirmWidgetState extends State<ShareconfirmWidget> {
-  late ShareconfirmModel _model;
+class _ShareStatsWidgetState extends State<ShareStatsWidget> {
+  late ShareStatsModel _model;
 
   @override
   void setState(VoidCallback callback) {
@@ -25,7 +34,7 @@ class _ShareconfirmWidgetState extends State<ShareconfirmWidget> {
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => ShareconfirmModel());
+    _model = createModel(context, () => ShareStatsModel());
 
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
@@ -95,15 +104,65 @@ class _ShareconfirmWidgetState extends State<ShareconfirmWidget> {
             Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 0.0, 0.0),
               child: Text(
-                'Share',
+                'Your Mouse Credit Stats',
                 style: FlutterFlowTheme.of(context).headlineMedium,
               ),
             ),
             Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(16.0, 8.0, 16.0, 16.0),
-              child: Text(
-                'Your achivement has now been copied to your clipboard for sharing to Facebook.',
-                style: FlutterFlowTheme.of(context).labelLarge,
+              padding: const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 0.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding:
+                        const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 10.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsetsDirectional.fromSTEB(
+                              20.0, 0.0, 0.0, 0.0),
+                          child: AuthUserStreamWidget(
+                            builder: (context) => Text(
+                              'As of ${dateTimeFormat('yMMMd', getCurrentTimestamp)}, you have ${(currentUserDocument?.credits.toList() ?? []).length.toString()} credits and ${(currentUserDocument?.badges.toList() ?? []).length.toString()} badges.',
+                              style: FlutterFlowTheme.of(context).labelLarge,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 10.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsetsDirectional.fromSTEB(
+                              20.0, 0.0, 0.0, 0.0),
+                          child: AuthUserStreamWidget(
+                            builder: (context) => Text(
+                              'Your total credit progress is ${formatNumber(
+                                functions.calPercentage(
+                                    (currentUserDocument?.credits.toList() ??
+                                            [])
+                                        .length
+                                        .toDouble(),
+                                    widget.creditCount?.toDouble()),
+                                formatType: FormatType.percent,
+                              )}.',
+                              style: FlutterFlowTheme.of(context).labelLarge,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
             Padding(
@@ -150,11 +209,35 @@ class _ShareconfirmWidgetState extends State<ShareconfirmWidget> {
                       alignment: const AlignmentDirectional(0.0, 0.0),
                       child: FFButtonWidget(
                         onPressed: () async {
-                          await launchURL('https://facebook.com');
+                          await Clipboard.setData(ClipboardData(
+                              text:
+                                  'As of ${dateTimeFormat('yMMMd', getCurrentTimestamp)}, you have ${(currentUserDocument?.credits.toList() ?? []).length.toString()} credits and ${(currentUserDocument?.badges.toList() ?? []).length.toString()} badges. You\'re credit progress is ${formatNumber(
+                            functions.calPercentage(
+                                (currentUserDocument?.credits.toList() ?? [])
+                                    .length
+                                    .toDouble(),
+                                widget.creditCount?.toDouble()),
+                            formatType: FormatType.percent,
+                          )}!'));
+                          await showModalBottomSheet(
+                            isScrollControlled: true,
+                            backgroundColor:
+                                FlutterFlowTheme.of(context).primaryBackground,
+                            enableDrag: false,
+                            context: context,
+                            builder: (context) {
+                              return Padding(
+                                padding: MediaQuery.viewInsetsOf(context),
+                                child: const ShareconfirmWidget(),
+                              );
+                            },
+                          ).then((value) => safeSetState(() {}));
+
+                          Navigator.pop(context);
                         },
-                        text: 'Open Facebook',
+                        text: 'Share',
                         options: FFButtonOptions(
-                          width: 160.0,
+                          width: 165.0,
                           height: 50.0,
                           padding: const EdgeInsetsDirectional.fromSTEB(
                               0.0, 0.0, 0.0, 0.0),

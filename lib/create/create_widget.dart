@@ -28,8 +28,8 @@ class _CreateWidgetState extends State<CreateWidget> {
     super.initState();
     _model = createModel(context, () => CreateModel());
 
-    _model.nameController ??= TextEditingController();
-    _model.nameFocusNode ??= FocusNode();
+    _model.textController1 ??= TextEditingController();
+    _model.textFieldFocusNode ??= FocusNode();
 
     _model.emailAddressController ??= TextEditingController();
     _model.emailAddressFocusNode ??= FocusNode();
@@ -150,7 +150,7 @@ class _CreateWidgetState extends State<CreateWidget> {
                                               ),
                                               TextSpan(
                                                 text:
-                                                    'Learn more about Mouse Credits',
+                                                    'Learn about Mouse Credits',
                                                 style: FlutterFlowTheme.of(
                                                         context)
                                                     .bodyMedium
@@ -189,18 +189,18 @@ class _CreateWidgetState extends State<CreateWidget> {
                                       child: SizedBox(
                                         width: double.infinity,
                                         child: TextFormField(
-                                          controller: _model.nameController,
-                                          focusNode: _model.nameFocusNode,
+                                          controller: _model.textController1,
+                                          focusNode: _model.textFieldFocusNode,
                                           autofocus: true,
-                                          autofillHints: const [AutofillHints.name],
-                                          textCapitalization:
-                                              TextCapitalization.words,
                                           obscureText: false,
                                           decoration: InputDecoration(
                                             labelText: 'Name',
                                             labelStyle:
                                                 FlutterFlowTheme.of(context)
-                                                    .labelLarge,
+                                                    .bodyLarge,
+                                            hintStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .labelMedium,
                                             enabledBorder: OutlineInputBorder(
                                               borderSide: BorderSide(
                                                 color:
@@ -225,7 +225,7 @@ class _CreateWidgetState extends State<CreateWidget> {
                                               borderSide: BorderSide(
                                                 color:
                                                     FlutterFlowTheme.of(context)
-                                                        .alternate,
+                                                        .error,
                                                 width: 2.0,
                                               ),
                                               borderRadius:
@@ -236,22 +236,21 @@ class _CreateWidgetState extends State<CreateWidget> {
                                               borderSide: BorderSide(
                                                 color:
                                                     FlutterFlowTheme.of(context)
-                                                        .alternate,
+                                                        .error,
                                                 width: 2.0,
                                               ),
                                               borderRadius:
                                                   BorderRadius.circular(12.0),
                                             ),
-                                            filled: true,
-                                            fillColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .primaryBackground,
                                           ),
                                           style: FlutterFlowTheme.of(context)
-                                              .bodyLarge,
-                                          keyboardType: TextInputType.name,
+                                              .bodyMedium
+                                              .override(
+                                                fontFamily: 'Readex Pro',
+                                                fontSize: 16.0,
+                                              ),
                                           validator: _model
-                                              .nameControllerValidator
+                                              .textController1Validator
                                               .asValidator(context),
                                         ),
                                       ),
@@ -541,7 +540,7 @@ class _CreateWidgetState extends State<CreateWidget> {
                                           final user = await authManager
                                               .createAccountWithEmail(
                                             context,
-                                            _model.nameController.text,
+                                            _model.emailAddressController.text,
                                             _model.passwordController.text,
                                           );
                                           if (user == null) {
@@ -552,7 +551,7 @@ class _CreateWidgetState extends State<CreateWidget> {
                                               .doc(user.uid)
                                               .update(createUsersRecordData(
                                                 displayName:
-                                                    _model.nameController.text,
+                                                    _model.textController1.text,
                                               ));
 
                                           context.goNamedAuth(

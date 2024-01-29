@@ -6,10 +6,10 @@ class CreateModel extends FlutterFlowModel<CreateWidget> {
   ///  State fields for stateful widgets in this page.
 
   final unfocusNode = FocusNode();
-  // State field(s) for Name widget.
-  FocusNode? nameFocusNode;
-  TextEditingController? nameController;
-  String? Function(BuildContext, String?)? nameControllerValidator;
+  // State field(s) for TextField widget.
+  FocusNode? textFieldFocusNode;
+  TextEditingController? textController1;
+  String? Function(BuildContext, String?)? textController1Validator;
   // State field(s) for emailAddress widget.
   FocusNode? emailAddressFocusNode;
   TextEditingController? emailAddressController;
@@ -36,8 +36,8 @@ class CreateModel extends FlutterFlowModel<CreateWidget> {
   @override
   void dispose() {
     unfocusNode.dispose();
-    nameFocusNode?.dispose();
-    nameController?.dispose();
+    textFieldFocusNode?.dispose();
+    textController1?.dispose();
 
     emailAddressFocusNode?.dispose();
     emailAddressController?.dispose();
