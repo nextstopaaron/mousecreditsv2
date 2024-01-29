@@ -1,33 +1,29 @@
-import '/components/shareconfirm_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/pages/components/shareconfirm/shareconfirm_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'share_cred_model.dart';
-export 'share_cred_model.dart';
+import 'share_badge_model.dart';
+export 'share_badge_model.dart';
 
-class ShareCredWidget extends StatefulWidget {
-  const ShareCredWidget({
+class ShareBadgeWidget extends StatefulWidget {
+  const ShareBadgeWidget({
     super.key,
-    required this.credit,
-    required this.timeStamp,
-    required this.location,
-    required this.count,
+    required this.badge,
+    required this.description,
   });
 
-  final String? credit;
-  final DateTime? timeStamp;
-  final String? location;
-  final int? count;
+  final String? badge;
+  final String? description;
 
   @override
-  State<ShareCredWidget> createState() => _ShareCredWidgetState();
+  State<ShareBadgeWidget> createState() => _ShareBadgeWidgetState();
 }
 
-class _ShareCredWidgetState extends State<ShareCredWidget> {
-  late ShareCredModel _model;
+class _ShareBadgeWidgetState extends State<ShareBadgeWidget> {
+  late ShareBadgeModel _model;
 
   @override
   void setState(VoidCallback callback) {
@@ -38,7 +34,7 @@ class _ShareCredWidgetState extends State<ShareCredWidget> {
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => ShareCredModel());
+    _model = createModel(context, () => ShareBadgeModel());
 
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
@@ -57,7 +53,7 @@ class _ShareCredWidgetState extends State<ShareCredWidget> {
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
       child: Container(
-        height: 250.0,
+        height: 275.0,
         decoration: BoxDecoration(
           color: FlutterFlowTheme.of(context).primaryBackground,
         ),
@@ -113,16 +109,10 @@ class _ShareCredWidgetState extends State<ShareCredWidget> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Container(
-                decoration: const BoxDecoration(),
-                child: Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(5.0, 5.0, 5.0, 5.0),
-                  child: Text(
-                    'You\'ve added Mouse Credit "${widget.credit}" at ${widget.location}. Your Mouse Credit count is now ${widget.count?.toString()}!',
-                    style: FlutterFlowTheme.of(context).labelLarge,
-                  ),
-                ),
+              padding: const EdgeInsetsDirectional.fromSTEB(16.0, 8.0, 16.0, 16.0),
+              child: Text(
+                'You\'ve added Mouse Credit badge"${widget.badge}" by " ${widget.description}"!',
+                style: FlutterFlowTheme.of(context).labelLarge,
               ),
             ),
             Padding(
@@ -139,7 +129,7 @@ class _ShareCredWidgetState extends State<ShareCredWidget> {
                         onPressed: () async {
                           await Clipboard.setData(ClipboardData(
                               text:
-                                  'I just collected Mouse Credit "${widget.credit}" in the ${widget.location}. My Mouse Credit count is now ${widget.count?.toString()}!'));
+                                  'I just collected Mouse Credit badge "${widget.badge}" by "${widget.description}"!'));
                           await showModalBottomSheet(
                             isScrollControlled: true,
                             backgroundColor:

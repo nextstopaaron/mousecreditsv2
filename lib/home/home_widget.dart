@@ -1,13 +1,13 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
-import '/components/addthings_widget.dart';
-import '/components/nonetoshow_widget.dart';
-import '/components/share_stats_widget.dart';
-import '/components/submit_credit_widget.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/pages/components/addthings/addthings_widget.dart';
+import '/pages/components/nonetoshow/nonetoshow_widget.dart';
+import '/pages/components/share_stats/share_stats_widget.dart';
+import '/pages/components/submit_credit/submit_credit_widget.dart';
 import '/flutter_flow/custom_functions.dart' as functions;
 import 'dart:async';
 import 'package:flutter/gestures.dart';

@@ -1,29 +1,33 @@
-import '/auth/firebase_auth/auth_util.dart';
-import '/components/shareconfirm_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import '/flutter_flow/custom_functions.dart' as functions;
+import '/pages/components/shareconfirm/shareconfirm_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'share_stats_model.dart';
-export 'share_stats_model.dart';
+import 'share_cred_model.dart';
+export 'share_cred_model.dart';
 
-class ShareStatsWidget extends StatefulWidget {
-  const ShareStatsWidget({
+class ShareCredWidget extends StatefulWidget {
+  const ShareCredWidget({
     super.key,
-    required this.creditCount,
+    required this.credit,
+    required this.timeStamp,
+    required this.location,
+    required this.count,
   });
 
-  final int? creditCount;
+  final String? credit;
+  final DateTime? timeStamp;
+  final String? location;
+  final int? count;
 
   @override
-  State<ShareStatsWidget> createState() => _ShareStatsWidgetState();
+  State<ShareCredWidget> createState() => _ShareCredWidgetState();
 }
 
-class _ShareStatsWidgetState extends State<ShareStatsWidget> {
-  late ShareStatsModel _model;
+class _ShareCredWidgetState extends State<ShareCredWidget> {
+  late ShareCredModel _model;
 
   @override
   void setState(VoidCallback callback) {
@@ -34,7 +38,7 @@ class _ShareStatsWidgetState extends State<ShareStatsWidget> {
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => ShareStatsModel());
+    _model = createModel(context, () => ShareCredModel());
 
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
@@ -53,7 +57,7 @@ class _ShareStatsWidgetState extends State<ShareStatsWidget> {
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
       child: Container(
-        height: 250.0,
+        height: 275.0,
         decoration: BoxDecoration(
           color: FlutterFlowTheme.of(context).primaryBackground,
         ),
@@ -104,65 +108,21 @@ class _ShareStatsWidgetState extends State<ShareStatsWidget> {
             Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 0.0, 0.0),
               child: Text(
-                'Your Mouse Credit Stats',
+                'Congrats!',
                 style: FlutterFlowTheme.of(context).headlineMedium,
               ),
             ),
             Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 0.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding:
-                        const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 10.0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(
-                              20.0, 0.0, 0.0, 0.0),
-                          child: AuthUserStreamWidget(
-                            builder: (context) => Text(
-                              'As of ${dateTimeFormat('yMMMd', getCurrentTimestamp)}, you have ${(currentUserDocument?.credits.toList() ?? []).length.toString()} credits and ${(currentUserDocument?.badges.toList() ?? []).length.toString()} badges.',
-                              style: FlutterFlowTheme.of(context).labelLarge,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+              padding: const EdgeInsets.all(15.0),
+              child: Container(
+                decoration: const BoxDecoration(),
+                child: Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(5.0, 5.0, 5.0, 5.0),
+                  child: Text(
+                    'You\'ve added Mouse Credit "${widget.credit}" at ${widget.location}. Your Mouse Credit count is now ${widget.count?.toString()}!',
+                    style: FlutterFlowTheme.of(context).labelLarge,
                   ),
-                  Padding(
-                    padding:
-                        const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 10.0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(
-                              20.0, 0.0, 0.0, 0.0),
-                          child: AuthUserStreamWidget(
-                            builder: (context) => Text(
-                              'Your total credit progress is ${formatNumber(
-                                functions.calPercentage(
-                                    (currentUserDocument?.credits.toList() ??
-                                            [])
-                                        .length
-                                        .toDouble(),
-                                    widget.creditCount?.toDouble()),
-                                formatType: FormatType.percent,
-                              )}.',
-                              style: FlutterFlowTheme.of(context).labelLarge,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
             Padding(
@@ -179,14 +139,7 @@ class _ShareStatsWidgetState extends State<ShareStatsWidget> {
                         onPressed: () async {
                           await Clipboard.setData(ClipboardData(
                               text:
-                                  'As of ${dateTimeFormat('yMMMd', getCurrentTimestamp)}, you have ${(currentUserDocument?.credits.toList() ?? []).length.toString()} credits and ${(currentUserDocument?.badges.toList() ?? []).length.toString()} badges. Your credit progress is ${formatNumber(
-                            functions.calPercentage(
-                                (currentUserDocument?.credits.toList() ?? [])
-                                    .length
-                                    .toDouble(),
-                                widget.creditCount?.toDouble()),
-                            formatType: FormatType.percent,
-                          )}!'));
+                                  'I just collected Mouse Credit "${widget.credit}" in the ${widget.location}. My Mouse Credit count is now ${widget.count?.toString()}!'));
                           await showModalBottomSheet(
                             isScrollControlled: true,
                             backgroundColor:
