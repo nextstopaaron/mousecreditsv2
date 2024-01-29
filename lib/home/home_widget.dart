@@ -1,11 +1,9 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
-import '/flutter_flow/flutter_flow_choice_chips.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import '/flutter_flow/form_field_controller.dart';
 import '/pages/components/addthings/addthings_widget.dart';
 import '/pages/components/nonetoshow/nonetoshow_widget.dart';
 import '/pages/components/submit_credit/submit_credit_widget.dart';
@@ -282,12 +280,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
 
     return FutureBuilder<int>(
       future: (_model.firestoreRequestCompleter ??= Completer<int>()
-            ..complete(queryCreditsRecordCount(
-              queryBuilder: (creditsRecord) => creditsRecord.where(
-                'Location',
-                isEqualTo: _model.choiceChipsValue,
-              ),
-            )))
+            ..complete(queryCreditsRecordCount()))
           .future,
       builder: (context, snapshot) {
         // Customize what your widget looks like when it's loading.
@@ -424,7 +417,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                       alignment: const AlignmentDirectional(0.0, 0.0),
                       child: Padding(
                         padding: const EdgeInsetsDirectional.fromSTEB(
-                            16.0, 0.0, 16.0, 10.0),
+                            16.0, 0.0, 16.0, 0.0),
                         child: Container(
                           width: MediaQuery.sizeOf(context).width * 0.95,
                           height: 250.0,
@@ -500,81 +493,6 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                         ).animateOnPageLoad(
                             animationsMap['containerOnPageLoadAnimation1']!),
                       ),
-                    ),
-                    StreamBuilder<List<LocationsRecord>>(
-                      stream: queryLocationsRecord(),
-                      builder: (context, snapshot) {
-                        // Customize what your widget looks like when it's loading.
-                        if (!snapshot.hasData) {
-                          return Center(
-                            child: SizedBox(
-                              width: 50.0,
-                              height: 50.0,
-                              child: CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  FlutterFlowTheme.of(context).primary,
-                                ),
-                              ),
-                            ),
-                          );
-                        }
-                        List<LocationsRecord> choiceChipsLocationsRecordList =
-                            snapshot.data!;
-                        return FlutterFlowChoiceChips(
-                          options: choiceChipsLocationsRecordList
-                              .map((e) => e.name)
-                              .toList()
-                              .map((label) => ChipData(label))
-                              .toList(),
-                          onChanged: (val) async {
-                            setState(
-                                () => _model.choiceChipsValue = val?.first);
-                            setState(
-                                () => _model.firestoreRequestCompleter = null);
-                          },
-                          selectedChipStyle: ChipStyle(
-                            backgroundColor: FlutterFlowTheme.of(context)
-                                .secondaryBackground,
-                            textStyle: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  fontFamily: 'Readex Pro',
-                                  color:
-                                      FlutterFlowTheme.of(context).primaryText,
-                                ),
-                            iconColor: FlutterFlowTheme.of(context).primaryText,
-                            iconSize: 10.0,
-                            elevation: 4.0,
-                            borderRadius: BorderRadius.circular(14.0),
-                          ),
-                          unselectedChipStyle: ChipStyle(
-                            backgroundColor: const Color(0x00000000),
-                            textStyle: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  fontFamily: 'Readex Pro',
-                                  color: FlutterFlowTheme.of(context)
-                                      .secondaryText,
-                                ),
-                            iconColor:
-                                FlutterFlowTheme.of(context).secondaryText,
-                            iconSize: 10.0,
-                            elevation: 0.0,
-                            borderColor:
-                                FlutterFlowTheme.of(context).secondaryText,
-                            borderRadius: BorderRadius.circular(16.0),
-                          ),
-                          chipSpacing: 5.0,
-                          rowSpacing: 5.0,
-                          multiselect: false,
-                          alignment: WrapAlignment.center,
-                          controller: _model.choiceChipsValueController ??=
-                              FormFieldController<List<String>>(
-                            [],
-                          ),
-                          wrapped: false,
-                        );
-                      },
                     ),
                     Padding(
                       padding:
