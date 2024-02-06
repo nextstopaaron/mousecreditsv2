@@ -1,5 +1,6 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
+import '/backend/firebase_storage/storage.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_autocomplete_options_list.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
@@ -8,6 +9,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/form_field_controller.dart';
+import '/flutter_flow/upload_data.dart';
 import '/custom_code/actions/index.dart' as actions;
 import 'package:collection/collection.dart';
 import 'package:easy_debounce/easy_debounce.dart';
@@ -52,25 +54,6 @@ class _AdminWidgetState extends State<AdminWidget>
         ),
       ],
     ),
-    'containerOnPageLoadAnimation2': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: 0.0,
-          end: 1.0,
-        ),
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: const Offset(0.0, 90.0),
-          end: const Offset(0.0, 0.0),
-        ),
-      ],
-    ),
     'listViewOnPageLoadAnimation1': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
       effects: [
@@ -91,7 +74,7 @@ class _AdminWidgetState extends State<AdminWidget>
         ),
       ],
     ),
-    'containerOnPageLoadAnimation3': AnimationInfo(
+    'containerOnPageLoadAnimation2': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
       effects: [
         FadeEffect(
@@ -110,7 +93,7 @@ class _AdminWidgetState extends State<AdminWidget>
         ),
       ],
     ),
-    'containerOnPageLoadAnimation4': AnimationInfo(
+    'containerOnPageLoadAnimation3': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
       effects: [
         FadeEffect(
@@ -149,7 +132,7 @@ class _AdminWidgetState extends State<AdminWidget>
         ),
       ],
     ),
-    'containerOnPageLoadAnimation5': AnimationInfo(
+    'containerOnPageLoadAnimation4': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
       effects: [
         FadeEffect(
@@ -164,6 +147,26 @@ class _AdminWidgetState extends State<AdminWidget>
           delay: 0.ms,
           duration: 600.ms,
           begin: const Offset(0.0, 90.0),
+          end: const Offset(0.0, 0.0),
+        ),
+      ],
+    ),
+    'listViewOnPageLoadAnimation3': AnimationInfo(
+      trigger: AnimationTrigger.onPageLoad,
+      effects: [
+        VisibilityEffect(duration: 150.ms),
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 150.ms,
+          duration: 600.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+        MoveEffect(
+          curve: Curves.easeInOut,
+          delay: 150.ms,
+          duration: 600.ms,
+          begin: const Offset(0.0, 170.0),
           end: const Offset(0.0, 0.0),
         ),
       ],
@@ -219,12 +222,13 @@ class _AdminWidgetState extends State<AdminWidget>
     context.watch<FFAppState>();
 
     return StreamBuilder<List<BadgesRecord>>(
-      stream: queryBadgesRecord(),
+      stream: FFAppState().badges(
+        requestFn: () => queryBadgesRecord(),
+      ),
       builder: (context, snapshot) {
         // Customize what your widget looks like when it's loading.
         if (!snapshot.hasData) {
           return Scaffold(
-            backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
             body: Center(
               child: SizedBox(
                 width: 50.0,
@@ -245,7 +249,6 @@ class _AdminWidgetState extends State<AdminWidget>
               : FocusScope.of(context).unfocus(),
           child: Scaffold(
             key: scaffoldKey,
-            backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
             appBar: AppBar(
               backgroundColor: FlutterFlowTheme.of(context).primary,
               automaticallyImplyLeading: false,
@@ -550,7 +553,9 @@ class _AdminWidgetState extends State<AdminWidget>
                                     padding: const EdgeInsetsDirectional.fromSTEB(
                                         0.0, 0.0, 0.0, 15.0),
                                     child: StreamBuilder<List<TypesRecord>>(
-                                      stream: queryTypesRecord(),
+                                      stream: FFAppState().types(
+                                        requestFn: () => queryTypesRecord(),
+                                      ),
                                       builder: (context, snapshot) {
                                         // Customize what your widget looks like when it's loading.
                                         if (!snapshot.hasData) {
@@ -659,7 +664,7 @@ class _AdminWidgetState extends State<AdminWidget>
                                             const EdgeInsetsDirectional.fromSTEB(
                                                 0.0, 0.0, 0.0, 0.0),
                                         color: FlutterFlowTheme.of(context)
-                                            .primary,
+                                            .secondary,
                                         textStyle: FlutterFlowTheme.of(context)
                                             .titleSmall
                                             .override(
@@ -681,8 +686,7 @@ class _AdminWidgetState extends State<AdminWidget>
                             ],
                           ),
                         ),
-                      ).animateOnPageLoad(
-                          animationsMap['containerOnPageLoadAnimation1']!),
+                      ),
                     ),
                     Padding(
                       padding:
@@ -816,7 +820,7 @@ class _AdminWidgetState extends State<AdminWidget>
                                       24.0, 0.0, 24.0, 0.0),
                                   iconPadding: const EdgeInsetsDirectional.fromSTEB(
                                       0.0, 0.0, 0.0, 0.0),
-                                  color: FlutterFlowTheme.of(context).primary,
+                                  color: FlutterFlowTheme.of(context).secondary,
                                   textStyle: FlutterFlowTheme.of(context)
                                       .titleSmall
                                       .override(
@@ -835,7 +839,7 @@ class _AdminWidgetState extends State<AdminWidget>
                           ),
                         ),
                       ).animateOnPageLoad(
-                          animationsMap['containerOnPageLoadAnimation2']!),
+                          animationsMap['containerOnPageLoadAnimation1']!),
                     ),
                     Builder(
                       builder: (context) {
@@ -964,7 +968,7 @@ class _AdminWidgetState extends State<AdminWidget>
                           const EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
                       child: Container(
                         width: MediaQuery.sizeOf(context).width * 1.0,
-                        height: 300.0,
+                        height: 350.0,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(24.0),
                         ),
@@ -1145,9 +1149,11 @@ class _AdminWidgetState extends State<AdminWidget>
                                 children: [
                                   Padding(
                                     padding: const EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 0.0, 0.0, 15.0),
+                                        0.0, 0.0, 0.0, 10.0),
                                     child: StreamBuilder<List<LocationsRecord>>(
-                                      stream: queryLocationsRecord(),
+                                      stream: FFAppState().locations(
+                                        requestFn: () => queryLocationsRecord(),
+                                      ),
                                       builder: (context, snapshot) {
                                         // Customize what your widget looks like when it's loading.
                                         if (!snapshot.hasData) {
@@ -1212,36 +1218,88 @@ class _AdminWidgetState extends State<AdminWidget>
                                   ),
                                 ],
                               ),
-                              Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                    child: FFButtonWidget(
+                              Padding(
+                                padding: const EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 0.0, 0.0, 10.0),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    FFButtonWidget(
                                       onPressed: () async {
-                                        await BadgesRecord.collection
-                                            .doc()
-                                            .set({
-                                          ...createBadgesRecordData(
-                                            name: _model.textController5.text,
-                                            description:
-                                                _model.textController6.text,
-                                            popularity: 0,
-                                            location: _model.dropDownValue2,
-                                          ),
-                                          ...mapToFirestore(
-                                            {
-                                              'CreatedTime':
-                                                  FieldValue.serverTimestamp(),
-                                            },
-                                          ),
-                                        });
-                                        setState(() {
-                                          _model.textController5?.clear();
-                                          _model.textController6?.clear();
-                                        });
+                                        final selectedMedia =
+                                            await selectMediaWithSourceBottomSheet(
+                                          context: context,
+                                          maxWidth: 500.00,
+                                          maxHeight: 500.00,
+                                          allowPhoto: true,
+                                        );
+                                        if (selectedMedia != null &&
+                                            selectedMedia.every((m) =>
+                                                validateFileFormat(
+                                                    m.storagePath, context))) {
+                                          setState(() =>
+                                              _model.isDataUploading = true);
+                                          var selectedUploadedFiles =
+                                              <FFUploadedFile>[];
+
+                                          var downloadUrls = <String>[];
+                                          try {
+                                            showUploadMessage(
+                                              context,
+                                              'Uploading file...',
+                                              showLoading: true,
+                                            );
+                                            selectedUploadedFiles =
+                                                selectedMedia
+                                                    .map((m) => FFUploadedFile(
+                                                          name: m.storagePath
+                                                              .split('/')
+                                                              .last,
+                                                          bytes: m.bytes,
+                                                          height: m.dimensions
+                                                              ?.height,
+                                                          width: m.dimensions
+                                                              ?.width,
+                                                          blurHash: m.blurHash,
+                                                        ))
+                                                    .toList();
+
+                                            downloadUrls = (await Future.wait(
+                                              selectedMedia.map(
+                                                (m) async => await uploadData(
+                                                    m.storagePath, m.bytes),
+                                              ),
+                                            ))
+                                                .where((u) => u != null)
+                                                .map((u) => u!)
+                                                .toList();
+                                          } finally {
+                                            ScaffoldMessenger.of(context)
+                                                .hideCurrentSnackBar();
+                                            _model.isDataUploading = false;
+                                          }
+                                          if (selectedUploadedFiles.length ==
+                                                  selectedMedia.length &&
+                                              downloadUrls.length ==
+                                                  selectedMedia.length) {
+                                            setState(() {
+                                              _model.uploadedLocalFile =
+                                                  selectedUploadedFiles.first;
+                                              _model.uploadedFileUrl =
+                                                  downloadUrls.first;
+                                            });
+                                            showUploadMessage(
+                                                context, 'Success!');
+                                          } else {
+                                            setState(() {});
+                                            showUploadMessage(context,
+                                                'Failed to upload data');
+                                            return;
+                                          }
+                                        }
                                       },
-                                      text: 'Create',
+                                      text: 'Upload Image',
                                       options: FFButtonOptions(
                                         height: 40.0,
                                         padding: const EdgeInsetsDirectional.fromSTEB(
@@ -1266,6 +1324,64 @@ class _AdminWidgetState extends State<AdminWidget>
                                             BorderRadius.circular(8.0),
                                       ),
                                     ),
+                                  ],
+                                ),
+                              ),
+                              Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: FFButtonWidget(
+                                      onPressed: () async {
+                                        await BadgesRecord.collection
+                                            .doc()
+                                            .set({
+                                          ...createBadgesRecordData(
+                                            name: _model.textController5.text,
+                                            description:
+                                                _model.textController6.text,
+                                            popularity: 0,
+                                            location: _model.dropDownValue2,
+                                            image: _model.uploadedFileUrl,
+                                          ),
+                                          ...mapToFirestore(
+                                            {
+                                              'CreatedTime':
+                                                  FieldValue.serverTimestamp(),
+                                            },
+                                          ),
+                                        });
+                                        setState(() {
+                                          _model.textController5?.clear();
+                                          _model.textController6?.clear();
+                                        });
+                                      },
+                                      text: 'Create',
+                                      options: FFButtonOptions(
+                                        height: 40.0,
+                                        padding: const EdgeInsetsDirectional.fromSTEB(
+                                            24.0, 0.0, 24.0, 0.0),
+                                        iconPadding:
+                                            const EdgeInsetsDirectional.fromSTEB(
+                                                0.0, 0.0, 0.0, 0.0),
+                                        color: FlutterFlowTheme.of(context)
+                                            .secondary,
+                                        textStyle: FlutterFlowTheme.of(context)
+                                            .titleSmall
+                                            .override(
+                                              fontFamily: 'Readex Pro',
+                                              color: Colors.white,
+                                            ),
+                                        elevation: 3.0,
+                                        borderSide: const BorderSide(
+                                          color: Colors.transparent,
+                                          width: 1.0,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                      ),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -1273,7 +1389,7 @@ class _AdminWidgetState extends State<AdminWidget>
                           ),
                         ),
                       ).animateOnPageLoad(
-                          animationsMap['containerOnPageLoadAnimation3']!),
+                          animationsMap['containerOnPageLoadAnimation2']!),
                     ),
                     Padding(
                       padding:
@@ -1490,7 +1606,7 @@ class _AdminWidgetState extends State<AdminWidget>
                                       24.0, 0.0, 24.0, 0.0),
                                   iconPadding: const EdgeInsetsDirectional.fromSTEB(
                                       0.0, 0.0, 0.0, 0.0),
-                                  color: FlutterFlowTheme.of(context).primary,
+                                  color: FlutterFlowTheme.of(context).secondary,
                                   textStyle: FlutterFlowTheme.of(context)
                                       .titleSmall
                                       .override(
@@ -1509,21 +1625,38 @@ class _AdminWidgetState extends State<AdminWidget>
                           ),
                         ),
                       ).animateOnPageLoad(
-                          animationsMap['containerOnPageLoadAnimation4']!),
+                          animationsMap['containerOnPageLoadAnimation3']!),
                     ),
-                    Builder(
-                      builder: (context) {
-                        final badgeCredSearch =
-                            _model.simpleSearchResults2.toList();
+                    StreamBuilder<List<CreditsRecord>>(
+                      stream: FFAppState().creditMasterSingle(
+                        requestFn: () => queryCreditsRecord(),
+                      ),
+                      builder: (context, snapshot) {
+                        // Customize what your widget looks like when it's loading.
+                        if (!snapshot.hasData) {
+                          return Center(
+                            child: SizedBox(
+                              width: 50.0,
+                              height: 50.0,
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  FlutterFlowTheme.of(context).primary,
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+                        List<CreditsRecord> listViewCreditsRecordList =
+                            snapshot.data!;
                         return ListView.builder(
                           padding: EdgeInsets.zero,
                           primary: false,
                           shrinkWrap: true,
                           scrollDirection: Axis.vertical,
-                          itemCount: badgeCredSearch.length,
-                          itemBuilder: (context, badgeCredSearchIndex) {
-                            final badgeCredSearchItem =
-                                badgeCredSearch[badgeCredSearchIndex];
+                          itemCount: listViewCreditsRecordList.length,
+                          itemBuilder: (context, listViewIndex) {
+                            final listViewCreditsRecord =
+                                listViewCreditsRecordList[listViewIndex];
                             return Padding(
                               padding: const EdgeInsetsDirectional.fromSTEB(
                                   16.0, 0.0, 16.0, 12.0),
@@ -1561,7 +1694,7 @@ class _AdminWidgetState extends State<AdminWidget>
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              badgeCredSearchItem.name
+                                              listViewCreditsRecord.name
                                                   .maybeHandleOverflow(
                                                 maxChars: 20,
                                                 replacement: '…',
@@ -1574,7 +1707,7 @@ class _AdminWidgetState extends State<AdminWidget>
                                               padding: const EdgeInsetsDirectional
                                                   .fromSTEB(0.0, 4.0, 0.0, 0.0),
                                               child: Text(
-                                                badgeCredSearchItem.location,
+                                                listViewCreditsRecord.location,
                                                 style:
                                                     FlutterFlowTheme.of(context)
                                                         .labelMedium,
@@ -1601,13 +1734,14 @@ class _AdminWidgetState extends State<AdminWidget>
                                               {
                                                 'CredReq':
                                                     FieldValue.arrayUnion([
-                                                  badgeCredSearchItem.reference
+                                                  listViewCreditsRecord
+                                                      .reference
                                                 ]),
                                               },
                                             ),
                                           });
 
-                                          await badgeCredSearchItem.reference
+                                          await listViewCreditsRecord.reference
                                               .update({
                                             ...mapToFirestore(
                                               {
@@ -1768,7 +1902,7 @@ class _AdminWidgetState extends State<AdminWidget>
                                       24.0, 0.0, 24.0, 0.0),
                                   iconPadding: const EdgeInsetsDirectional.fromSTEB(
                                       0.0, 0.0, 0.0, 0.0),
-                                  color: FlutterFlowTheme.of(context).primary,
+                                  color: FlutterFlowTheme.of(context).secondary,
                                   textStyle: FlutterFlowTheme.of(context)
                                       .titleSmall
                                       .override(
@@ -1787,7 +1921,160 @@ class _AdminWidgetState extends State<AdminWidget>
                           ),
                         ),
                       ).animateOnPageLoad(
-                          animationsMap['containerOnPageLoadAnimation5']!),
+                          animationsMap['containerOnPageLoadAnimation4']!),
+                    ),
+                    StreamBuilder<List<RequestsRecord>>(
+                      stream: queryRequestsRecord(
+                        limit: 5,
+                      ),
+                      builder: (context, snapshot) {
+                        // Customize what your widget looks like when it's loading.
+                        if (!snapshot.hasData) {
+                          return Center(
+                            child: SizedBox(
+                              width: 50.0,
+                              height: 50.0,
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  FlutterFlowTheme.of(context).primary,
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+                        List<RequestsRecord> listViewRequestsRecordList =
+                            snapshot.data!;
+                        return ListView.builder(
+                          padding: EdgeInsets.zero,
+                          primary: false,
+                          shrinkWrap: true,
+                          scrollDirection: Axis.vertical,
+                          itemCount: listViewRequestsRecordList.length,
+                          itemBuilder: (context, listViewIndex) {
+                            final listViewRequestsRecord =
+                                listViewRequestsRecordList[listViewIndex];
+                            return Padding(
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  16.0, 0.0, 16.0, 12.0),
+                              child: Container(
+                                width: double.infinity,
+                                constraints: const BoxConstraints(
+                                  maxWidth: 570.0,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: FlutterFlowTheme.of(context)
+                                      .secondaryBackground,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  border: Border.all(
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryBackground,
+                                    width: 2.0,
+                                  ),
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsetsDirectional.fromSTEB(
+                                          16.0, 12.0, 16.0, 12.0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Padding(
+                                            padding:
+                                                const EdgeInsetsDirectional.fromSTEB(
+                                                    0.0, 0.0, 12.0, 0.0),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.max,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  listViewRequestsRecord
+                                                      .description
+                                                      .maybeHandleOverflow(
+                                                    maxChars: 120,
+                                                    replacement: '…',
+                                                  ),
+                                                  maxLines: 4,
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .bodyLarge,
+                                                ),
+                                                Text(
+                                                  listViewRequestsRecord.email
+                                                      .maybeHandleOverflow(
+                                                    maxChars: 20,
+                                                    replacement: '…',
+                                                  ),
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .bodyLarge,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsetsDirectional.fromSTEB(
+                                          16.0, 12.0, 16.0, 12.0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          FFButtonWidget(
+                                            onPressed: () async {
+                                              await listViewRequestsRecord
+                                                  .reference
+                                                  .delete();
+                                            },
+                                            text: 'Delete',
+                                            options: FFButtonOptions(
+                                              height: 40.0,
+                                              padding: const EdgeInsetsDirectional
+                                                  .fromSTEB(
+                                                      24.0, 0.0, 24.0, 0.0),
+                                              iconPadding: const EdgeInsetsDirectional
+                                                  .fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                              textStyle: FlutterFlowTheme.of(
+                                                      context)
+                                                  .titleSmall
+                                                  .override(
+                                                    fontFamily: 'Readex Pro',
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .primaryBackground,
+                                                  ),
+                                              elevation: 3.0,
+                                              borderSide: const BorderSide(
+                                                color: Colors.transparent,
+                                                width: 1.0,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ).animateOnPageLoad(
+                            animationsMap['listViewOnPageLoadAnimation3']!);
+                      },
                     ),
                   ],
                 ),

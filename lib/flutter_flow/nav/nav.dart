@@ -110,17 +110,13 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: 'View',
           path: '/view',
-          builder: (context, params) => params.isEmpty
-              ? const NavBarPage(initialPage: 'View')
-              : ViewWidget(
-                  initialChipSelect:
-                      params.getParam('initialChipSelect', ParamType.String),
-                ),
+          builder: (context, params) =>
+              params.isEmpty ? const NavBarPage(initialPage: 'View') : const ViewWidget(),
         ),
         FFRoute(
-          name: 'Profile',
-          path: '/profile',
-          builder: (context, params) => const ProfileWidget(),
+          name: 'GetStarted',
+          path: '/getStarted',
+          builder: (context, params) => const GetStartedWidget(),
         ),
         FFRoute(
           name: 'Login',
@@ -131,6 +127,13 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           name: 'Create',
           path: '/create',
           builder: (context, params) => const CreateWidget(),
+        ),
+        FFRoute(
+          name: 'Testing',
+          path: '/testing',
+          builder: (context, params) => params.isEmpty
+              ? const NavBarPage(initialPage: 'Testing')
+              : const TestingWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );
@@ -316,9 +319,8 @@ class FFRoute {
                       color: Colors.transparent,
                       child: Center(
                         child: Image.asset(
-                          'assets/images/Mouse_Credits_Logo_BW_(4).png',
-                          width: 50.0,
-                          height: 50.0,
+                          'assets/images/Mouse_Credits_Logo_BW.png',
+                          width: 100.0,
                           fit: BoxFit.contain,
                         ),
                       ),

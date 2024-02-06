@@ -12,6 +12,7 @@ class AddBadgeModel extends FlutterFlowModel<AddBadgeWidget> {
   // State field(s) for ChoiceChips widget.
   String? choiceChipsValue;
   FormFieldController<List<String>>? choiceChipsValueController;
+  List<CreditsRecord> simpleSearchResults = [];
   // State field(s) for ListView widget.
 
   PagingController<DocumentSnapshot?, BadgesRecord>? listViewPagingController;

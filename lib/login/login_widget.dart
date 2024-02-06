@@ -2,8 +2,7 @@ import '/auth/firebase_auth/auth_util.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import '/pages/components/forgot/forgot_widget.dart';
-import 'package:flutter/gestures.dart';
+import '/pages/forgot/forgot_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -98,9 +97,9 @@ class _LoginWidgetState extends State<LoginWidget> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(8.0),
                               child: Image.asset(
-                                'assets/images/Mouse_Credits_Logo_BW_(4).png',
-                                width: MediaQuery.sizeOf(context).width * 0.75,
-                                height: 75.0,
+                                'assets/images/Mouse_Credits_Logo_BW.png',
+                                width: MediaQuery.sizeOf(context).width * 0.5,
+                                height: 50.0,
                                 fit: BoxFit.contain,
                               ),
                             ),
@@ -114,7 +113,8 @@ class _LoginWidgetState extends State<LoginWidget> {
                             child: Align(
                               alignment: const AlignmentDirectional(0.0, 0.0),
                               child: Padding(
-                                padding: const EdgeInsets.all(24.0),
+                                padding: const EdgeInsetsDirectional.fromSTEB(
+                                    35.0, 24.0, 35.0, 24.0),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.max,
                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -128,9 +128,15 @@ class _LoginWidgetState extends State<LoginWidget> {
                                       padding: const EdgeInsetsDirectional.fromSTEB(
                                           0.0, 12.0, 0.0, 24.0),
                                       child: Text(
-                                        'Log in to start collecting...',
+                                        'Log in to start collecting.',
                                         style: FlutterFlowTheme.of(context)
-                                            .labelMedium,
+                                            .labelMedium
+                                            .override(
+                                              fontFamily: 'Readex Pro',
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primaryText,
+                                            ),
                                       ),
                                     ),
                                     Padding(
@@ -150,7 +156,14 @@ class _LoginWidgetState extends State<LoginWidget> {
                                             labelText: 'Email',
                                             labelStyle:
                                                 FlutterFlowTheme.of(context)
-                                                    .labelLarge,
+                                                    .labelLarge
+                                                    .override(
+                                                      fontFamily: 'Readex Pro',
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .primaryText,
+                                                    ),
                                             enabledBorder: OutlineInputBorder(
                                               borderSide: BorderSide(
                                                 color:
@@ -225,7 +238,14 @@ class _LoginWidgetState extends State<LoginWidget> {
                                             labelText: 'Password',
                                             labelStyle:
                                                 FlutterFlowTheme.of(context)
-                                                    .labelLarge,
+                                                    .labelLarge
+                                                    .override(
+                                                      fontFamily: 'Readex Pro',
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .primaryText,
+                                                    ),
                                             enabledBorder: OutlineInputBorder(
                                               borderSide: BorderSide(
                                                 color:
@@ -301,7 +321,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                                     ),
                                     Padding(
                                       padding: const EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 0.0, 0.0, 16.0),
+                                          0.0, 0.0, 0.0, 30.0),
                                       child: FFButtonWidget(
                                         onPressed: () async {
                                           GoRouter.of(context)
@@ -351,7 +371,67 @@ class _LoginWidgetState extends State<LoginWidget> {
                                     ),
                                     Padding(
                                       padding: const EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 0.0, 0.0, 24.0),
+                                          0.0, 0.0, 0.0, 16.0),
+                                      child: FFButtonWidget(
+                                        onPressed: () async {
+                                          GoRouter.of(context)
+                                              .prepareAuthEvent();
+                                          final user = await authManager
+                                              .signInWithGoogle(context);
+                                          if (user == null) {
+                                            return;
+                                          }
+
+                                          context.goNamedAuth(
+                                              'Home', context.mounted);
+                                        },
+                                        text: 'Sign-in with Google',
+                                        icon: const FaIcon(
+                                          FontAwesomeIcons.google,
+                                          size: 20.0,
+                                        ),
+                                        options: FFButtonOptions(
+                                          width: double.infinity,
+                                          height: 44.0,
+                                          padding:
+                                              const EdgeInsetsDirectional.fromSTEB(
+                                                  0.0, 0.0, 0.0, 0.0),
+                                          iconPadding:
+                                              const EdgeInsetsDirectional.fromSTEB(
+                                                  0.0, 0.0, 0.0, 0.0),
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryBackground,
+                                          textStyle: FlutterFlowTheme.of(
+                                                  context)
+                                              .titleSmall
+                                              .override(
+                                                fontFamily: 'Readex Pro',
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primaryText,
+                                              ),
+                                          elevation: 0.0,
+                                          borderSide: BorderSide(
+                                            color: FlutterFlowTheme.of(context)
+                                                .alternate,
+                                            width: 2.0,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(12.0),
+                                          hoverColor:
+                                              FlutterFlowTheme.of(context)
+                                                  .primaryBackground,
+                                          hoverBorderSide: BorderSide(
+                                            color: FlutterFlowTheme.of(context)
+                                                .secondary,
+                                            width: 2.0,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsetsDirectional.fromSTEB(
+                                          0.0, 0.0, 0.0, 16.0),
                                       child: SizedBox(
                                         width: 370.0,
                                         child: Stack(
@@ -382,18 +462,22 @@ class _LoginWidgetState extends State<LoginWidget> {
                                               child: Container(
                                                 width: 70.0,
                                                 height: 32.0,
-                                                decoration: BoxDecoration(
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .secondaryBackground,
-                                                ),
+                                                decoration: const BoxDecoration(),
                                                 alignment: const AlignmentDirectional(
                                                     0.0, 0.0),
                                                 child: Text(
                                                   'OR',
                                                   style: FlutterFlowTheme.of(
                                                           context)
-                                                      .labelMedium,
+                                                      .labelMedium
+                                                      .override(
+                                                        fontFamily:
+                                                            'Readex Pro',
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primaryText,
+                                                      ),
                                                 ),
                                               ),
                                             ),
@@ -417,9 +501,9 @@ class _LoginWidgetState extends State<LoginWidget> {
                                           context.goNamedAuth(
                                               'Home', context.mounted);
                                         },
-                                        text: 'Sign-in with Google',
-                                        icon: const FaIcon(
-                                          FontAwesomeIcons.google,
+                                        text: 'Create a new account',
+                                        icon: const Icon(
+                                          Icons.add,
                                           size: 20.0,
                                         ),
                                         options: FFButtonOptions(
@@ -502,56 +586,8 @@ class _LoginWidgetState extends State<LoginWidget> {
                                               color:
                                                   FlutterFlowTheme.of(context)
                                                       .primary,
-                                              fontWeight: FontWeight.w600,
+                                              fontWeight: FontWeight.normal,
                                             ),
-                                      ),
-                                    ),
-
-                                    // You will have to add an action on this rich text to go to your login page.
-                                    Align(
-                                      alignment: const AlignmentDirectional(0.0, 0.0),
-                                      child: Padding(
-                                        padding: const EdgeInsetsDirectional.fromSTEB(
-                                            0.0, 12.0, 0.0, 12.0),
-                                        child: RichText(
-                                          textScaleFactor:
-                                              MediaQuery.of(context)
-                                                  .textScaleFactor,
-                                          text: TextSpan(
-                                            children: [
-                                              const TextSpan(
-                                                text:
-                                                    'Don\'t have an account? ',
-                                                style: TextStyle(),
-                                              ),
-                                              TextSpan(
-                                                text: 'Sign Up here',
-                                                style: FlutterFlowTheme.of(
-                                                        context)
-                                                    .bodyMedium
-                                                    .override(
-                                                      fontFamily: 'Readex Pro',
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primary,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                    ),
-                                                mouseCursor:
-                                                    SystemMouseCursors.click,
-                                                recognizer:
-                                                    TapGestureRecognizer()
-                                                      ..onTap = () async {
-                                                        context.pushNamed(
-                                                            'Create');
-                                                      },
-                                              )
-                                            ],
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyMedium,
-                                          ),
-                                        ),
                                       ),
                                     ),
                                   ],

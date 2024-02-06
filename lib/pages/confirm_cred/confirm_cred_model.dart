@@ -1,8 +1,8 @@
 import '/flutter_flow/flutter_flow_util.dart';
-import 'share_cred_widget.dart' show ShareCredWidget;
+import 'confirm_cred_widget.dart' show ConfirmCredWidget;
 import 'package:flutter/material.dart';
 
-class ShareCredModel extends FlutterFlowModel<ShareCredWidget> {
+class ConfirmCredModel extends FlutterFlowModel<ConfirmCredWidget> {
   /// Initialization and disposal methods.
 
   @override

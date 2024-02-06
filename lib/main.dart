@@ -95,11 +95,9 @@ class _MyAppState extends State<MyApp> {
       supportedLocales: const [Locale('en', '')],
       theme: ThemeData(
         brightness: Brightness.light,
-        scrollbarTheme: const ScrollbarThemeData(),
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
-        scrollbarTheme: const ScrollbarThemeData(),
       ),
       themeMode: _themeMode,
       routerConfig: _router,
@@ -136,6 +134,7 @@ class _NavBarPageState extends State<NavBarPage> {
       'AddCred': const AddCredWidget(),
       'AddBadge': const AddBadgeWidget(),
       'View': const ViewWidget(),
+      'Testing': const TestingWidget(),
     };
     final currentIndex = tabs.keys.toList().indexOf(_currentPageName);
 
@@ -165,7 +164,7 @@ class _NavBarPageState extends State<NavBarPage> {
           BottomNavigationBarItem(
             icon: Icon(
               Icons.check_circle,
-              size: 24.0,
+              size: 22.0,
             ),
             label: 'Add Credits',
             tooltip: '',
@@ -181,9 +180,17 @@ class _NavBarPageState extends State<NavBarPage> {
           BottomNavigationBarItem(
             icon: Icon(
               Icons.remove_red_eye,
-              size: 24.0,
+              size: 22.0,
             ),
             label: 'View',
+            tooltip: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.twenty_mp,
+              size: 24.0,
+            ),
+            label: 'Test',
             tooltip: '',
           )
         ],

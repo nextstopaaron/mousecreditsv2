@@ -6,7 +6,6 @@ import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'create_model.dart';
 export 'create_model.dart';
@@ -104,7 +103,7 @@ class _CreateWidgetState extends State<CreateWidget> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(8.0),
                               child: Image.asset(
-                                'assets/images/Mouse_Credits_Logo_BW_(4).png',
+                                'assets/images/Mouse_Credits_Logo_BW_(2).png',
                                 width: MediaQuery.sizeOf(context).width * 0.75,
                                 height: 75.0,
                                 fit: BoxFit.contain,
@@ -120,7 +119,8 @@ class _CreateWidgetState extends State<CreateWidget> {
                             child: Align(
                               alignment: const AlignmentDirectional(0.0, 0.0),
                               child: Padding(
-                                padding: const EdgeInsets.all(24.0),
+                                padding: const EdgeInsetsDirectional.fromSTEB(
+                                    35.0, 24.0, 35.0, 24.0),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.max,
                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -145,7 +145,7 @@ class _CreateWidgetState extends State<CreateWidget> {
                                             children: [
                                               const TextSpan(
                                                 text:
-                                                    'Create an account below to get started collecting. Not quite ready? ',
+                                                    'Create an account below to start collecting. Not ready? ',
                                                 style: TextStyle(),
                                               ),
                                               TextSpan(
@@ -168,8 +168,8 @@ class _CreateWidgetState extends State<CreateWidget> {
                                                 recognizer:
                                                     TapGestureRecognizer()
                                                       ..onTap = () async {
-                                                        await launchURL(
-                                                            'https://nextstopaaron.com/credits');
+                                                        context.pushNamed(
+                                                            'GetStarted');
                                                       },
                                               ),
                                               const TextSpan(
@@ -272,7 +272,14 @@ class _CreateWidgetState extends State<CreateWidget> {
                                             labelText: 'Email',
                                             labelStyle:
                                                 FlutterFlowTheme.of(context)
-                                                    .labelLarge,
+                                                    .labelLarge
+                                                    .override(
+                                                      fontFamily: 'Readex Pro',
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .primaryText,
+                                                    ),
                                             enabledBorder: OutlineInputBorder(
                                               borderSide: BorderSide(
                                                 color:
@@ -347,7 +354,14 @@ class _CreateWidgetState extends State<CreateWidget> {
                                             labelText: 'Password',
                                             labelStyle:
                                                 FlutterFlowTheme.of(context)
-                                                    .labelLarge,
+                                                    .labelLarge
+                                                    .override(
+                                                      fontFamily: 'Readex Pro',
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .primaryText,
+                                                    ),
                                             enabledBorder: OutlineInputBorder(
                                               borderSide: BorderSide(
                                                 color:
@@ -423,7 +437,7 @@ class _CreateWidgetState extends State<CreateWidget> {
                                     ),
                                     Padding(
                                       padding: const EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 0.0, 0.0, 16.0),
+                                          0.0, 0.0, 0.0, 25.0),
                                       child: SizedBox(
                                         width: double.infinity,
                                         child: TextFormField(
@@ -441,7 +455,14 @@ class _CreateWidgetState extends State<CreateWidget> {
                                             labelText: 'Confirm Password',
                                             labelStyle:
                                                 FlutterFlowTheme.of(context)
-                                                    .labelLarge,
+                                                    .labelLarge
+                                                    .override(
+                                                      fontFamily: 'Readex Pro',
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .primaryText,
+                                                    ),
                                             enabledBorder: OutlineInputBorder(
                                               borderSide: BorderSide(
                                                 color:
@@ -583,118 +604,6 @@ class _CreateWidgetState extends State<CreateWidget> {
                                           ),
                                           borderRadius:
                                               BorderRadius.circular(12.0),
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 0.0, 0.0, 16.0),
-                                      child: SizedBox(
-                                        width: 370.0,
-                                        child: Stack(
-                                          alignment:
-                                              const AlignmentDirectional(0.0, 0.0),
-                                          children: [
-                                            Align(
-                                              alignment: const AlignmentDirectional(
-                                                  0.0, 0.0),
-                                              child: Padding(
-                                                padding: const EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        0.0, 12.0, 0.0, 12.0),
-                                                child: Container(
-                                                  width: double.infinity,
-                                                  height: 2.0,
-                                                  decoration: BoxDecoration(
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .primaryBackground,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Align(
-                                              alignment: const AlignmentDirectional(
-                                                  0.0, 0.0),
-                                              child: Container(
-                                                width: 70.0,
-                                                height: 32.0,
-                                                decoration: BoxDecoration(
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .secondaryBackground,
-                                                ),
-                                                alignment: const AlignmentDirectional(
-                                                    0.0, 0.0),
-                                                child: Text(
-                                                  'OR',
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .labelMedium,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 0.0, 0.0, 16.0),
-                                      child: FFButtonWidget(
-                                        onPressed: () async {
-                                          GoRouter.of(context)
-                                              .prepareAuthEvent();
-                                          final user = await authManager
-                                              .signInWithGoogle(context);
-                                          if (user == null) {
-                                            return;
-                                          }
-
-                                          context.goNamedAuth(
-                                              'Home', context.mounted);
-                                        },
-                                        text: 'Sign-in with Google',
-                                        icon: const FaIcon(
-                                          FontAwesomeIcons.google,
-                                          size: 20.0,
-                                        ),
-                                        options: FFButtonOptions(
-                                          width: double.infinity,
-                                          height: 44.0,
-                                          padding:
-                                              const EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 0.0, 0.0, 0.0),
-                                          iconPadding:
-                                              const EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 0.0, 0.0, 0.0),
-                                          color: FlutterFlowTheme.of(context)
-                                              .primaryBackground,
-                                          textStyle: FlutterFlowTheme.of(
-                                                  context)
-                                              .titleSmall
-                                              .override(
-                                                fontFamily: 'Readex Pro',
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primaryText,
-                                              ),
-                                          elevation: 0.0,
-                                          borderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .alternate,
-                                            width: 2.0,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(12.0),
-                                          hoverColor:
-                                              FlutterFlowTheme.of(context)
-                                                  .primaryBackground,
-                                          hoverBorderSide: BorderSide(
-                                            color: FlutterFlowTheme.of(context)
-                                                .secondary,
-                                            width: 2.0,
-                                          ),
                                         ),
                                       ),
                                     ),

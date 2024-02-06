@@ -1,5 +1,6 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
+import '/backend/firebase_storage/storage.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_choice_chips.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -7,11 +8,13 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/form_field_controller.dart';
+import '/flutter_flow/upload_data.dart';
 import '/pages/components/addthings/addthings_widget.dart';
 import '/pages/components/nonetoshow/nonetoshow_widget.dart';
-import '/flutter_flow/custom_functions.dart' as functions;
+import '/pages/shareconfirm/shareconfirm_widget.dart';
 import 'package:aligned_tooltip/aligned_tooltip.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
@@ -19,12 +22,7 @@ import 'view_model.dart';
 export 'view_model.dart';
 
 class ViewWidget extends StatefulWidget {
-  const ViewWidget({
-    super.key,
-    String? initialChipSelect,
-  }) : initialChipSelect = initialChipSelect ?? 'Credits';
-
-  final String initialChipSelect;
+  const ViewWidget({super.key});
 
   @override
   State<ViewWidget> createState() => _ViewWidgetState();
@@ -96,12 +94,37 @@ class _ViewWidgetState extends State<ViewWidget> with TickerProviderStateMixin {
         ),
       ],
     ),
+    'listViewOnPageLoadAnimation4': AnimationInfo(
+      trigger: AnimationTrigger.onPageLoad,
+      effects: [
+        VisibilityEffect(duration: 150.ms),
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 150.ms,
+          duration: 600.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+        MoveEffect(
+          curve: Curves.easeInOut,
+          delay: 150.ms,
+          duration: 600.ms,
+          begin: const Offset(0.0, 170.0),
+          end: const Offset(0.0, 0.0),
+        ),
+      ],
+    ),
   };
 
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => ViewModel());
+
+    // On page load action.
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      setState(() {});
+    });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
@@ -128,10 +151,12 @@ class _ViewWidgetState extends State<ViewWidget> with TickerProviderStateMixin {
 
     return StreamBuilder<List<CreditsRecord>>(
       stream: queryCreditsRecord(
-        queryBuilder: (creditsRecord) => creditsRecord.where(
-          'Users',
-          arrayContains: currentUserReference,
-        ),
+        queryBuilder: (creditsRecord) => creditsRecord
+            .where(
+              'Users',
+              arrayContains: currentUserReference,
+            )
+            .orderBy('Name'),
       ),
       builder: (context, snapshot) {
         // Customize what your widget looks like when it's loading.
@@ -159,34 +184,56 @@ class _ViewWidgetState extends State<ViewWidget> with TickerProviderStateMixin {
           child: Scaffold(
             key: scaffoldKey,
             backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-            floatingActionButton: FloatingActionButton(
-              onPressed: () async {
-                await showModalBottomSheet(
-                  isScrollControlled: true,
-                  backgroundColor: Colors.transparent,
-                  enableDrag: false,
-                  context: context,
-                  builder: (context) {
-                    return GestureDetector(
-                      onTap: () => _model.unfocusNode.canRequestFocus
-                          ? FocusScope.of(context)
-                              .requestFocus(_model.unfocusNode)
-                          : FocusScope.of(context).unfocus(),
-                      child: Padding(
-                        padding: MediaQuery.viewInsetsOf(context),
-                        child: const AddthingsWidget(),
-                      ),
-                    );
-                  },
-                ).then((value) => safeSetState(() {}));
-              },
-              backgroundColor: FlutterFlowTheme.of(context).primary,
-              elevation: 10.0,
-              child: Icon(
-                Icons.add,
-                color: FlutterFlowTheme.of(context).primaryBackground,
-                size: 24.0,
+            floatingActionButton: FutureBuilder<int>(
+              future: FFAppState().creditCount(
+                requestFn: () => queryCreditsRecordCount(),
               ),
+              builder: (context, snapshot) {
+                // Customize what your widget looks like when it's loading.
+                if (!snapshot.hasData) {
+                  return Center(
+                    child: SizedBox(
+                      width: 50.0,
+                      height: 50.0,
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          FlutterFlowTheme.of(context).primary,
+                        ),
+                      ),
+                    ),
+                  );
+                }
+                int floatingActionButtonCount = snapshot.data!;
+                return FloatingActionButton(
+                  onPressed: () async {
+                    await showModalBottomSheet(
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      enableDrag: false,
+                      context: context,
+                      builder: (context) {
+                        return GestureDetector(
+                          onTap: () => _model.unfocusNode.canRequestFocus
+                              ? FocusScope.of(context)
+                                  .requestFocus(_model.unfocusNode)
+                              : FocusScope.of(context).unfocus(),
+                          child: Padding(
+                            padding: MediaQuery.viewInsetsOf(context),
+                            child: const AddthingsWidget(),
+                          ),
+                        );
+                      },
+                    ).then((value) => safeSetState(() {}));
+                  },
+                  backgroundColor: FlutterFlowTheme.of(context).primary,
+                  elevation: 10.0,
+                  child: Icon(
+                    Icons.add,
+                    color: FlutterFlowTheme.of(context).primaryBackground,
+                    size: 24.0,
+                  ),
+                );
+              },
             ),
             appBar: AppBar(
               backgroundColor: FlutterFlowTheme.of(context).primary,
@@ -222,7 +269,7 @@ class _ViewWidgetState extends State<ViewWidget> with TickerProviderStateMixin {
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Padding(
                       padding:
@@ -241,11 +288,11 @@ class _ViewWidgetState extends State<ViewWidget> with TickerProviderStateMixin {
                                 ChipData('Favorites')
                               ],
                               onChanged: (val) async {
-                                setState(
-                                    () => _model.choiceChipsValue = val?.first);
+                                setState(() =>
+                                    _model.choiceChipsValue1 = val?.first);
                                 setState(() {
                                   FFAppState().Viewtoggle =
-                                      _model.choiceChipsValue!;
+                                      _model.choiceChipsValue1!;
                                 });
                               },
                               selectedChipStyle: ChipStyle(
@@ -258,12 +305,9 @@ class _ViewWidgetState extends State<ViewWidget> with TickerProviderStateMixin {
                                       color: FlutterFlowTheme.of(context)
                                           .primaryText,
                                     ),
-                                iconColor:
-                                    FlutterFlowTheme.of(context).primaryText,
+                                iconColor: FlutterFlowTheme.of(context).primary,
                                 iconSize: 10.0,
                                 elevation: 0.0,
-                                borderColor:
-                                    FlutterFlowTheme.of(context).lineColor,
                                 borderRadius: BorderRadius.circular(14.0),
                               ),
                               unselectedChipStyle: ChipStyle(
@@ -276,7 +320,7 @@ class _ViewWidgetState extends State<ViewWidget> with TickerProviderStateMixin {
                                           .secondaryText,
                                     ),
                                 iconColor:
-                                    FlutterFlowTheme.of(context).secondaryText,
+                                    FlutterFlowTheme.of(context).primaryText,
                                 iconSize: 10.0,
                                 elevation: 0.0,
                                 borderRadius: BorderRadius.circular(16.0),
@@ -284,11 +328,11 @@ class _ViewWidgetState extends State<ViewWidget> with TickerProviderStateMixin {
                               chipSpacing: 12.0,
                               rowSpacing: 12.0,
                               multiselect: false,
-                              initialized: _model.choiceChipsValue != null,
+                              initialized: _model.choiceChipsValue1 != null,
                               alignment: WrapAlignment.start,
-                              controller: _model.choiceChipsValueController ??=
+                              controller: _model.choiceChipsValueController1 ??=
                                   FormFieldController<List<String>>(
-                                [widget.initialChipSelect],
+                                [FFAppState().Viewparameter],
                               ),
                               wrapped: true,
                             ),
@@ -296,36 +340,160 @@ class _ViewWidgetState extends State<ViewWidget> with TickerProviderStateMixin {
                         ],
                       ),
                     ),
+                    Container(
+                      decoration: const BoxDecoration(),
+                      child: Visibility(
+                        visible: _model.choiceChipsValue1 == 'Credits',
+                        child: Padding(
+                          padding: const EdgeInsetsDirectional.fromSTEB(
+                              0.0, 0.0, 0.0, 10.0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 0.0, 10.0, 0.0),
+                                child: StreamBuilder<List<LocationsRecord>>(
+                                  stream: FFAppState().locations(
+                                    requestFn: () => queryLocationsRecord(
+                                      queryBuilder: (locationsRecord) =>
+                                          locationsRecord.orderBy('Position'),
+                                    ),
+                                  ),
+                                  builder: (context, snapshot) {
+                                    // Customize what your widget looks like when it's loading.
+                                    if (!snapshot.hasData) {
+                                      return Center(
+                                        child: SizedBox(
+                                          width: 50.0,
+                                          height: 50.0,
+                                          child: CircularProgressIndicator(
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
+                                              FlutterFlowTheme.of(context)
+                                                  .primary,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                    List<LocationsRecord>
+                                        choiceChipsLocationsRecordList =
+                                        snapshot.data!;
+                                    return FlutterFlowChoiceChips(
+                                      options: choiceChipsLocationsRecordList
+                                          .map((e) => e.name)
+                                          .toList()
+                                          .map((label) => ChipData(label))
+                                          .toList(),
+                                      onChanged: (val) async {
+                                        setState(() => _model
+                                            .choiceChipsValue2 = val?.first);
+                                        setState(() {
+                                          FFAppState().Viewtoggle =
+                                              'CreditsFiltered';
+                                        });
+                                      },
+                                      selectedChipStyle: ChipStyle(
+                                        backgroundColor:
+                                            FlutterFlowTheme.of(context)
+                                                .secondaryBackground,
+                                        textStyle: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              fontFamily: 'Readex Pro',
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primaryText,
+                                            ),
+                                        iconColor: FlutterFlowTheme.of(context)
+                                            .primary,
+                                        iconSize: 10.0,
+                                        elevation: 0.0,
+                                        borderRadius:
+                                            BorderRadius.circular(14.0),
+                                      ),
+                                      unselectedChipStyle: ChipStyle(
+                                        backgroundColor: const Color(0x00000000),
+                                        textStyle: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              fontFamily: 'Readex Pro',
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .secondaryText,
+                                            ),
+                                        iconColor: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                        iconSize: 10.0,
+                                        elevation: 0.0,
+                                        borderRadius:
+                                            BorderRadius.circular(16.0),
+                                      ),
+                                      chipSpacing: 5.0,
+                                      rowSpacing: 12.0,
+                                      multiselect: false,
+                                      alignment: WrapAlignment.start,
+                                      controller:
+                                          _model.choiceChipsValueController2 ??=
+                                              FormFieldController<List<String>>(
+                                        [],
+                                      ),
+                                      wrapped: false,
+                                    );
+                                  },
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 5.0, 0.0, 5.0),
+                                child: FFButtonWidget(
+                                  onPressed: () async {
+                                    setState(() {
+                                      FFAppState().Viewtoggle = 'Credits';
+                                    });
+                                    setState(() {
+                                      _model.choiceChipsValueController2
+                                          ?.reset();
+                                    });
+                                  },
+                                  text: 'Clear Filter',
+                                  options: FFButtonOptions(
+                                    height: 25.0,
+                                    padding: const EdgeInsetsDirectional.fromSTEB(
+                                        24.0, 0.0, 24.0, 0.0),
+                                    iconPadding: const EdgeInsetsDirectional.fromSTEB(
+                                        0.0, 0.0, 0.0, 0.0),
+                                    color: FlutterFlowTheme.of(context).primary,
+                                    textStyle: FlutterFlowTheme.of(context)
+                                        .labelSmall
+                                        .override(
+                                          fontFamily: 'Readex Pro',
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryBackground,
+                                        ),
+                                    elevation: 3.0,
+                                    borderSide: const BorderSide(
+                                      color: Colors.transparent,
+                                      width: 1.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                     if (FFAppState().Viewtoggle == 'Favorites')
                       Padding(
                         padding:
                             const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 24.0),
-                        child: StreamBuilder<List<CreditsRecord>>(
-                          stream: queryCreditsRecord(
-                            queryBuilder: (creditsRecord) =>
-                                creditsRecord.where(
-                              'Favorites',
-                              arrayContains: currentUserReference,
-                            ),
-                          ),
-                          builder: (context, snapshot) {
-                            // Customize what your widget looks like when it's loading.
-                            if (!snapshot.hasData) {
-                              return Center(
-                                child: SizedBox(
-                                  width: 50.0,
-                                  height: 50.0,
-                                  child: CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                      FlutterFlowTheme.of(context).primary,
-                                    ),
-                                  ),
-                                ),
-                              );
-                            }
-                            List<CreditsRecord> listViewCreditsRecordList =
-                                snapshot.data!;
-                            if (listViewCreditsRecordList.isEmpty) {
+                        child: Builder(
+                          builder: (context) {
+                            final creditList = viewCreditsRecordList.toList();
+                            if (creditList.isEmpty) {
                               return const NonetoshowWidget();
                             }
                             return ListView.builder(
@@ -333,10 +501,10 @@ class _ViewWidgetState extends State<ViewWidget> with TickerProviderStateMixin {
                               primary: false,
                               shrinkWrap: true,
                               scrollDirection: Axis.vertical,
-                              itemCount: listViewCreditsRecordList.length,
-                              itemBuilder: (context, listViewIndex) {
-                                final listViewCreditsRecord =
-                                    listViewCreditsRecordList[listViewIndex];
+                              itemCount: creditList.length,
+                              itemBuilder: (context, creditListIndex) {
+                                final creditListItem =
+                                    creditList[creditListIndex];
                                 return Padding(
                                   padding: const EdgeInsetsDirectional.fromSTEB(
                                       16.0, 0.0, 16.0, 12.0),
@@ -349,79 +517,57 @@ class _ViewWidgetState extends State<ViewWidget> with TickerProviderStateMixin {
                                       color: FlutterFlowTheme.of(context)
                                           .secondaryBackground,
                                       borderRadius: BorderRadius.circular(8.0),
-                                      border: Border.all(
-                                        color: FlutterFlowTheme.of(context)
-                                            .alternate,
-                                        width: 1.0,
-                                      ),
                                     ),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Padding(
-                                          padding:
-                                              const EdgeInsetsDirectional.fromSTEB(
-                                                  16.0, 12.0, 16.0, 5.0),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        0.0, 0.0, 12.0, 0.0),
-                                                child: Column(
+                                    child: InkWell(
+                                      splashColor: Colors.transparent,
+                                      focusColor: Colors.transparent,
+                                      hoverColor: Colors.transparent,
+                                      highlightColor: Colors.transparent,
+                                      onTap: () async {
+                                        setState(() {
+                                          FFAppState().Viewtoggle =
+                                              'CreditsFiltered';
+                                        });
+                                      },
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Padding(
+                                            padding:
+                                                const EdgeInsetsDirectional.fromSTEB(
+                                                    16.0, 12.0, 16.0, 12.0),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Row(
                                                   mainAxisSize:
                                                       MainAxisSize.max,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
                                                   children: [
-                                                    AlignedTooltip(
-                                                      content: Padding(
-                                                          padding:
-                                                              const EdgeInsets.all(
-                                                                  4.0),
-                                                          child: Text(
-                                                            listViewCreditsRecord
-                                                                .name,
-                                                            style: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .bodyLarge,
-                                                          )),
-                                                      offset: 4.0,
-                                                      preferredDirection:
-                                                          AxisDirection.down,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8.0),
-                                                      backgroundColor:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .secondaryBackground,
-                                                      elevation: 4.0,
-                                                      tailBaseWidth: 24.0,
-                                                      tailLength: 12.0,
-                                                      waitDuration: const Duration(
-                                                          milliseconds: 100),
-                                                      showDuration: const Duration(
-                                                          milliseconds: 1500),
-                                                      triggerMode:
-                                                          TooltipTriggerMode
-                                                              .tap,
-                                                      child: Text(
-                                                        listViewCreditsRecord
-                                                            .name
-                                                            .maybeHandleOverflow(
-                                                          maxChars: 15,
-                                                          replacement: '…',
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsetsDirectional
+                                                              .fromSTEB(
+                                                                  0.0,
+                                                                  0.0,
+                                                                  10.0,
+                                                                  0.0),
+                                                      child: Container(
+                                                        width: 40.0,
+                                                        height: 40.0,
+                                                        clipBehavior:
+                                                            Clip.antiAlias,
+                                                        decoration:
+                                                            const BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
                                                         ),
-                                                        style:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyLarge,
+                                                        child: Image.asset(
+                                                          'assets/images/Mouse_Credits_Logo_BW.png',
+                                                          fit: BoxFit.cover,
+                                                        ),
                                                       ),
                                                     ),
                                                     Padding(
@@ -429,273 +575,185 @@ class _ViewWidgetState extends State<ViewWidget> with TickerProviderStateMixin {
                                                           const EdgeInsetsDirectional
                                                               .fromSTEB(
                                                                   0.0,
-                                                                  4.0,
                                                                   0.0,
+                                                                  12.0,
                                                                   0.0),
-                                                      child: Text(
-                                                        listViewCreditsRecord
-                                                            .location
-                                                            .maybeHandleOverflow(
-                                                          maxChars: 15,
-                                                          replacement: '…',
-                                                        ),
-                                                        style:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .labelMedium,
+                                                      child: Column(
+                                                        mainAxisSize:
+                                                            MainAxisSize.max,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          AlignedTooltip(
+                                                            content: Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .all(
+                                                                            4.0),
+                                                                child: Text(
+                                                                  creditListItem
+                                                                      .name,
+                                                                  style: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyLarge,
+                                                                )),
+                                                            offset: 4.0,
+                                                            preferredDirection:
+                                                                AxisDirection
+                                                                    .down,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8.0),
+                                                            backgroundColor:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .primaryBackground,
+                                                            elevation: 4.0,
+                                                            tailBaseWidth: 24.0,
+                                                            tailLength: 12.0,
+                                                            waitDuration:
+                                                                const Duration(
+                                                                    milliseconds:
+                                                                        100),
+                                                            showDuration:
+                                                                const Duration(
+                                                                    milliseconds:
+                                                                        1500),
+                                                            triggerMode:
+                                                                TooltipTriggerMode
+                                                                    .tap,
+                                                            child: Text(
+                                                              creditListItem
+                                                                  .name
+                                                                  .maybeHandleOverflow(
+                                                                maxChars: 15,
+                                                                replacement:
+                                                                    '…',
+                                                              ),
+                                                              style: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .bodyLarge
+                                                                  .override(
+                                                                    fontFamily:
+                                                                        'Readex Pro',
+                                                                    fontSize:
+                                                                        14.0,
+                                                                  ),
+                                                            ),
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsetsDirectional
+                                                                    .fromSTEB(
+                                                                        0.0,
+                                                                        4.0,
+                                                                        0.0,
+                                                                        0.0),
+                                                            child: Text(
+                                                              creditListItem
+                                                                  .location
+                                                                  .maybeHandleOverflow(
+                                                                maxChars: 15,
+                                                                replacement:
+                                                                    '…',
+                                                              ),
+                                                              style: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .labelMedium
+                                                                  .override(
+                                                                    fontFamily:
+                                                                        'Readex Pro',
+                                                                    fontSize:
+                                                                        12.0,
+                                                                  ),
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
                                                     ),
                                                   ],
                                                 ),
-                                              ),
-                                              Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                children: [
-                                                  FFButtonWidget(
-                                                    onPressed: () async {
-                                                      // Remove User
-
-                                                      await listViewCreditsRecord
-                                                          .reference
-                                                          .update({
-                                                        ...mapToFirestore(
-                                                          {
-                                                            'Favorites':
-                                                                FieldValue
-                                                                    .arrayRemove([
-                                                              currentUserReference
-                                                            ]),
-                                                          },
-                                                        ),
-                                                      });
-                                                      // Remove Credit
-
-                                                      await currentUserReference!
-                                                          .update({
-                                                        ...mapToFirestore(
-                                                          {
-                                                            'Favorites':
-                                                                FieldValue
-                                                                    .arrayRemove([
-                                                              listViewCreditsRecord
-                                                                  .reference
-                                                            ]),
-                                                          },
-                                                        ),
-                                                      });
-                                                    },
-                                                    text: 'Remove Favorite',
-                                                    options: FFButtonOptions(
-                                                      height: 30.0,
+                                                Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  children: [
+                                                    Padding(
                                                       padding:
                                                           const EdgeInsetsDirectional
                                                               .fromSTEB(
-                                                                  10.0,
+                                                                  0.0,
                                                                   0.0,
                                                                   10.0,
                                                                   0.0),
-                                                      iconPadding:
-                                                          const EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  0.0,
-                                                                  0.0,
-                                                                  0.0,
-                                                                  0.0),
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .secondary,
-                                                      textStyle:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .labelSmall
-                                                              .override(
-                                                                fontFamily:
-                                                                    'Readex Pro',
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .primaryBackground,
-                                                              ),
-                                                      elevation: 3.0,
-                                                      borderSide: const BorderSide(
-                                                        color:
-                                                            Colors.transparent,
-                                                        width: 1.0,
-                                                      ),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8.0),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsetsDirectional.fromSTEB(
-                                                  16.0, 0.0, 16.0, 12.0),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            children: [
-                                              Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                children: [
-                                                  if ((currentUserDocument
-                                                                  ?.credits
-                                                                  .toList() ??
-                                                              [])
-                                                          .contains(
-                                                              listViewCreditsRecord
-                                                                  .reference) ==
-                                                      false)
-                                                    AuthUserStreamWidget(
-                                                      builder: (context) =>
-                                                          FFButtonWidget(
-                                                        onPressed: () async {
-                                                          // Add User
-
-                                                          await listViewCreditsRecord
-                                                              .reference
-                                                              .update({
-                                                            ...mapToFirestore(
-                                                              {
-                                                                'Users': FieldValue
-                                                                    .arrayUnion([
-                                                                  currentUserReference
-                                                                ]),
-                                                              },
-                                                            ),
-                                                          });
-                                                          // Add Credit
-
-                                                          await currentUserReference!
-                                                              .update({
-                                                            ...mapToFirestore(
-                                                              {
-                                                                'Credits':
-                                                                    FieldValue
-                                                                        .arrayUnion([
-                                                                  listViewCreditsRecord
-                                                                      .reference
-                                                                ]),
-                                                              },
-                                                            ),
-                                                          });
-                                                          // Popularity Add
-
-                                                          await listViewCreditsRecord
-                                                              .reference
-                                                              .update({
-                                                            ...mapToFirestore(
-                                                              {
-                                                                'Popularity':
-                                                                    FieldValue
-                                                                        .increment(
-                                                                            1),
-                                                              },
-                                                            ),
-                                                          });
-                                                          // Remove User
-
-                                                          await listViewCreditsRecord
-                                                              .reference
-                                                              .update({
-                                                            ...mapToFirestore(
-                                                              {
-                                                                'Favorites':
-                                                                    FieldValue
-                                                                        .arrayRemove([
-                                                                  currentUserReference
-                                                                ]),
-                                                              },
-                                                            ),
-                                                          });
-                                                          // Remove Credit
-
-                                                          await currentUserReference!
-                                                              .update({
-                                                            ...mapToFirestore(
-                                                              {
-                                                                'Favorites':
-                                                                    FieldValue
-                                                                        .arrayRemove([
-                                                                  listViewCreditsRecord
-                                                                      .reference
-                                                                ]),
-                                                              },
-                                                            ),
-                                                          });
-
-                                                          await currentUserReference!
-                                                              .update({
-                                                            ...mapToFirestore(
-                                                              {
-                                                                'CreditCount':
-                                                                    FieldValue
-                                                                        .increment(
-                                                                            1),
-                                                              },
-                                                            ),
-                                                          });
-                                                        },
-                                                        text: 'Add Credit',
-                                                        options:
-                                                            FFButtonOptions(
-                                                          height: 30.0,
-                                                          padding:
-                                                              const EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                      28.0,
-                                                                      0.0,
-                                                                      28.0,
-                                                                      0.0),
-                                                          iconPadding:
-                                                              const EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                      0.0,
-                                                                      0.0,
-                                                                      0.0,
-                                                                      0.0),
+                                                      child: Container(
+                                                        decoration:
+                                                            BoxDecoration(
                                                           color: FlutterFlowTheme
                                                                   .of(context)
                                                               .primary,
-                                                          textStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .labelSmall
-                                                                  .override(
-                                                                    fontFamily:
-                                                                        'Readex Pro',
-                                                                    color: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .primaryBackground,
-                                                                    fontSize:
-                                                                        8.0,
-                                                                  ),
-                                                          elevation: 3.0,
-                                                          borderSide:
-                                                              const BorderSide(
-                                                            color: Colors
-                                                                .transparent,
-                                                            width: 1.0,
-                                                          ),
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(
                                                                       8.0),
                                                         ),
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsetsDirectional
+                                                                  .fromSTEB(
+                                                                      5.0,
+                                                                      5.0,
+                                                                      5.0,
+                                                                      5.0),
+                                                          child: Text(
+                                                            'Add Credit',
+                                                            style: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .labelSmall
+                                                                .override(
+                                                                  fontFamily:
+                                                                      'Readex Pro',
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .primaryBackground,
+                                                                ),
+                                                          ),
+                                                        ),
                                                       ),
                                                     ),
-                                                ],
-                                              ),
-                                            ],
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .tertiary,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(6.0),
+                                                      ),
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets.all(4.0),
+                                                        child: Icon(
+                                                          Icons.clear,
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primaryBackground,
+                                                          size: 16.0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 );
@@ -711,7 +769,9 @@ class _ViewWidgetState extends State<ViewWidget> with TickerProviderStateMixin {
                             const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 24.0),
                         child: Builder(
                           builder: (context) {
-                            final viewVar = viewCreditsRecordList.toList();
+                            final viewVar = viewCreditsRecordList
+                                .sortedList((e) => e.name)
+                                .toList();
                             if (viewVar.isEmpty) {
                               return const NonetoshowWidget();
                             }
@@ -726,256 +786,536 @@ class _ViewWidgetState extends State<ViewWidget> with TickerProviderStateMixin {
                                 return Padding(
                                   padding: const EdgeInsetsDirectional.fromSTEB(
                                       16.0, 0.0, 16.0, 12.0),
-                                  child: Container(
-                                    width: double.infinity,
-                                    constraints: const BoxConstraints(
-                                      maxWidth: 570.0,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondaryBackground,
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      border: Border.all(
-                                        color: FlutterFlowTheme.of(context)
-                                            .alternate,
-                                        width: 1.0,
+                                  child:
+                                      StreamBuilder<List<CreditDetailsRecord>>(
+                                    stream: queryCreditDetailsRecord(
+                                      parent: currentUserReference,
+                                      queryBuilder: (creditDetailsRecord) =>
+                                          creditDetailsRecord.where(
+                                        'Credit',
+                                        isEqualTo: viewVarItem.reference,
                                       ),
+                                      singleRecord: true,
                                     ),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Padding(
-                                          padding:
-                                              const EdgeInsetsDirectional.fromSTEB(
-                                                  16.0, 12.0, 16.0, 12.0),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        0.0, 0.0, 10.0, 0.0),
-                                                child: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    AlignedTooltip(
-                                                      content: Padding(
-                                                          padding:
-                                                              const EdgeInsets.all(
-                                                                  4.0),
-                                                          child: Text(
-                                                            viewVarItem.name,
-                                                            style: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .bodyLarge,
-                                                          )),
-                                                      offset: 4.0,
-                                                      preferredDirection:
-                                                          AxisDirection.down,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8.0),
-                                                      backgroundColor:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .secondaryBackground,
-                                                      elevation: 4.0,
-                                                      tailBaseWidth: 24.0,
-                                                      tailLength: 12.0,
-                                                      waitDuration: const Duration(
-                                                          milliseconds: 100),
-                                                      showDuration: const Duration(
-                                                          milliseconds: 1500),
-                                                      triggerMode:
-                                                          TooltipTriggerMode
-                                                              .tap,
-                                                      child: AlignedTooltip(
-                                                        content: Padding(
-                                                            padding:
-                                                                const EdgeInsets.all(
-                                                                    4.0),
-                                                            child: Text(
-                                                              viewVarItem.name,
-                                                              style: FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .bodyLarge,
-                                                            )),
-                                                        offset: 4.0,
-                                                        preferredDirection:
-                                                            AxisDirection.down,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(8.0),
-                                                        backgroundColor:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .secondaryBackground,
-                                                        elevation: 4.0,
-                                                        tailBaseWidth: 24.0,
-                                                        tailLength: 12.0,
-                                                        waitDuration: const Duration(
-                                                            milliseconds: 100),
-                                                        showDuration: const Duration(
-                                                            milliseconds: 1500),
-                                                        triggerMode:
-                                                            TooltipTriggerMode
-                                                                .tap,
-                                                        child: Text(
-                                                          viewVarItem.name
-                                                              .maybeHandleOverflow(
-                                                            maxChars: 20,
-                                                            replacement: '…',
-                                                          ),
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyLarge,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  0.0,
-                                                                  4.0,
-                                                                  0.0,
-                                                                  0.0),
-                                                      child: Text(
-                                                        viewVarItem.location
-                                                            .maybeHandleOverflow(
-                                                          maxChars: 20,
-                                                          replacement: '…',
-                                                        ),
-                                                        style:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .labelMedium,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
+                                    builder: (context, snapshot) {
+                                      // Customize what your widget looks like when it's loading.
+                                      if (!snapshot.hasData) {
+                                        return Center(
+                                          child: SizedBox(
+                                            width: 50.0,
+                                            height: 50.0,
+                                            child: CircularProgressIndicator(
+                                              valueColor:
+                                                  AlwaysStoppedAnimation<Color>(
+                                                FlutterFlowTheme.of(context)
+                                                    .primary,
                                               ),
-                                              Row(
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                      List<CreditDetailsRecord>
+                                          containerCreditDetailsRecordList =
+                                          snapshot.data!;
+                                      // Return an empty Container when the item does not exist.
+                                      if (snapshot.data!.isEmpty) {
+                                        return Container();
+                                      }
+                                      final containerCreditDetailsRecord =
+                                          containerCreditDetailsRecordList
+                                                  .isNotEmpty
+                                              ? containerCreditDetailsRecordList
+                                                  .first
+                                              : null;
+                                      return Container(
+                                        width: double.infinity,
+                                        constraints: const BoxConstraints(
+                                          maxWidth: 570.0,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: FlutterFlowTheme.of(context)
+                                              .secondaryBackground,
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                        ),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsetsDirectional
+                                                  .fromSTEB(
+                                                      16.0, 12.0, 16.0, 12.0),
+                                              child: Row(
                                                 mainAxisSize: MainAxisSize.max,
                                                 mainAxisAlignment:
                                                     MainAxisAlignment
-                                                        .spaceAround,
+                                                        .spaceBetween,
                                                 children: [
-                                                  FFButtonWidget(
-                                                    onPressed: () async {
-                                                      // Remove User
-
-                                                      await viewVarItem
-                                                          .reference
-                                                          .update({
-                                                        ...mapToFirestore(
-                                                          {
-                                                            'Users': FieldValue
-                                                                .arrayRemove([
-                                                              currentUserReference
-                                                            ]),
-                                                          },
+                                                  Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    children: [
+                                                      if (containerCreditDetailsRecord
+                                                                  ?.image !=
+                                                              null &&
+                                                          containerCreditDetailsRecord
+                                                                  ?.image !=
+                                                              '')
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsetsDirectional
+                                                                  .fromSTEB(
+                                                                      0.0,
+                                                                      0.0,
+                                                                      10.0,
+                                                                      0.0),
+                                                          child: Container(
+                                                            width: 40.0,
+                                                            height: 40.0,
+                                                            clipBehavior:
+                                                                Clip.antiAlias,
+                                                            decoration:
+                                                                const BoxDecoration(
+                                                              shape: BoxShape
+                                                                  .circle,
+                                                            ),
+                                                            child:
+                                                                Image.network(
+                                                              containerCreditDetailsRecord!
+                                                                  .image,
+                                                              fit: BoxFit.cover,
+                                                            ),
+                                                          ),
                                                         ),
-                                                      });
-                                                      // Remove Credit
-
-                                                      await currentUserReference!
-                                                          .update({
-                                                        ...mapToFirestore(
-                                                          {
-                                                            'Credits': FieldValue
-                                                                .arrayRemove([
-                                                              viewVarItem
-                                                                  .reference
-                                                            ]),
-                                                          },
+                                                      if (containerCreditDetailsRecord
+                                                                  ?.image ==
+                                                              null ||
+                                                          containerCreditDetailsRecord
+                                                                  ?.image ==
+                                                              '')
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsetsDirectional
+                                                                  .fromSTEB(
+                                                                      0.0,
+                                                                      0.0,
+                                                                      10.0,
+                                                                      0.0),
+                                                          child: Container(
+                                                            width: 40.0,
+                                                            height: 40.0,
+                                                            clipBehavior:
+                                                                Clip.antiAlias,
+                                                            decoration:
+                                                                const BoxDecoration(
+                                                              shape: BoxShape
+                                                                  .circle,
+                                                            ),
+                                                            child: Image.asset(
+                                                              'assets/images/Mouse_Credits_Logo_BW.png',
+                                                              fit: BoxFit.cover,
+                                                            ),
+                                                          ),
                                                         ),
-                                                      });
-                                                      // Decrease Popularity
-
-                                                      await viewVarItem
-                                                          .reference
-                                                          .update({
-                                                        ...mapToFirestore(
-                                                          {
-                                                            'Popularity':
-                                                                FieldValue
-                                                                    .increment(
-                                                                        -(1)),
-                                                          },
-                                                        ),
-                                                      });
-
-                                                      await currentUserReference!
-                                                          .update({
-                                                        ...mapToFirestore(
-                                                          {
-                                                            'CreditCount':
-                                                                FieldValue
-                                                                    .increment(
-                                                                        -(1)),
-                                                          },
-                                                        ),
-                                                      });
-                                                    },
-                                                    text: 'Remove Credit',
-                                                    options: FFButtonOptions(
-                                                      height: 30.0,
-                                                      padding:
-                                                          const EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  10.0,
-                                                                  0.0,
-                                                                  10.0,
-                                                                  0.0),
-                                                      iconPadding:
-                                                          const EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  0.0,
-                                                                  0.0,
-                                                                  0.0,
-                                                                  0.0),
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .secondary,
-                                                      textStyle:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .labelSmall
-                                                              .override(
-                                                                fontFamily:
-                                                                    'Readex Pro',
-                                                                color: FlutterFlowTheme.of(
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    0.0,
+                                                                    0.0,
+                                                                    10.0,
+                                                                    0.0),
+                                                        child: Column(
+                                                          mainAxisSize:
+                                                              MainAxisSize.max,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            AlignedTooltip(
+                                                              content: Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                          .all(
+                                                                              4.0),
+                                                                  child: Text(
+                                                                    viewVarItem
+                                                                        .name,
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyLarge,
+                                                                  )),
+                                                              offset: 4.0,
+                                                              preferredDirection:
+                                                                  AxisDirection
+                                                                      .down,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8.0),
+                                                              backgroundColor:
+                                                                  FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .primaryBackground,
+                                                              elevation: 4.0,
+                                                              tailBaseWidth:
+                                                                  24.0,
+                                                              tailLength: 12.0,
+                                                              waitDuration:
+                                                                  const Duration(
+                                                                      milliseconds:
+                                                                          100),
+                                                              showDuration:
+                                                                  const Duration(
+                                                                      milliseconds:
+                                                                          1500),
+                                                              triggerMode:
+                                                                  TooltipTriggerMode
+                                                                      .tap,
+                                                              child: Text(
+                                                                viewVarItem.name
+                                                                    .maybeHandleOverflow(
+                                                                  maxChars: 30,
+                                                                  replacement:
+                                                                      '…',
+                                                                ),
+                                                                style: FlutterFlowTheme.of(
                                                                         context)
-                                                                    .primaryBackground,
-                                                                fontSize: 8.0,
+                                                                    .bodyLarge
+                                                                    .override(
+                                                                      fontFamily:
+                                                                          'Readex Pro',
+                                                                      fontSize:
+                                                                          14.0,
+                                                                    ),
                                                               ),
-                                                      elevation: 3.0,
-                                                      borderSide: const BorderSide(
-                                                        color:
-                                                            Colors.transparent,
-                                                        width: 1.0,
+                                                            ),
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          0.0,
+                                                                          4.0,
+                                                                          0.0,
+                                                                          5.0),
+                                                              child: Text(
+                                                                viewVarItem
+                                                                    .location
+                                                                    .maybeHandleOverflow(
+                                                                  maxChars: 20,
+                                                                  replacement:
+                                                                      '…',
+                                                                ),
+                                                                style: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .labelMedium
+                                                                    .override(
+                                                                      fontFamily:
+                                                                          'Readex Pro',
+                                                                      fontSize:
+                                                                          12.0,
+                                                                    ),
+                                                              ),
+                                                            ),
+                                                            Row(
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .max,
+                                                              children: [
+                                                                Padding(
+                                                                  padding: const EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          0.0,
+                                                                          0.0,
+                                                                          10.0,
+                                                                          0.0),
+                                                                  child:
+                                                                      FFButtonWidget(
+                                                                    onPressed:
+                                                                        () async {
+                                                                      final selectedMedia =
+                                                                          await selectMediaWithSourceBottomSheet(
+                                                                        context:
+                                                                            context,
+                                                                        maxWidth:
+                                                                            250.00,
+                                                                        maxHeight:
+                                                                            250.00,
+                                                                        imageQuality:
+                                                                            100,
+                                                                        allowPhoto:
+                                                                            true,
+                                                                      );
+                                                                      if (selectedMedia !=
+                                                                              null &&
+                                                                          selectedMedia.every((m) => validateFileFormat(
+                                                                              m.storagePath,
+                                                                              context))) {
+                                                                        setState(() =>
+                                                                            _model.isDataUploading1 =
+                                                                                true);
+                                                                        var selectedUploadedFiles =
+                                                                            <FFUploadedFile>[];
+
+                                                                        var downloadUrls =
+                                                                            <String>[];
+                                                                        try {
+                                                                          showUploadMessage(
+                                                                            context,
+                                                                            'Uploading file...',
+                                                                            showLoading:
+                                                                                true,
+                                                                          );
+                                                                          selectedUploadedFiles = selectedMedia
+                                                                              .map((m) => FFUploadedFile(
+                                                                                    name: m.storagePath.split('/').last,
+                                                                                    bytes: m.bytes,
+                                                                                    height: m.dimensions?.height,
+                                                                                    width: m.dimensions?.width,
+                                                                                    blurHash: m.blurHash,
+                                                                                  ))
+                                                                              .toList();
+
+                                                                          downloadUrls = (await Future.wait(
+                                                                            selectedMedia.map(
+                                                                              (m) async => await uploadData(m.storagePath, m.bytes),
+                                                                            ),
+                                                                          ))
+                                                                              .where((u) => u != null)
+                                                                              .map((u) => u!)
+                                                                              .toList();
+                                                                        } finally {
+                                                                          ScaffoldMessenger.of(context)
+                                                                              .hideCurrentSnackBar();
+                                                                          _model.isDataUploading1 =
+                                                                              false;
+                                                                        }
+                                                                        if (selectedUploadedFiles.length == selectedMedia.length &&
+                                                                            downloadUrls.length ==
+                                                                                selectedMedia.length) {
+                                                                          setState(
+                                                                              () {
+                                                                            _model.uploadedLocalFile1 =
+                                                                                selectedUploadedFiles.first;
+                                                                            _model.uploadedFileUrl1 =
+                                                                                downloadUrls.first;
+                                                                          });
+                                                                          showUploadMessage(
+                                                                              context,
+                                                                              'Success!');
+                                                                        } else {
+                                                                          setState(
+                                                                              () {});
+                                                                          showUploadMessage(
+                                                                              context,
+                                                                              'Failed to upload data');
+                                                                          return;
+                                                                        }
+                                                                      }
+
+                                                                      await containerCreditDetailsRecord!
+                                                                          .reference
+                                                                          .update(
+                                                                              createCreditDetailsRecordData(
+                                                                        image: _model
+                                                                            .uploadedFileUrl1,
+                                                                      ));
+                                                                      setState(
+                                                                          () {
+                                                                        _model.isDataUploading1 =
+                                                                            false;
+                                                                        _model.uploadedLocalFile1 =
+                                                                            FFUploadedFile(bytes: Uint8List.fromList([]));
+                                                                        _model.uploadedFileUrl1 =
+                                                                            '';
+                                                                      });
+                                                                    },
+                                                                    text:
+                                                                        'Add Pic',
+                                                                    options:
+                                                                        FFButtonOptions(
+                                                                      height:
+                                                                          23.0,
+                                                                      padding: const EdgeInsetsDirectional.fromSTEB(
+                                                                          5.0,
+                                                                          0.0,
+                                                                          5.0,
+                                                                          0.0),
+                                                                      iconPadding: const EdgeInsetsDirectional.fromSTEB(
+                                                                          0.0,
+                                                                          0.0,
+                                                                          0.0,
+                                                                          0.0),
+                                                                      color: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .primary,
+                                                                      textStyle: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .labelSmall
+                                                                          .override(
+                                                                            fontFamily:
+                                                                                'Readex Pro',
+                                                                            color:
+                                                                                FlutterFlowTheme.of(context).primaryBackground,
+                                                                            fontSize:
+                                                                                8.0,
+                                                                          ),
+                                                                      elevation:
+                                                                          3.0,
+                                                                      borderSide:
+                                                                          const BorderSide(
+                                                                        color: Colors
+                                                                            .transparent,
+                                                                        width:
+                                                                            1.0,
+                                                                      ),
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              8.0),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Builder(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          FFButtonWidget(
+                                                                    onPressed:
+                                                                        () async {
+                                                                      await Clipboard.setData(
+                                                                          ClipboardData(
+                                                                              text: 'I collected Mouse Credit "${viewVarItem.name}" in the ${viewVarItem.location} on ${dateTimeFormat('yMMMd', containerCreditDetailsRecord?.createdTime)}!'));
+                                                                      await showDialog(
+                                                                        context:
+                                                                            context,
+                                                                        builder:
+                                                                            (dialogContext) {
+                                                                          return Dialog(
+                                                                            elevation:
+                                                                                0,
+                                                                            insetPadding:
+                                                                                EdgeInsets.zero,
+                                                                            backgroundColor:
+                                                                                Colors.transparent,
+                                                                            alignment:
+                                                                                const AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                            child:
+                                                                                GestureDetector(
+                                                                              onTap: () => _model.unfocusNode.canRequestFocus ? FocusScope.of(context).requestFocus(_model.unfocusNode) : FocusScope.of(context).unfocus(),
+                                                                              child: const ShareconfirmWidget(),
+                                                                            ),
+                                                                          );
+                                                                        },
+                                                                      ).then((value) =>
+                                                                          setState(
+                                                                              () {}));
+                                                                    },
+                                                                    text:
+                                                                        'Share',
+                                                                    options:
+                                                                        FFButtonOptions(
+                                                                      height:
+                                                                          23.0,
+                                                                      padding: const EdgeInsetsDirectional.fromSTEB(
+                                                                          5.0,
+                                                                          0.0,
+                                                                          5.0,
+                                                                          0.0),
+                                                                      iconPadding: const EdgeInsetsDirectional.fromSTEB(
+                                                                          0.0,
+                                                                          0.0,
+                                                                          0.0,
+                                                                          0.0),
+                                                                      color: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .primary,
+                                                                      textStyle: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .labelSmall
+                                                                          .override(
+                                                                            fontFamily:
+                                                                                'Readex Pro',
+                                                                            color:
+                                                                                FlutterFlowTheme.of(context).primaryBackground,
+                                                                            fontSize:
+                                                                                8.0,
+                                                                          ),
+                                                                      elevation:
+                                                                          3.0,
+                                                                      borderSide:
+                                                                          const BorderSide(
+                                                                        color: Colors
+                                                                            .transparent,
+                                                                        width:
+                                                                            1.0,
+                                                                      ),
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              8.0),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
                                                       ),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8.0),
-                                                    ),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    children: [
+                                                      Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primary,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      6.0),
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .tertiary,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      6.0),
+                                                        ),
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets.all(
+                                                                  4.0),
+                                                          child: Icon(
+                                                            Icons.clear,
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .primaryBackground,
+                                                            size: 16.0,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
                                                 ],
                                               ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
-                                      ],
-                                    ),
+                                      );
+                                    },
                                   ),
                                 );
                               },
@@ -984,15 +1324,581 @@ class _ViewWidgetState extends State<ViewWidget> with TickerProviderStateMixin {
                           },
                         ),
                       ),
+                    if (FFAppState().Viewtoggle == 'CreditsFiltered')
+                      Padding(
+                        padding:
+                            const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 24.0),
+                        child: Builder(
+                          builder: (context) {
+                            final viewVar = viewCreditsRecordList
+                                .where((e) =>
+                                    e.location == _model.choiceChipsValue2)
+                                .toList();
+                            if (viewVar.isEmpty) {
+                              return const NonetoshowWidget();
+                            }
+                            return ListView.builder(
+                              padding: EdgeInsets.zero,
+                              primary: false,
+                              shrinkWrap: true,
+                              scrollDirection: Axis.vertical,
+                              itemCount: viewVar.length,
+                              itemBuilder: (context, viewVarIndex) {
+                                final viewVarItem = viewVar[viewVarIndex];
+                                return Padding(
+                                  padding: const EdgeInsetsDirectional.fromSTEB(
+                                      16.0, 0.0, 16.0, 12.0),
+                                  child:
+                                      StreamBuilder<List<CreditDetailsRecord>>(
+                                    stream: queryCreditDetailsRecord(
+                                      parent: currentUserReference,
+                                      queryBuilder: (creditDetailsRecord) =>
+                                          creditDetailsRecord.where(
+                                        'Credit',
+                                        isEqualTo: viewVarItem.reference,
+                                      ),
+                                      singleRecord: true,
+                                    ),
+                                    builder: (context, snapshot) {
+                                      // Customize what your widget looks like when it's loading.
+                                      if (!snapshot.hasData) {
+                                        return Center(
+                                          child: SizedBox(
+                                            width: 50.0,
+                                            height: 50.0,
+                                            child: CircularProgressIndicator(
+                                              valueColor:
+                                                  AlwaysStoppedAnimation<Color>(
+                                                FlutterFlowTheme.of(context)
+                                                    .primary,
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                      List<CreditDetailsRecord>
+                                          containerCreditDetailsRecordList =
+                                          snapshot.data!;
+                                      // Return an empty Container when the item does not exist.
+                                      if (snapshot.data!.isEmpty) {
+                                        return Container();
+                                      }
+                                      final containerCreditDetailsRecord =
+                                          containerCreditDetailsRecordList
+                                                  .isNotEmpty
+                                              ? containerCreditDetailsRecordList
+                                                  .first
+                                              : null;
+                                      return Container(
+                                        width: double.infinity,
+                                        constraints: const BoxConstraints(
+                                          maxWidth: 570.0,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: FlutterFlowTheme.of(context)
+                                              .secondaryBackground,
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                        ),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsetsDirectional
+                                                  .fromSTEB(
+                                                      16.0, 12.0, 16.0, 12.0),
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.max,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    children: [
+                                                      if (containerCreditDetailsRecord
+                                                                  ?.image !=
+                                                              null &&
+                                                          containerCreditDetailsRecord
+                                                                  ?.image !=
+                                                              '')
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsetsDirectional
+                                                                  .fromSTEB(
+                                                                      0.0,
+                                                                      0.0,
+                                                                      10.0,
+                                                                      0.0),
+                                                          child: Container(
+                                                            width: 40.0,
+                                                            height: 40.0,
+                                                            clipBehavior:
+                                                                Clip.antiAlias,
+                                                            decoration:
+                                                                const BoxDecoration(
+                                                              shape: BoxShape
+                                                                  .circle,
+                                                            ),
+                                                            child:
+                                                                Image.network(
+                                                              containerCreditDetailsRecord!
+                                                                  .image,
+                                                              fit: BoxFit.cover,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      if (containerCreditDetailsRecord
+                                                                  ?.image ==
+                                                              null ||
+                                                          containerCreditDetailsRecord
+                                                                  ?.image ==
+                                                              '')
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsetsDirectional
+                                                                  .fromSTEB(
+                                                                      0.0,
+                                                                      0.0,
+                                                                      10.0,
+                                                                      0.0),
+                                                          child: Container(
+                                                            width: 40.0,
+                                                            height: 40.0,
+                                                            clipBehavior:
+                                                                Clip.antiAlias,
+                                                            decoration:
+                                                                const BoxDecoration(
+                                                              shape: BoxShape
+                                                                  .circle,
+                                                            ),
+                                                            child: Image.asset(
+                                                              'assets/images/Mouse_Credits_Logo_BW.png',
+                                                              fit: BoxFit.cover,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    0.0,
+                                                                    0.0,
+                                                                    10.0,
+                                                                    0.0),
+                                                        child: Column(
+                                                          mainAxisSize:
+                                                              MainAxisSize.max,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            AlignedTooltip(
+                                                              content: Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                          .all(
+                                                                              4.0),
+                                                                  child: Text(
+                                                                    viewVarItem
+                                                                        .name,
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyLarge,
+                                                                  )),
+                                                              offset: 4.0,
+                                                              preferredDirection:
+                                                                  AxisDirection
+                                                                      .down,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8.0),
+                                                              backgroundColor:
+                                                                  FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .primaryBackground,
+                                                              elevation: 4.0,
+                                                              tailBaseWidth:
+                                                                  24.0,
+                                                              tailLength: 12.0,
+                                                              waitDuration:
+                                                                  const Duration(
+                                                                      milliseconds:
+                                                                          100),
+                                                              showDuration:
+                                                                  const Duration(
+                                                                      milliseconds:
+                                                                          1500),
+                                                              triggerMode:
+                                                                  TooltipTriggerMode
+                                                                      .tap,
+                                                              child: Text(
+                                                                viewVarItem.name
+                                                                    .maybeHandleOverflow(
+                                                                  maxChars: 30,
+                                                                  replacement:
+                                                                      '…',
+                                                                ),
+                                                                style: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyLarge
+                                                                    .override(
+                                                                      fontFamily:
+                                                                          'Readex Pro',
+                                                                      fontSize:
+                                                                          14.0,
+                                                                    ),
+                                                              ),
+                                                            ),
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          0.0,
+                                                                          4.0,
+                                                                          0.0,
+                                                                          5.0),
+                                                              child: Text(
+                                                                viewVarItem
+                                                                    .location
+                                                                    .maybeHandleOverflow(
+                                                                  maxChars: 20,
+                                                                  replacement:
+                                                                      '…',
+                                                                ),
+                                                                style: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .labelMedium
+                                                                    .override(
+                                                                      fontFamily:
+                                                                          'Readex Pro',
+                                                                      fontSize:
+                                                                          12.0,
+                                                                    ),
+                                                              ),
+                                                            ),
+                                                            Row(
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .max,
+                                                              children: [
+                                                                Padding(
+                                                                  padding: const EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          0.0,
+                                                                          0.0,
+                                                                          10.0,
+                                                                          0.0),
+                                                                  child:
+                                                                      FFButtonWidget(
+                                                                    onPressed:
+                                                                        () async {
+                                                                      final selectedMedia =
+                                                                          await selectMediaWithSourceBottomSheet(
+                                                                        context:
+                                                                            context,
+                                                                        maxWidth:
+                                                                            250.00,
+                                                                        maxHeight:
+                                                                            250.00,
+                                                                        imageQuality:
+                                                                            100,
+                                                                        allowPhoto:
+                                                                            true,
+                                                                      );
+                                                                      if (selectedMedia !=
+                                                                              null &&
+                                                                          selectedMedia.every((m) => validateFileFormat(
+                                                                              m.storagePath,
+                                                                              context))) {
+                                                                        setState(() =>
+                                                                            _model.isDataUploading2 =
+                                                                                true);
+                                                                        var selectedUploadedFiles =
+                                                                            <FFUploadedFile>[];
+
+                                                                        var downloadUrls =
+                                                                            <String>[];
+                                                                        try {
+                                                                          showUploadMessage(
+                                                                            context,
+                                                                            'Uploading file...',
+                                                                            showLoading:
+                                                                                true,
+                                                                          );
+                                                                          selectedUploadedFiles = selectedMedia
+                                                                              .map((m) => FFUploadedFile(
+                                                                                    name: m.storagePath.split('/').last,
+                                                                                    bytes: m.bytes,
+                                                                                    height: m.dimensions?.height,
+                                                                                    width: m.dimensions?.width,
+                                                                                    blurHash: m.blurHash,
+                                                                                  ))
+                                                                              .toList();
+
+                                                                          downloadUrls = (await Future.wait(
+                                                                            selectedMedia.map(
+                                                                              (m) async => await uploadData(m.storagePath, m.bytes),
+                                                                            ),
+                                                                          ))
+                                                                              .where((u) => u != null)
+                                                                              .map((u) => u!)
+                                                                              .toList();
+                                                                        } finally {
+                                                                          ScaffoldMessenger.of(context)
+                                                                              .hideCurrentSnackBar();
+                                                                          _model.isDataUploading2 =
+                                                                              false;
+                                                                        }
+                                                                        if (selectedUploadedFiles.length == selectedMedia.length &&
+                                                                            downloadUrls.length ==
+                                                                                selectedMedia.length) {
+                                                                          setState(
+                                                                              () {
+                                                                            _model.uploadedLocalFile2 =
+                                                                                selectedUploadedFiles.first;
+                                                                            _model.uploadedFileUrl2 =
+                                                                                downloadUrls.first;
+                                                                          });
+                                                                          showUploadMessage(
+                                                                              context,
+                                                                              'Success!');
+                                                                        } else {
+                                                                          setState(
+                                                                              () {});
+                                                                          showUploadMessage(
+                                                                              context,
+                                                                              'Failed to upload data');
+                                                                          return;
+                                                                        }
+                                                                      }
+
+                                                                      await containerCreditDetailsRecord!
+                                                                          .reference
+                                                                          .update(
+                                                                              createCreditDetailsRecordData(
+                                                                        image: _model
+                                                                            .uploadedFileUrl2,
+                                                                      ));
+                                                                      setState(
+                                                                          () {
+                                                                        _model.isDataUploading1 =
+                                                                            false;
+                                                                        _model.uploadedLocalFile1 =
+                                                                            FFUploadedFile(bytes: Uint8List.fromList([]));
+                                                                        _model.uploadedFileUrl1 =
+                                                                            '';
+                                                                      });
+                                                                    },
+                                                                    text:
+                                                                        'Add Pic',
+                                                                    options:
+                                                                        FFButtonOptions(
+                                                                      height:
+                                                                          23.0,
+                                                                      padding: const EdgeInsetsDirectional.fromSTEB(
+                                                                          5.0,
+                                                                          0.0,
+                                                                          5.0,
+                                                                          0.0),
+                                                                      iconPadding: const EdgeInsetsDirectional.fromSTEB(
+                                                                          0.0,
+                                                                          0.0,
+                                                                          0.0,
+                                                                          0.0),
+                                                                      color: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .primary,
+                                                                      textStyle: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .labelSmall
+                                                                          .override(
+                                                                            fontFamily:
+                                                                                'Readex Pro',
+                                                                            color:
+                                                                                FlutterFlowTheme.of(context).primaryBackground,
+                                                                            fontSize:
+                                                                                8.0,
+                                                                          ),
+                                                                      elevation:
+                                                                          3.0,
+                                                                      borderSide:
+                                                                          const BorderSide(
+                                                                        color: Colors
+                                                                            .transparent,
+                                                                        width:
+                                                                            1.0,
+                                                                      ),
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              8.0),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Builder(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          FFButtonWidget(
+                                                                    onPressed:
+                                                                        () async {
+                                                                      await Clipboard.setData(
+                                                                          ClipboardData(
+                                                                              text: 'I collected Mouse Credit "${viewVarItem.name}" in the ${viewVarItem.location} on ${dateTimeFormat('yMMMd', containerCreditDetailsRecord?.createdTime)}!'));
+                                                                      await showDialog(
+                                                                        context:
+                                                                            context,
+                                                                        builder:
+                                                                            (dialogContext) {
+                                                                          return Dialog(
+                                                                            elevation:
+                                                                                0,
+                                                                            insetPadding:
+                                                                                EdgeInsets.zero,
+                                                                            backgroundColor:
+                                                                                Colors.transparent,
+                                                                            alignment:
+                                                                                const AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                                                            child:
+                                                                                GestureDetector(
+                                                                              onTap: () => _model.unfocusNode.canRequestFocus ? FocusScope.of(context).requestFocus(_model.unfocusNode) : FocusScope.of(context).unfocus(),
+                                                                              child: const ShareconfirmWidget(),
+                                                                            ),
+                                                                          );
+                                                                        },
+                                                                      ).then((value) =>
+                                                                          setState(
+                                                                              () {}));
+                                                                    },
+                                                                    text:
+                                                                        'Share',
+                                                                    options:
+                                                                        FFButtonOptions(
+                                                                      height:
+                                                                          23.0,
+                                                                      padding: const EdgeInsetsDirectional.fromSTEB(
+                                                                          5.0,
+                                                                          0.0,
+                                                                          5.0,
+                                                                          0.0),
+                                                                      iconPadding: const EdgeInsetsDirectional.fromSTEB(
+                                                                          0.0,
+                                                                          0.0,
+                                                                          0.0,
+                                                                          0.0),
+                                                                      color: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .primary,
+                                                                      textStyle: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .labelSmall
+                                                                          .override(
+                                                                            fontFamily:
+                                                                                'Readex Pro',
+                                                                            color:
+                                                                                FlutterFlowTheme.of(context).primaryBackground,
+                                                                            fontSize:
+                                                                                8.0,
+                                                                          ),
+                                                                      elevation:
+                                                                          3.0,
+                                                                      borderSide:
+                                                                          const BorderSide(
+                                                                        color: Colors
+                                                                            .transparent,
+                                                                        width:
+                                                                            1.0,
+                                                                      ),
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              8.0),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    children: [
+                                                      Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primary,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      6.0),
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .tertiary,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      6.0),
+                                                        ),
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets.all(
+                                                                  4.0),
+                                                          child: Icon(
+                                                            Icons.clear,
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .primaryBackground,
+                                                            size: 16.0,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                );
+                              },
+                            ).animateOnPageLoad(
+                                animationsMap['listViewOnPageLoadAnimation3']!);
+                          },
+                        ),
+                      ),
                     if (FFAppState().Viewtoggle == 'Badges')
                       Padding(
                         padding:
                             const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 24.0),
                         child: StreamBuilder<List<BadgesRecord>>(
-                          stream: queryBadgesRecord(
-                            queryBuilder: (badgesRecord) => badgesRecord.where(
-                              'Users',
-                              arrayContains: currentUserReference,
+                          stream: FFAppState().badges(
+                            requestFn: () => queryBadgesRecord(
+                              queryBuilder: (badgesRecord) => badgesRecord
+                                  .where(
+                                    'Users',
+                                    arrayContains: currentUserReference,
+                                  )
+                                  .orderBy('Name'),
                             ),
                           ),
                           builder: (context, snapshot) {
@@ -1036,11 +1942,6 @@ class _ViewWidgetState extends State<ViewWidget> with TickerProviderStateMixin {
                                       color: FlutterFlowTheme.of(context)
                                           .secondaryBackground,
                                       borderRadius: BorderRadius.circular(8.0),
-                                      border: Border.all(
-                                        color: FlutterFlowTheme.of(context)
-                                            .alternate,
-                                        width: 2.0,
-                                      ),
                                     ),
                                     child: Column(
                                       mainAxisSize: MainAxisSize.max,
@@ -1054,192 +1955,297 @@ class _ViewWidgetState extends State<ViewWidget> with TickerProviderStateMixin {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Padding(
-                                                padding: const EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        0.0, 0.0, 12.0, 0.0),
-                                                child: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    AlignedTooltip(
-                                                      content: Padding(
-                                                          padding:
-                                                              const EdgeInsets.all(
-                                                                  4.0),
-                                                          child: Text(
-                                                            listViewBadgesRecord
-                                                                .name,
-                                                            style: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .bodyLarge,
-                                                          )),
-                                                      offset: 4.0,
-                                                      preferredDirection:
-                                                          AxisDirection.down,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8.0),
-                                                      backgroundColor:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .secondaryBackground,
-                                                      elevation: 4.0,
-                                                      tailBaseWidth: 24.0,
-                                                      tailLength: 12.0,
-                                                      waitDuration: const Duration(
-                                                          milliseconds: 100),
-                                                      showDuration: const Duration(
-                                                          milliseconds: 1500),
-                                                      triggerMode:
-                                                          TooltipTriggerMode
-                                                              .tap,
-                                                      child: Text(
+                                              Row(
+                                                mainAxisSize: MainAxisSize.max,
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsetsDirectional
+                                                            .fromSTEB(0.0, 0.0,
+                                                                10.0, 0.0),
+                                                    child: Container(
+                                                      width: 40.0,
+                                                      height: 40.0,
+                                                      clipBehavior:
+                                                          Clip.antiAlias,
+                                                      decoration: const BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      child: Image.network(
                                                         listViewBadgesRecord
-                                                            .name
-                                                            .maybeHandleOverflow(
-                                                          maxChars: 20,
-                                                          replacement: '…',
-                                                        ),
-                                                        style:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyLarge,
+                                                            .image,
+                                                        fit: BoxFit.cover,
                                                       ),
                                                     ),
-                                                    AlignedTooltip(
-                                                      content: Padding(
-                                                          padding:
-                                                              const EdgeInsets.all(
-                                                                  4.0),
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsetsDirectional
+                                                            .fromSTEB(0.0, 0.0,
+                                                                12.0, 0.0),
+                                                    child: Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        AlignedTooltip(
+                                                          content: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(4.0),
+                                                              child: Text(
+                                                                listViewBadgesRecord
+                                                                    .name,
+                                                                style: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyLarge,
+                                                              )),
+                                                          offset: 4.0,
+                                                          preferredDirection:
+                                                              AxisDirection
+                                                                  .down,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      8.0),
+                                                          backgroundColor:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .primaryBackground,
+                                                          elevation: 4.0,
+                                                          tailBaseWidth: 24.0,
+                                                          tailLength: 12.0,
+                                                          waitDuration:
+                                                              const Duration(
+                                                                  milliseconds:
+                                                                      100),
+                                                          showDuration:
+                                                              const Duration(
+                                                                  milliseconds:
+                                                                      1500),
+                                                          triggerMode:
+                                                              TooltipTriggerMode
+                                                                  .tap,
                                                           child: Text(
                                                             listViewBadgesRecord
-                                                                .description,
+                                                                .name
+                                                                .maybeHandleOverflow(
+                                                              maxChars: 20,
+                                                              replacement: '…',
+                                                            ),
                                                             style: FlutterFlowTheme
                                                                     .of(context)
-                                                                .bodyLarge,
-                                                          )),
-                                                      offset: 4.0,
-                                                      preferredDirection:
-                                                          AxisDirection.down,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8.0),
-                                                      backgroundColor:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .secondaryBackground,
-                                                      elevation: 4.0,
-                                                      tailBaseWidth: 24.0,
-                                                      tailLength: 12.0,
-                                                      waitDuration: const Duration(
-                                                          milliseconds: 100),
-                                                      showDuration: const Duration(
-                                                          milliseconds: 1500),
-                                                      triggerMode:
-                                                          TooltipTriggerMode
-                                                              .tap,
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsetsDirectional
-                                                                .fromSTEB(
-                                                                    0.0,
-                                                                    4.0,
-                                                                    0.0,
-                                                                    0.0),
-                                                        child: Text(
-                                                          listViewBadgesRecord
-                                                              .description
-                                                              .maybeHandleOverflow(
-                                                            maxChars: 20,
-                                                            replacement: '…',
+                                                                .bodyLarge
+                                                                .override(
+                                                                  fontFamily:
+                                                                      'Readex Pro',
+                                                                  fontSize:
+                                                                      14.0,
+                                                                ),
                                                           ),
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .labelMedium,
                                                         ),
-                                                      ),
+                                                        AlignedTooltip(
+                                                          content: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(4.0),
+                                                              child: Text(
+                                                                listViewBadgesRecord
+                                                                    .description,
+                                                                style: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyLarge,
+                                                              )),
+                                                          offset: 4.0,
+                                                          preferredDirection:
+                                                              AxisDirection
+                                                                  .down,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      8.0),
+                                                          backgroundColor:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .primaryBackground,
+                                                          elevation: 4.0,
+                                                          tailBaseWidth: 24.0,
+                                                          tailLength: 12.0,
+                                                          waitDuration:
+                                                              const Duration(
+                                                                  milliseconds:
+                                                                      100),
+                                                          showDuration:
+                                                              const Duration(
+                                                                  milliseconds:
+                                                                      1500),
+                                                          triggerMode:
+                                                              TooltipTriggerMode
+                                                                  .tap,
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsetsDirectional
+                                                                    .fromSTEB(
+                                                                        0.0,
+                                                                        4.0,
+                                                                        0.0,
+                                                                        0.0),
+                                                            child: Text(
+                                                              listViewBadgesRecord
+                                                                  .description
+                                                                  .maybeHandleOverflow(
+                                                                maxChars: 20,
+                                                                replacement:
+                                                                    '…',
+                                                              ),
+                                                              style: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .labelMedium
+                                                                  .override(
+                                                                    fontFamily:
+                                                                        'Readex Pro',
+                                                                    fontSize:
+                                                                        12.0,
+                                                                  ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
-                                                  ],
-                                                ),
+                                                  ),
+                                                ],
                                               ),
                                               Row(
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: [
-                                                  FFButtonWidget(
-                                                    onPressed: () async {
-                                                      await listViewBadgesRecord
-                                                          .reference
-                                                          .update({
-                                                        ...mapToFirestore(
-                                                          {
-                                                            'Users': FieldValue
-                                                                .arrayRemove([
-                                                              currentUserReference
-                                                            ]),
-                                                          },
-                                                        ),
-                                                      });
-
-                                                      await currentUserReference!
-                                                          .update({
-                                                        ...mapToFirestore(
-                                                          {
-                                                            'Badges': FieldValue
-                                                                .arrayRemove([
-                                                              listViewBadgesRecord
-                                                                  .reference
-                                                            ]),
-                                                          },
-                                                        ),
-                                                      });
-                                                    },
-                                                    text: 'Remove Badge',
-                                                    options: FFButtonOptions(
-                                                      height: 30.0,
+                                                  Builder(
+                                                    builder: (context) =>
+                                                        Padding(
                                                       padding:
                                                           const EdgeInsetsDirectional
                                                               .fromSTEB(
-                                                                  10.0,
+                                                                  0.0,
                                                                   0.0,
                                                                   10.0,
                                                                   0.0),
-                                                      iconPadding:
-                                                          const EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  0.0,
-                                                                  0.0,
-                                                                  0.0,
-                                                                  0.0),
+                                                      child: FFButtonWidget(
+                                                        onPressed: () async {
+                                                          await Clipboard.setData(
+                                                              ClipboardData(
+                                                                  text:
+                                                                      'I\'ve collected Mouse Credit badge "${listViewBadgesRecord.name}- ${listViewBadgesRecord.description}.'));
+                                                          await showDialog(
+                                                            context: context,
+                                                            builder:
+                                                                (dialogContext) {
+                                                              return Dialog(
+                                                                elevation: 0,
+                                                                insetPadding:
+                                                                    EdgeInsets
+                                                                        .zero,
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .transparent,
+                                                                alignment: const AlignmentDirectional(
+                                                                        0.0,
+                                                                        0.0)
+                                                                    .resolve(
+                                                                        Directionality.of(
+                                                                            context)),
+                                                                child:
+                                                                    GestureDetector(
+                                                                  onTap: () => _model
+                                                                          .unfocusNode
+                                                                          .canRequestFocus
+                                                                      ? FocusScope.of(
+                                                                              context)
+                                                                          .requestFocus(_model
+                                                                              .unfocusNode)
+                                                                      : FocusScope.of(
+                                                                              context)
+                                                                          .unfocus(),
+                                                                  child:
+                                                                      const ShareconfirmWidget(),
+                                                                ),
+                                                              );
+                                                            },
+                                                          ).then((value) =>
+                                                              setState(() {}));
+                                                        },
+                                                        text: 'Share',
+                                                        options:
+                                                            FFButtonOptions(
+                                                          height: 23.0,
+                                                          padding:
+                                                              const EdgeInsetsDirectional
+                                                                  .fromSTEB(
+                                                                      5.0,
+                                                                      0.0,
+                                                                      5.0,
+                                                                      0.0),
+                                                          iconPadding:
+                                                              const EdgeInsetsDirectional
+                                                                  .fromSTEB(
+                                                                      0.0,
+                                                                      0.0,
+                                                                      0.0,
+                                                                      0.0),
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primary,
+                                                          textStyle:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .labelSmall
+                                                                  .override(
+                                                                    fontFamily:
+                                                                        'Readex Pro',
+                                                                    color: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .primaryBackground,
+                                                                    fontSize:
+                                                                        8.0,
+                                                                  ),
+                                                          elevation: 3.0,
+                                                          borderSide:
+                                                              const BorderSide(
+                                                            color: Colors
+                                                                .transparent,
+                                                            width: 1.0,
+                                                          ),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      8.0),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    decoration: BoxDecoration(
                                                       color:
                                                           FlutterFlowTheme.of(
                                                                   context)
-                                                              .secondary,
-                                                      textStyle:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodySmall
-                                                              .override(
-                                                                fontFamily:
-                                                                    'Readex Pro',
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .primaryBackground,
-                                                                fontSize: 8.0,
-                                                              ),
-                                                      elevation: 3.0,
-                                                      borderSide: const BorderSide(
-                                                        color:
-                                                            Colors.transparent,
-                                                        width: 1.0,
-                                                      ),
+                                                              .tertiary,
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                              8.0),
+                                                              6.0),
+                                                    ),
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(4.0),
+                                                      child: Icon(
+                                                        Icons.clear,
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .primaryBackground,
+                                                        size: 16.0,
+                                                      ),
                                                     ),
                                                   ),
                                                 ],
@@ -1247,51 +2253,40 @@ class _ViewWidgetState extends State<ViewWidget> with TickerProviderStateMixin {
                                             ],
                                           ),
                                         ),
-                                        if (!functions.arraycheck(
-                                            (currentUserDocument?.credits
-                                                        .toList() ??
-                                                    [])
-                                                .map((e) => e.id)
-                                                .toList(),
-                                            listViewBadgesRecord.credReq
-                                                .map((e) => e.id)
-                                                .toList())!)
-                                          Padding(
-                                            padding:
-                                                const EdgeInsetsDirectional.fromSTEB(
-                                                    16.0, 12.0, 16.0, 12.0),
-                                            child: AuthUserStreamWidget(
-                                              builder: (context) => Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Text(
-                                                    'Missing Credit!',
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          fontFamily:
-                                                              'Readex Pro',
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .primary,
-                                                          fontStyle:
-                                                              FontStyle.italic,
-                                                        ),
-                                                  ),
-                                                ],
+                                        Padding(
+                                          padding:
+                                              const EdgeInsetsDirectional.fromSTEB(
+                                                  16.0, 12.0, 16.0, 12.0),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                'Missing Credit!',
+                                                style: FlutterFlowTheme.of(
+                                                        context)
+                                                    .bodyMedium
+                                                    .override(
+                                                      fontFamily: 'Readex Pro',
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .tertiary,
+                                                      fontStyle:
+                                                          FontStyle.italic,
+                                                    ),
                                               ),
-                                            ),
+                                            ],
                                           ),
+                                        ),
                                       ],
                                     ),
                                   ),
                                 );
                               },
                             ).animateOnPageLoad(
-                                animationsMap['listViewOnPageLoadAnimation3']!);
+                                animationsMap['listViewOnPageLoadAnimation4']!);
                           },
                         ),
                       ),

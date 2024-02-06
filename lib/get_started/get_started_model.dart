@@ -1,15 +1,21 @@
 import '/flutter_flow/flutter_flow_util.dart';
-import 'share_badge_widget.dart' show ShareBadgeWidget;
+import 'get_started_widget.dart' show GetStartedWidget;
 import 'package:flutter/material.dart';
 
-class ShareBadgeModel extends FlutterFlowModel<ShareBadgeWidget> {
+class GetStartedModel extends FlutterFlowModel<GetStartedWidget> {
+  ///  State fields for stateful widgets in this page.
+
+  final unfocusNode = FocusNode();
+
   /// Initialization and disposal methods.
 
   @override
   void initState(BuildContext context) {}
 
   @override
-  void dispose() {}
+  void dispose() {
+    unfocusNode.dispose();
+  }
 
   /// Action blocks are added here.
 

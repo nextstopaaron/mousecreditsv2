@@ -11,7 +11,7 @@ class WordpressCall {
   static Future<ApiCallResponse> call() async {
     return ApiManager.instance.makeApiCall(
       callName: 'Wordpress',
-      apiUrl: 'https://nextstopaaron.com/wp-json/wp/v2/posts',
+      apiUrl: 'https://nextstopaaron.com/wp-json/wp/v2/posts/3925',
       callType: ApiCallType.GET,
       headers: {},
       params: {},
@@ -59,6 +59,11 @@ class WordpressCall {
           .map((x) => castToType<String>(x))
           .withoutNulls
           .toList();
+  static String? postContent(dynamic response) =>
+      castToType<String>(getJsonField(
+        response,
+        r'''$.content.rendered''',
+      ));
 }
 
 class ApiPagingParams {

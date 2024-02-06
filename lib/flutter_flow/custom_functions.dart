@@ -10,6 +10,7 @@ import 'place.dart';
 import 'uploaded_file.dart';
 import '/backend/backend.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '/backend/schema/structs/index.dart';
 import '/auth/firebase_auth/auth_util.dart';
 
 double? calPercentage(
@@ -32,7 +33,7 @@ String? credStatus(
     return null;
   }
   double percentage = credsearned / credsavailable;
-  if (percentage >= 0.1 && percentage <= 0.25) {
+  if (percentage >= 0.01 && percentage <= 0.25) {
     return "Rookie";
   } else if (percentage >= 0.26 && percentage <= 0.50) {
     return "Novice";

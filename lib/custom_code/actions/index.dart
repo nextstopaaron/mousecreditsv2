@@ -6,4 +6,4 @@ export 'credit_ref_delete_favorites.dart' show creditRefDeleteFavorites;
 export 'user_ref_delete_badges.dart' show userRefDeleteBadges;
 export 'user_ref_delete_credits.dart' show userRefDeleteCredits;
 export 'user_ref_delete_favorites.dart' show userRefDeleteFavorites;
-export 'new_custom_action.dart' show newCustomAction;
+export 'gen_u_i_d.dart' show genUID;

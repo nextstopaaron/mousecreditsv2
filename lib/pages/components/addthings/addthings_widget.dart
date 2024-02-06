@@ -9,12 +9,7 @@ import 'addthings_model.dart';
 export 'addthings_model.dart';
 
 class AddthingsWidget extends StatefulWidget {
-  const AddthingsWidget({
-    super.key,
-    this.creditCount,
-  });
-
-  final int? creditCount;
+  const AddthingsWidget({super.key});
 
   @override
   State<AddthingsWidget> createState() => _AddthingsWidgetState();
@@ -49,99 +44,112 @@ class _AddthingsWidgetState extends State<AddthingsWidget> {
     context.watch<FFAppState>();
 
     return Padding(
-      padding: const EdgeInsets.all(5.0),
-      child: Container(
-        width: MediaQuery.sizeOf(context).width * 1.0,
-        height: 270.0,
-        decoration: BoxDecoration(
-          color: FlutterFlowTheme.of(context).primaryBackground,
-          border: Border.all(
-            color: FlutterFlowTheme.of(context).secondary,
-            width: 1.0,
-          ),
+      padding: const EdgeInsetsDirectional.fromSTEB(15.0, 0.0, 15.0, 0.0),
+      child: FutureBuilder<int>(
+        future: FFAppState().creditCount(
+          requestFn: () => queryCreditsRecordCount(),
         ),
-        child: Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(25.0, 5.0, 25.0, 20.0),
-          child: FutureBuilder<int>(
-            future: queryBadgesRecordCount(),
-            builder: (context, snapshot) {
-              // Customize what your widget looks like when it's loading.
-              if (!snapshot.hasData) {
-                return Center(
-                  child: SizedBox(
-                    width: 50.0,
-                    height: 50.0,
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        FlutterFlowTheme.of(context).primary,
-                      ),
-                    ),
+        builder: (context, snapshot) {
+          // Customize what your widget looks like when it's loading.
+          if (!snapshot.hasData) {
+            return Center(
+              child: SizedBox(
+                width: 50.0,
+                height: 50.0,
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    FlutterFlowTheme.of(context).primary,
                   ),
-                );
-              }
-              int columnCount = snapshot.data!;
-              return Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding:
-                        const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 15.0),
-                    child: AuthUserStreamWidget(
-                      builder: (context) => FFButtonWidget(
-                        onPressed:
-                            ((currentUserDocument?.credits.toList() ?? [])
-                                        .length ==
-                                    widget.creditCount)
-                                ? null
-                                : () async {
-                                    context.pushNamed('AddCred');
+                ),
+              ),
+            );
+          }
+          int containerCount = snapshot.data!;
+          return Container(
+            width: MediaQuery.sizeOf(context).width * 1.0,
+            height: 270.0,
+            decoration: BoxDecoration(
+              color: FlutterFlowTheme.of(context).primaryBackground,
+              borderRadius: BorderRadius.circular(10.0),
+              border: Border.all(
+                color: FlutterFlowTheme.of(context).secondary,
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(25.0, 5.0, 25.0, 20.0),
+              child: FutureBuilder<int>(
+                future: queryBadgesRecordCount(),
+                builder: (context, snapshot) {
+                  // Customize what your widget looks like when it's loading.
+                  if (!snapshot.hasData) {
+                    return Center(
+                      child: SizedBox(
+                        width: 50.0,
+                        height: 50.0,
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            FlutterFlowTheme.of(context).primary,
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                  int columnCount = snapshot.data!;
+                  return Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsetsDirectional.fromSTEB(
+                            0.0, 15.0, 0.0, 15.0),
+                        child: AuthUserStreamWidget(
+                          builder: (context) => FFButtonWidget(
+                            onPressed:
+                                ((currentUserDocument?.credits.toList() ?? [])
+                                            .length ==
+                                        containerCount)
+                                    ? null
+                                    : () async {
+                                        context.pushNamed('AddCred');
 
-                                    Navigator.pop(context);
-                                  },
-                        text: 'Add Credits',
-                        options: FFButtonOptions(
-                          width: MediaQuery.sizeOf(context).width * 1.0,
-                          height: 45.0,
-                          padding: const EdgeInsetsDirectional.fromSTEB(
-                              24.0, 0.0, 24.0, 0.0),
-                          iconPadding: const EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color: FlutterFlowTheme.of(context).secondary,
-                          textStyle:
-                              FlutterFlowTheme.of(context).titleSmall.override(
+                                        Navigator.pop(context);
+                                      },
+                            text: 'Add Credits',
+                            options: FFButtonOptions(
+                              width: MediaQuery.sizeOf(context).width * 1.0,
+                              height: 45.0,
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  24.0, 0.0, 24.0, 0.0),
+                              iconPadding: const EdgeInsetsDirectional.fromSTEB(
+                                  0.0, 0.0, 0.0, 0.0),
+                              color: FlutterFlowTheme.of(context).primary,
+                              textStyle: FlutterFlowTheme.of(context)
+                                  .titleSmall
+                                  .override(
                                     fontFamily: 'Readex Pro',
                                     color: FlutterFlowTheme.of(context)
                                         .primaryBackground,
                                   ),
-                          elevation: 3.0,
-                          borderSide: BorderSide(
-                            color: FlutterFlowTheme.of(context).secondary,
-                            width: 0.0,
+                              elevation: 3.0,
+                              borderSide: const BorderSide(
+                                color: Color(0x004F4F4F),
+                              ),
+                              borderRadius: BorderRadius.circular(8.0),
+                              disabledColor:
+                                  FlutterFlowTheme.of(context).lineColor,
+                            ),
                           ),
-                          borderRadius: BorderRadius.circular(8.0),
-                          disabledColor: FlutterFlowTheme.of(context).lineColor,
                         ),
                       ),
-                    ),
-                  ),
-                  if (columnCount !=
-                      (currentUserDocument?.badges.toList() ?? []).length)
-                    Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 15.0),
-                      child: AuthUserStreamWidget(
-                        builder: (context) => FFButtonWidget(
-                          onPressed:
-                              ((currentUserDocument?.badges.toList() ?? [])
-                                          .length ==
-                                      columnCount)
-                                  ? null
-                                  : () async {
-                                      context.pushNamed('AddBadge');
+                      Padding(
+                        padding: const EdgeInsetsDirectional.fromSTEB(
+                            0.0, 15.0, 0.0, 15.0),
+                        child: FFButtonWidget(
+                          onPressed: () async {
+                            context.pushNamed('AddBadge');
 
-                                      Navigator.pop(context);
-                                    },
+                            Navigator.pop(context);
+                          },
                           text: 'Add Badges',
                           options: FFButtonOptions(
                             width: MediaQuery.sizeOf(context).width * 1.0,
@@ -150,7 +158,7 @@ class _AddthingsWidgetState extends State<AddthingsWidget> {
                                 24.0, 0.0, 24.0, 0.0),
                             iconPadding: const EdgeInsetsDirectional.fromSTEB(
                                 0.0, 0.0, 0.0, 0.0),
-                            color: FlutterFlowTheme.of(context).secondary,
+                            color: FlutterFlowTheme.of(context).primary,
                             textStyle: FlutterFlowTheme.of(context)
                                 .titleSmall
                                 .override(
@@ -159,68 +167,69 @@ class _AddthingsWidgetState extends State<AddthingsWidget> {
                                       .primaryBackground,
                                 ),
                             elevation: 3.0,
-                            borderSide: BorderSide(
-                              color: FlutterFlowTheme.of(context).secondary,
+                            borderSide: const BorderSide(
+                              color: Color(0x004F4F4F),
                               width: 0.0,
                             ),
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
                       ),
-                    ),
-                  if (widget.creditCount !=
-                      (currentUserDocument?.favorites.toList() ?? []).length)
-                    Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 15.0),
-                      child: AuthUserStreamWidget(
-                        builder: (context) => FFButtonWidget(
-                          onPressed:
-                              (((currentUserDocument?.credits.toList() ?? [])
-                                              .length ==
-                                          widget.creditCount) ||
-                                      ((currentUserDocument?.favorites
-                                                      .toList() ??
-                                                  [])
-                                              .length ==
-                                          widget.creditCount))
-                                  ? null
-                                  : () async {
-                                      context.pushNamed('AddCred');
+                      Padding(
+                        padding: const EdgeInsetsDirectional.fromSTEB(
+                            0.0, 15.0, 0.0, 15.0),
+                        child: AuthUserStreamWidget(
+                          builder: (context) => FFButtonWidget(
+                            onPressed:
+                                (((currentUserDocument?.credits.toList() ?? [])
+                                                .length ==
+                                            containerCount) ||
+                                        ((currentUserDocument?.favorites
+                                                        .toList() ??
+                                                    [])
+                                                .length ==
+                                            containerCount))
+                                    ? null
+                                    : () async {
+                                        context.pushNamed('AddCred');
 
-                                      Navigator.pop(context);
-                                    },
-                          text: 'Add Favorites',
-                          options: FFButtonOptions(
-                            width: MediaQuery.sizeOf(context).width * 1.0,
-                            height: 45.0,
-                            padding: const EdgeInsetsDirectional.fromSTEB(
-                                24.0, 0.0, 24.0, 0.0),
-                            iconPadding: const EdgeInsetsDirectional.fromSTEB(
-                                0.0, 0.0, 0.0, 0.0),
-                            color: FlutterFlowTheme.of(context).secondary,
-                            textStyle: FlutterFlowTheme.of(context)
-                                .titleSmall
-                                .override(
-                                  fontFamily: 'Readex Pro',
-                                  color: FlutterFlowTheme.of(context)
-                                      .primaryBackground,
-                                ),
-                            elevation: 3.0,
-                            borderSide: BorderSide(
-                              color: FlutterFlowTheme.of(context).secondary,
-                              width: 0.0,
+                                        Navigator.pop(context);
+                                      },
+                            text: 'Add Favorites',
+                            options: FFButtonOptions(
+                              width: MediaQuery.sizeOf(context).width * 1.0,
+                              height: 45.0,
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  24.0, 0.0, 24.0, 0.0),
+                              iconPadding: const EdgeInsetsDirectional.fromSTEB(
+                                  0.0, 0.0, 0.0, 0.0),
+                              color: FlutterFlowTheme.of(context).primary,
+                              textStyle: FlutterFlowTheme.of(context)
+                                  .titleSmall
+                                  .override(
+                                    fontFamily: 'Readex Pro',
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryBackground,
+                                  ),
+                              elevation: 3.0,
+                              borderSide: const BorderSide(
+                                color: Color(0x004F4F4F),
+                                width: 0.0,
+                              ),
+                              borderRadius: BorderRadius.circular(8.0),
+                              disabledColor:
+                                  FlutterFlowTheme.of(context).lineColor,
                             ),
-                            borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
                       ),
-                    ),
-                ],
-              );
-            },
-          ),
-        ),
+                    ],
+                  );
+                },
+              ),
+            ),
+          );
+        },
       ),
     );
   }

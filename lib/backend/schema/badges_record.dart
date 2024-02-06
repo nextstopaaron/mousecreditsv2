@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 
 import '/backend/schema/util/firestore_util.dart';
-import '/backend/schema/util/schema_util.dart';
 
 import 'index.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -56,6 +55,11 @@ class BadgesRecord extends FirestoreRecord {
   String get location => _location ?? '';
   bool hasLocation() => _location != null;
 
+  // "Image" field.
+  String? _image;
+  String get image => _image ?? '';
+  bool hasImage() => _image != null;
+
   void _initializeFields() {
     _name = snapshotData['Name'] as String?;
     _description = snapshotData['Description'] as String?;
@@ -65,6 +69,7 @@ class BadgesRecord extends FirestoreRecord {
     _challenge = snapshotData['Challenge'] as String?;
     _createdTime = snapshotData['CreatedTime'] as DateTime?;
     _location = snapshotData['Location'] as String?;
+    _image = snapshotData['Image'] as String?;
   }
 
   static CollectionReference get collection =>
@@ -107,6 +112,7 @@ Map<String, dynamic> createBadgesRecordData({
   String? challenge,
   DateTime? createdTime,
   String? location,
+  String? image,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -116,6 +122,7 @@ Map<String, dynamic> createBadgesRecordData({
       'Challenge': challenge,
       'CreatedTime': createdTime,
       'Location': location,
+      'Image': image,
     }.withoutNulls,
   );
 
@@ -135,7 +142,8 @@ class BadgesRecordDocumentEquality implements Equality<BadgesRecord> {
         e1?.popularity == e2?.popularity &&
         e1?.challenge == e2?.challenge &&
         e1?.createdTime == e2?.createdTime &&
-        e1?.location == e2?.location;
+        e1?.location == e2?.location &&
+        e1?.image == e2?.image;
   }
 
   @override
@@ -147,7 +155,8 @@ class BadgesRecordDocumentEquality implements Equality<BadgesRecord> {
         e?.popularity,
         e?.challenge,
         e?.createdTime,
-        e?.location
+        e?.location,
+        e?.image
       ]);
 
   @override

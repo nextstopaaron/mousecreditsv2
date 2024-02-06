@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 
 import '/backend/schema/util/firestore_util.dart';
-import '/backend/schema/util/schema_util.dart';
 
 import 'index.dart';
 
@@ -14,11 +13,6 @@ class RequestsRecord extends FirestoreRecord {
   ) {
     _initializeFields();
   }
-
-  // "Experience" field.
-  String? _experience;
-  String get experience => _experience ?? '';
-  bool hasExperience() => _experience != null;
 
   // "Description" field.
   String? _description;
@@ -31,7 +25,6 @@ class RequestsRecord extends FirestoreRecord {
   bool hasEmail() => _email != null;
 
   void _initializeFields() {
-    _experience = snapshotData['Experience'] as String?;
     _description = snapshotData['Description'] as String?;
     _email = snapshotData['Email'] as String?;
   }
@@ -71,13 +64,11 @@ class RequestsRecord extends FirestoreRecord {
 }
 
 Map<String, dynamic> createRequestsRecordData({
-  String? experience,
   String? description,
   String? email,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
-      'Experience': experience,
       'Description': description,
       'Email': email,
     }.withoutNulls,
@@ -91,14 +82,12 @@ class RequestsRecordDocumentEquality implements Equality<RequestsRecord> {
 
   @override
   bool equals(RequestsRecord? e1, RequestsRecord? e2) {
-    return e1?.experience == e2?.experience &&
-        e1?.description == e2?.description &&
-        e1?.email == e2?.email;
+    return e1?.description == e2?.description && e1?.email == e2?.email;
   }
 
   @override
   int hash(RequestsRecord? e) =>
-      const ListEquality().hash([e?.experience, e?.description, e?.email]);
+      const ListEquality().hash([e?.description, e?.email]);
 
   @override
   bool isValidKey(Object? o) => o is RequestsRecord;

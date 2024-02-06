@@ -8,8 +8,20 @@ class ViewModel extends FlutterFlowModel<ViewWidget> {
 
   final unfocusNode = FocusNode();
   // State field(s) for ChoiceChips widget.
-  String? choiceChipsValue;
-  FormFieldController<List<String>>? choiceChipsValueController;
+  String? choiceChipsValue1;
+  FormFieldController<List<String>>? choiceChipsValueController1;
+  // State field(s) for ChoiceChips widget.
+  String? choiceChipsValue2;
+  FormFieldController<List<String>>? choiceChipsValueController2;
+  bool isDataUploading1 = false;
+  FFUploadedFile uploadedLocalFile1 =
+      FFUploadedFile(bytes: Uint8List.fromList([]));
+  String uploadedFileUrl1 = '';
+
+  bool isDataUploading2 = false;
+  FFUploadedFile uploadedLocalFile2 =
+      FFUploadedFile(bytes: Uint8List.fromList([]));
+  String uploadedFileUrl2 = '';
 
   /// Initialization and disposal methods.
 
