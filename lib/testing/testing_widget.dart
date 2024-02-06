@@ -199,6 +199,35 @@ class _TestingWidgetState extends State<TestingWidget> {
                                       ),
                                     ),
                                   ),
+                                  FFButtonWidget(
+                                    onPressed: () async {
+                                      FFAppState().CreditShow =
+                                          _model.textController.text;
+                                    },
+                                    text: 'Filter',
+                                    options: FFButtonOptions(
+                                      height: 40.0,
+                                      padding: const EdgeInsetsDirectional.fromSTEB(
+                                          24.0, 0.0, 24.0, 0.0),
+                                      iconPadding:
+                                          const EdgeInsetsDirectional.fromSTEB(
+                                              0.0, 0.0, 0.0, 0.0),
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                      textStyle: FlutterFlowTheme.of(context)
+                                          .titleSmall
+                                          .override(
+                                            fontFamily: 'Readex Pro',
+                                            color: Colors.white,
+                                          ),
+                                      elevation: 3.0,
+                                      borderSide: const BorderSide(
+                                        color: Colors.transparent,
+                                        width: 1.0,
+                                      ),
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -254,278 +283,287 @@ class _TestingWidgetState extends State<TestingWidget> {
                                           (context, credTestinnerIndex) {
                                         final credTestinnerItem =
                                             credTestinner[credTestinnerIndex];
-                                        return Container(
-                                          decoration: const BoxDecoration(),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.max,
-                                            children: [
-                                              Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                children: [
-                                                  Text(
-                                                    credTestinnerItem.name
-                                                        .maybeHandleOverflow(
-                                                            maxChars: 5),
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodySmall,
-                                                  ),
-                                                ],
-                                              ),
-                                              Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                children: [
-                                                  FFButtonWidget(
-                                                    onPressed: () async {
-                                                      await testItem.reference
-                                                          .update({
-                                                        ...mapToFirestore(
-                                                          {
-                                                            'CreditFieldTest':
-                                                                FieldValue
-                                                                    .arrayRemove([
-                                                              getCreditFirestoreData(
-                                                                updateCreditStruct(
-                                                                  credTestinnerItem,
-                                                                  clearUnsetFields:
-                                                                      false,
-                                                                ),
-                                                                true,
-                                                              )
-                                                            ]),
-                                                            'CreditCount':
-                                                                FieldValue
-                                                                    .increment(
-                                                                        -(1)),
-                                                          },
-                                                        ),
-                                                      });
-                                                    },
-                                                    text: 'Delete',
-                                                    options: FFButtonOptions(
-                                                      width: 75.0,
-                                                      height: 20.0,
-                                                      padding:
-                                                          const EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  24.0,
-                                                                  0.0,
-                                                                  24.0,
-                                                                  0.0),
-                                                      iconPadding:
-                                                          const EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  0.0,
-                                                                  0.0,
-                                                                  0.0,
-                                                                  0.0),
-                                                      color:
+                                        return Visibility(
+                                          visible: functions.strCheck(
+                                                  credTestinnerItem.name,
+                                                  FFAppState().CreditShow) ??
+                                              true,
+                                          child: Container(
+                                            decoration: const BoxDecoration(),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  children: [
+                                                    Text(
+                                                      credTestinnerItem.name
+                                                          .maybeHandleOverflow(
+                                                              maxChars: 5),
+                                                      style:
                                                           FlutterFlowTheme.of(
                                                                   context)
-                                                              .primary,
-                                                      textStyle:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .titleSmall
-                                                              .override(
-                                                                fontFamily:
-                                                                    'Readex Pro',
-                                                                color: Colors
-                                                                    .white,
-                                                              ),
-                                                      elevation: 3.0,
-                                                      borderSide: const BorderSide(
-                                                        color:
-                                                            Colors.transparent,
-                                                        width: 1.0,
-                                                      ),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8.0),
+                                                              .bodySmall,
                                                     ),
-                                                  ),
-                                                  FFButtonWidget(
-                                                    onPressed: () async {
-                                                      await currentUserReference!
-                                                          .update({
-                                                        ...mapToFirestore(
-                                                          {
-                                                            'Credits': FieldValue
-                                                                .arrayUnion([
-                                                              getUserCreditFirestoreData(
-                                                                updateUserCreditStruct(
-                                                                  UserCreditStruct(
-                                                                    name: credTestinnerItem
-                                                                        .name,
-                                                                    location:
-                                                                        credTestinnerItem
-                                                                            .location,
-                                                                    timeAdded:
-                                                                        getCurrentTimestamp,
-                                                                    creditUID:
-                                                                        credTestinnerItem
-                                                                            .uid,
-                                                                    type: credTestinnerItem
-                                                                        .type,
+                                                  ],
+                                                ),
+                                                Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  children: [
+                                                    FFButtonWidget(
+                                                      onPressed: () async {
+                                                        await testItem.reference
+                                                            .update({
+                                                          ...mapToFirestore(
+                                                            {
+                                                              'CreditFieldTest':
+                                                                  FieldValue
+                                                                      .arrayRemove([
+                                                                getCreditFirestoreData(
+                                                                  updateCreditStruct(
+                                                                    credTestinnerItem,
+                                                                    clearUnsetFields:
+                                                                        false,
                                                                   ),
-                                                                  clearUnsetFields:
-                                                                      false,
-                                                                ),
-                                                                true,
-                                                              )
-                                                            ]),
-                                                          },
-                                                        ),
-                                                      });
-
-                                                      await currentUserReference!
-                                                          .update({
-                                                        ...mapToFirestore(
-                                                          {
-                                                            'CreditCount':
-                                                                FieldValue
-                                                                    .increment(
-                                                                        1),
-                                                          },
-                                                        ),
-                                                      });
-                                                    },
-                                                    text: 'Collect',
-                                                    options: FFButtonOptions(
-                                                      width: 75.0,
-                                                      height: 20.0,
-                                                      padding:
-                                                          const EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  24.0,
-                                                                  0.0,
-                                                                  24.0,
-                                                                  0.0),
-                                                      iconPadding:
-                                                          const EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  0.0,
-                                                                  0.0,
-                                                                  0.0,
-                                                                  0.0),
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .success,
-                                                      textStyle:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .titleSmall
-                                                              .override(
-                                                                fontFamily:
-                                                                    'Readex Pro',
-                                                                color: Colors
-                                                                    .white,
-                                                              ),
-                                                      elevation: 3.0,
-                                                      borderSide: const BorderSide(
+                                                                  true,
+                                                                )
+                                                              ]),
+                                                              'CreditCount':
+                                                                  FieldValue
+                                                                      .increment(
+                                                                          -(1)),
+                                                            },
+                                                          ),
+                                                        });
+                                                      },
+                                                      text: 'Delete',
+                                                      options: FFButtonOptions(
+                                                        width: 75.0,
+                                                        height: 20.0,
+                                                        padding:
+                                                            const EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    24.0,
+                                                                    0.0,
+                                                                    24.0,
+                                                                    0.0),
+                                                        iconPadding:
+                                                            const EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0),
                                                         color:
-                                                            Colors.transparent,
-                                                        width: 1.0,
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primary,
+                                                        textStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .titleSmall
+                                                                .override(
+                                                                  fontFamily:
+                                                                      'Readex Pro',
+                                                                  color: Colors
+                                                                      .white,
+                                                                ),
+                                                        elevation: 3.0,
+                                                        borderSide: const BorderSide(
+                                                          color: Colors
+                                                              .transparent,
+                                                          width: 1.0,
+                                                        ),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8.0),
                                                       ),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8.0),
                                                     ),
-                                                  ),
-                                                  FFButtonWidget(
-                                                    onPressed: () async {
-                                                      await currentUserReference!
-                                                          .update({
-                                                        ...mapToFirestore(
-                                                          {
-                                                            'Favorites':
-                                                                FieldValue
-                                                                    .arrayUnion([
-                                                              getUserFavsFirestoreData(
-                                                                updateUserFavsStruct(
-                                                                  UserFavsStruct(
-                                                                    name: credTestinnerItem
-                                                                        .name,
-                                                                    location:
-                                                                        credTestinnerItem
-                                                                            .location,
-                                                                    timeAdded:
-                                                                        getCurrentTimestamp,
-                                                                    creditUID:
-                                                                        credTestinnerItem
-                                                                            .uid,
-                                                                    type: credTestinnerItem
-                                                                        .type,
+                                                    FFButtonWidget(
+                                                      onPressed: () async {
+                                                        await currentUserReference!
+                                                            .update({
+                                                          ...mapToFirestore(
+                                                            {
+                                                              'Credits': FieldValue
+                                                                  .arrayUnion([
+                                                                getUserCreditFirestoreData(
+                                                                  updateUserCreditStruct(
+                                                                    UserCreditStruct(
+                                                                      name: credTestinnerItem
+                                                                          .name,
+                                                                      location:
+                                                                          credTestinnerItem
+                                                                              .location,
+                                                                      timeAdded:
+                                                                          getCurrentTimestamp,
+                                                                      creditUID:
+                                                                          credTestinnerItem
+                                                                              .uid,
+                                                                      type: credTestinnerItem
+                                                                          .type,
+                                                                    ),
+                                                                    clearUnsetFields:
+                                                                        false,
                                                                   ),
-                                                                  clearUnsetFields:
-                                                                      false,
-                                                                ),
-                                                                true,
-                                                              )
-                                                            ]),
-                                                          },
-                                                        ),
-                                                      });
+                                                                  true,
+                                                                )
+                                                              ]),
+                                                            },
+                                                          ),
+                                                        });
 
-                                                      await currentUserReference!
-                                                          .update({
-                                                        ...mapToFirestore(
-                                                          {
-                                                            'FavoritesCount':
-                                                                FieldValue
-                                                                    .increment(
-                                                                        1),
-                                                          },
-                                                        ),
-                                                      });
-                                                    },
-                                                    text: 'Fav',
-                                                    options: FFButtonOptions(
-                                                      width: 75.0,
-                                                      height: 20.0,
-                                                      padding:
-                                                          const EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  24.0,
-                                                                  0.0,
-                                                                  24.0,
-                                                                  0.0),
-                                                      iconPadding:
-                                                          const EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  0.0,
-                                                                  0.0,
-                                                                  0.0,
-                                                                  0.0),
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .accent3,
-                                                      textStyle:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .titleSmall
-                                                              .override(
-                                                                fontFamily:
-                                                                    'Readex Pro',
-                                                                color: Colors
-                                                                    .white,
-                                                              ),
-                                                      elevation: 3.0,
-                                                      borderSide: const BorderSide(
+                                                        await currentUserReference!
+                                                            .update({
+                                                          ...mapToFirestore(
+                                                            {
+                                                              'CreditCount':
+                                                                  FieldValue
+                                                                      .increment(
+                                                                          1),
+                                                            },
+                                                          ),
+                                                        });
+                                                      },
+                                                      text: 'Collect',
+                                                      options: FFButtonOptions(
+                                                        width: 75.0,
+                                                        height: 20.0,
+                                                        padding:
+                                                            const EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    24.0,
+                                                                    0.0,
+                                                                    24.0,
+                                                                    0.0),
+                                                        iconPadding:
+                                                            const EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0),
                                                         color:
-                                                            Colors.transparent,
-                                                        width: 1.0,
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .success,
+                                                        textStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .titleSmall
+                                                                .override(
+                                                                  fontFamily:
+                                                                      'Readex Pro',
+                                                                  color: Colors
+                                                                      .white,
+                                                                ),
+                                                        elevation: 3.0,
+                                                        borderSide: const BorderSide(
+                                                          color: Colors
+                                                              .transparent,
+                                                          width: 1.0,
+                                                        ),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8.0),
                                                       ),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8.0),
                                                     ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
+                                                    FFButtonWidget(
+                                                      onPressed: () async {
+                                                        await currentUserReference!
+                                                            .update({
+                                                          ...mapToFirestore(
+                                                            {
+                                                              'Favorites':
+                                                                  FieldValue
+                                                                      .arrayUnion([
+                                                                getUserFavsFirestoreData(
+                                                                  updateUserFavsStruct(
+                                                                    UserFavsStruct(
+                                                                      name: credTestinnerItem
+                                                                          .name,
+                                                                      location:
+                                                                          credTestinnerItem
+                                                                              .location,
+                                                                      timeAdded:
+                                                                          getCurrentTimestamp,
+                                                                      creditUID:
+                                                                          credTestinnerItem
+                                                                              .uid,
+                                                                      type: credTestinnerItem
+                                                                          .type,
+                                                                    ),
+                                                                    clearUnsetFields:
+                                                                        false,
+                                                                  ),
+                                                                  true,
+                                                                )
+                                                              ]),
+                                                            },
+                                                          ),
+                                                        });
+
+                                                        await currentUserReference!
+                                                            .update({
+                                                          ...mapToFirestore(
+                                                            {
+                                                              'FavoritesCount':
+                                                                  FieldValue
+                                                                      .increment(
+                                                                          1),
+                                                            },
+                                                          ),
+                                                        });
+                                                      },
+                                                      text: 'Fav',
+                                                      options: FFButtonOptions(
+                                                        width: 75.0,
+                                                        height: 20.0,
+                                                        padding:
+                                                            const EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    24.0,
+                                                                    0.0,
+                                                                    24.0,
+                                                                    0.0),
+                                                        iconPadding:
+                                                            const EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0),
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .accent3,
+                                                        textStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .titleSmall
+                                                                .override(
+                                                                  fontFamily:
+                                                                      'Readex Pro',
+                                                                  color: Colors
+                                                                      .white,
+                                                                ),
+                                                        elevation: 3.0,
+                                                        borderSide: const BorderSide(
+                                                          color: Colors
+                                                              .transparent,
+                                                          width: 1.0,
+                                                        ),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8.0),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         );
                                       },
@@ -542,44 +580,12 @@ class _TestingWidgetState extends State<TestingWidget> {
                                     ),
                                   ],
                                 ),
-                                Padding(
-                                  padding: const EdgeInsetsDirectional.fromSTEB(
+                                const Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
                                       0.0, 0.0, 0.0, 20.0),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      FFButtonWidget(
-                                        onPressed: () {
-                                          print('Button pressed ...');
-                                        },
-                                        text: 'Button',
-                                        options: FFButtonOptions(
-                                          height: 40.0,
-                                          padding:
-                                              const EdgeInsetsDirectional.fromSTEB(
-                                                  24.0, 0.0, 24.0, 0.0),
-                                          iconPadding:
-                                              const EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 0.0, 0.0, 0.0),
-                                          color: FlutterFlowTheme.of(context)
-                                              .primary,
-                                          textStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .titleSmall
-                                                  .override(
-                                                    fontFamily: 'Readex Pro',
-                                                    color: Colors.white,
-                                                  ),
-                                          elevation: 3.0,
-                                          borderSide: const BorderSide(
-                                            color: Colors.transparent,
-                                            width: 1.0,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                        ),
-                                      ),
-                                    ],
+                                    children: [],
                                   ),
                                 ),
                                 FFButtonWidget(
@@ -887,11 +893,8 @@ class _TestingWidgetState extends State<TestingWidget> {
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
                                       FFButtonWidget(
-                                        onPressed: () async {
-                                          setState(() {
-                                            FFAppState().CreditShow =
-                                                _model.textController.text;
-                                          });
+                                        onPressed: () {
+                                          print('Button pressed ...');
                                         },
                                         text: 'Button',
                                         options: FFButtonOptions(
