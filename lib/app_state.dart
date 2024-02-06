@@ -61,33 +61,10 @@ class FFAppState extends ChangeNotifier {
     _Creditcount = value;
   }
 
-  List<String> _CreditLocalQuery = [];
-  List<String> get CreditLocalQuery => _CreditLocalQuery;
-  set CreditLocalQuery(List<String> value) {
-    _CreditLocalQuery = value;
-  }
-
-  void addToCreditLocalQuery(String value) {
-    _CreditLocalQuery.add(value);
-  }
-
-  void removeFromCreditLocalQuery(String value) {
-    _CreditLocalQuery.remove(value);
-  }
-
-  void removeAtIndexFromCreditLocalQuery(int index) {
-    _CreditLocalQuery.removeAt(index);
-  }
-
-  void updateCreditLocalQueryAtIndex(
-    int index,
-    String Function(String) updateFn,
-  ) {
-    _CreditLocalQuery[index] = updateFn(_CreditLocalQuery[index]);
-  }
-
-  void insertAtIndexInCreditLocalQuery(int index, String value) {
-    _CreditLocalQuery.insert(index, value);
+  String _CreditShow = '';
+  String get CreditShow => _CreditShow;
+  set CreditShow(String value) {
+    _CreditShow = value;
   }
 
   final _creditMasterManager = FutureRequestManager<List<CreditsRecord>>();

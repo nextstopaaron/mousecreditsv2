@@ -59,3 +59,14 @@ bool? arraycheck(
   }
   return true;
 }
+
+bool? strCheck(
+  String? string1,
+  String? string2,
+) {
+  // See if string1 contains text in string2
+  if (string1 == null || string2 == null) {
+    return null;
+  }
+  return string1.toLowerCase().contains(string2.toLowerCase());
+}
