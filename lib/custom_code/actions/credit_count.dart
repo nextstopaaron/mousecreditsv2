@@ -24,6 +24,6 @@ Future<int?> creditCount() async {
   if (creditFields != null) {
     return creditFields.length;
   } else {
-    return null;
+    return 0;
   }
 }
