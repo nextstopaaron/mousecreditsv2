@@ -16,7 +16,7 @@ Future<int?> creditCount() async {
   final DocumentSnapshot<Map<String, dynamic>> snapshot =
       await FirebaseFirestore.instance
           .collection('CreditsTesting')
-          .doc('2KpTuSHy6GOqpWNlposp')
+          .doc('/CreditsTesting/2KpTuSHy6GOqpWNlposp')
           .get();
 
   final List<dynamic>? creditFields = snapshot.data()?['CreditFieldTest'];
@@ -24,6 +24,6 @@ Future<int?> creditCount() async {
   if (creditFields != null) {
     return creditFields.length;
   } else {
-    return 0;
+    return null;
   }
 }
