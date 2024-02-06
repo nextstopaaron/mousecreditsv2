@@ -869,6 +869,14 @@ class _TestingWidgetState extends State<TestingWidget> {
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium,
                                     ),
+                                    Text(
+                                      valueOrDefault<String>(
+                                        _model.count?.toString(),
+                                        '0',
+                                      ),
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium,
+                                    ),
                                   ],
                                 ),
                                 Padding(
@@ -896,6 +904,10 @@ class _TestingWidgetState extends State<TestingWidget> {
                                                     .map((r) => r.object)
                                                     .toList();
                                           });
+                                          _model.count =
+                                              await actions.creditCount();
+
+                                          setState(() {});
                                         },
                                         text: 'Button',
                                         options: FFButtonOptions(

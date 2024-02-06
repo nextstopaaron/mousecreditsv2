@@ -13,6 +13,8 @@ class TestingModel extends FlutterFlowModel<TestingWidget> {
   // Stores action output result for [Custom Action - genUID] action in Button widget.
   String? genUID;
   List<String> simpleSearchResults = [];
+  // Stores action output result for [Custom Action - creditCount] action in Button widget.
+  int? count;
   // Stores action output result for [Custom Action - genUID] action in Button widget.
   String? genUID2;
 
