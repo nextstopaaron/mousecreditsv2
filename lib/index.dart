@@ -7,4 +7,4 @@ export '/view/view_widget.dart' show ViewWidget;
 export '/get_started/get_started_widget.dart' show GetStartedWidget;
 export '/login/login_widget.dart' show LoginWidget;
 export '/create/create_widget.dart' show CreateWidget;
-export '/testing/testing_widget.dart' show TestingWidget;
+export '/stats/stats_widget.dart' show StatsWidget;

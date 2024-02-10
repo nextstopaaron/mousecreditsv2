@@ -14,15 +14,15 @@ class CreditStruct extends FFFirebaseStruct {
     String? location,
     DateTime? timeCreated,
     String? uid,
-    int? popularity,
     String? type,
+    String? imageURL,
     FirestoreUtilData firestoreUtilData = const FirestoreUtilData(),
   })  : _name = name,
         _location = location,
         _timeCreated = timeCreated,
         _uid = uid,
-        _popularity = popularity,
         _type = type,
+        _imageURL = imageURL,
         super(firestoreUtilData);
 
   // "Name" field.
@@ -49,26 +49,25 @@ class CreditStruct extends FFFirebaseStruct {
   set uid(String? val) => _uid = val;
   bool hasUid() => _uid != null;
 
-  // "Popularity" field.
-  int? _popularity;
-  int get popularity => _popularity ?? 0;
-  set popularity(int? val) => _popularity = val;
-  void incrementPopularity(int amount) => _popularity = popularity + amount;
-  bool hasPopularity() => _popularity != null;
-
   // "Type" field.
   String? _type;
   String get type => _type ?? '';
   set type(String? val) => _type = val;
   bool hasType() => _type != null;
 
+  // "ImageURL" field.
+  String? _imageURL;
+  String get imageURL => _imageURL ?? '';
+  set imageURL(String? val) => _imageURL = val;
+  bool hasImageURL() => _imageURL != null;
+
   static CreditStruct fromMap(Map<String, dynamic> data) => CreditStruct(
         name: data['Name'] as String?,
         location: data['Location'] as String?,
         timeCreated: data['TimeCreated'] as DateTime?,
         uid: data['UID'] as String?,
-        popularity: castToType<int>(data['Popularity']),
         type: data['Type'] as String?,
+        imageURL: data['ImageURL'] as String?,
       );
 
   static CreditStruct? maybeFromMap(dynamic data) =>
@@ -79,8 +78,8 @@ class CreditStruct extends FFFirebaseStruct {
         'Location': _location,
         'TimeCreated': _timeCreated,
         'UID': _uid,
-        'Popularity': _popularity,
         'Type': _type,
+        'ImageURL': _imageURL,
       }.withoutNulls;
 
   @override
@@ -101,12 +100,12 @@ class CreditStruct extends FFFirebaseStruct {
           _uid,
           ParamType.String,
         ),
-        'Popularity': serializeParam(
-          _popularity,
-          ParamType.int,
-        ),
         'Type': serializeParam(
           _type,
+          ParamType.String,
+        ),
+        'ImageURL': serializeParam(
+          _imageURL,
           ParamType.String,
         ),
       }.withoutNulls;
@@ -133,13 +132,13 @@ class CreditStruct extends FFFirebaseStruct {
           ParamType.String,
           false,
         ),
-        popularity: deserializeParam(
-          data['Popularity'],
-          ParamType.int,
-          false,
-        ),
         type: deserializeParam(
           data['Type'],
+          ParamType.String,
+          false,
+        ),
+        imageURL: deserializeParam(
+          data['ImageURL'],
           ParamType.String,
           false,
         ),
@@ -155,13 +154,13 @@ class CreditStruct extends FFFirebaseStruct {
         location == other.location &&
         timeCreated == other.timeCreated &&
         uid == other.uid &&
-        popularity == other.popularity &&
-        type == other.type;
+        type == other.type &&
+        imageURL == other.imageURL;
   }
 
   @override
   int get hashCode => const ListEquality()
-      .hash([name, location, timeCreated, uid, popularity, type]);
+      .hash([name, location, timeCreated, uid, type, imageURL]);
 }
 
 CreditStruct createCreditStruct({
@@ -169,8 +168,8 @@ CreditStruct createCreditStruct({
   String? location,
   DateTime? timeCreated,
   String? uid,
-  int? popularity,
   String? type,
+  String? imageURL,
   Map<String, dynamic> fieldValues = const {},
   bool clearUnsetFields = true,
   bool create = false,
@@ -181,8 +180,8 @@ CreditStruct createCreditStruct({
       location: location,
       timeCreated: timeCreated,
       uid: uid,
-      popularity: popularity,
       type: type,
+      imageURL: imageURL,
       firestoreUtilData: FirestoreUtilData(
         clearUnsetFields: clearUnsetFields,
         create: create,

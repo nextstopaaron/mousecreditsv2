@@ -16,7 +16,7 @@ class ShareStatsWidget extends StatefulWidget {
     required this.creditCount,
   });
 
-  final int? creditCount;
+  final double? creditCount;
 
   @override
   State<ShareStatsWidget> createState() => _ShareStatsWidgetState();
@@ -173,10 +173,10 @@ class _ShareStatsWidgetState extends State<ShareStatsWidget> {
                               (currentUserDocument?.credits.toList() ?? [])
                                   .length
                                   .toDouble(),
-                              widget.creditCount?.toDouble()),
+                              widget.creditCount),
                           formatType: FormatType.percent,
                         )} and your cred status is ${functions.credStatus((currentUserDocument?.credits.toList() ?? []).length.toDouble(), valueOrDefault<double>(
-                              widget.creditCount?.toDouble(),
+                              widget.creditCount,
                               0.0,
                             ))}!',
                         style: FlutterFlowTheme.of(context).labelLarge,
@@ -204,9 +204,9 @@ class _ShareStatsWidgetState extends State<ShareStatsWidget> {
                                   (currentUserDocument?.credits.toList() ?? [])
                                       .length
                                       .toDouble(),
-                                  widget.creditCount?.toDouble()),
+                                  widget.creditCount),
                               formatType: FormatType.percent,
-                            )} and your cred status is ${functions.credStatus((currentUserDocument?.credits.toList() ?? []).length.toDouble(), widget.creditCount?.toDouble())}!'));
+                            )} and your cred status is ${functions.credStatus((currentUserDocument?.credits.toList() ?? []).length.toDouble(), widget.creditCount)}!'));
                             await showModalBottomSheet(
                               isScrollControlled: true,
                               backgroundColor: FlutterFlowTheme.of(context)

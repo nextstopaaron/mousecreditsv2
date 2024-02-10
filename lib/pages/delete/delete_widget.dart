@@ -1,8 +1,6 @@
-import '/auth/firebase_auth/auth_util.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import '/custom_code/actions/index.dart' as actions;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'delete_model.dart';
@@ -91,20 +89,8 @@ class _DeleteWidgetState extends State<DeleteWidget> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   FFButtonWidget(
-                    onPressed: () async {
-                      await actions.userRefDeleteCredits(
-                        currentUserReference!,
-                      );
-                      await actions.userRefDeleteBadges(
-                        currentUserReference!,
-                      );
-                      await actions.userRefDeleteFavorites(
-                        currentUserReference!,
-                      );
-                      await currentUserReference!.delete();
-                      await authManager.deleteUser(context);
-
-                      context.goNamedAuth('Home', context.mounted);
+                    onPressed: () {
+                      print('Button pressed ...');
                     },
                     text: 'Delete',
                     options: FFButtonOptions(

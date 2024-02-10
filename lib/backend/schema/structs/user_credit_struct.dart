@@ -15,12 +15,18 @@ class UserCreditStruct extends FFFirebaseStruct {
     DateTime? timeAdded,
     String? creditUID,
     String? type,
+    String? imageURL,
+    double? waitTime,
+    double? rating,
     FirestoreUtilData firestoreUtilData = const FirestoreUtilData(),
   })  : _name = name,
         _location = location,
         _timeAdded = timeAdded,
         _creditUID = creditUID,
         _type = type,
+        _imageURL = imageURL,
+        _waitTime = waitTime,
+        _rating = rating,
         super(firestoreUtilData);
 
   // "Name" field.
@@ -53,6 +59,26 @@ class UserCreditStruct extends FFFirebaseStruct {
   set type(String? val) => _type = val;
   bool hasType() => _type != null;
 
+  // "ImageURL" field.
+  String? _imageURL;
+  String get imageURL => _imageURL ?? '';
+  set imageURL(String? val) => _imageURL = val;
+  bool hasImageURL() => _imageURL != null;
+
+  // "WaitTime" field.
+  double? _waitTime;
+  double get waitTime => _waitTime ?? 0.0;
+  set waitTime(double? val) => _waitTime = val;
+  void incrementWaitTime(double amount) => _waitTime = waitTime + amount;
+  bool hasWaitTime() => _waitTime != null;
+
+  // "Rating" field.
+  double? _rating;
+  double get rating => _rating ?? 0.0;
+  set rating(double? val) => _rating = val;
+  void incrementRating(double amount) => _rating = rating + amount;
+  bool hasRating() => _rating != null;
+
   static UserCreditStruct fromMap(Map<String, dynamic> data) =>
       UserCreditStruct(
         name: data['Name'] as String?,
@@ -60,6 +86,9 @@ class UserCreditStruct extends FFFirebaseStruct {
         timeAdded: data['TimeAdded'] as DateTime?,
         creditUID: data['CreditUID'] as String?,
         type: data['Type'] as String?,
+        imageURL: data['ImageURL'] as String?,
+        waitTime: castToType<double>(data['WaitTime']),
+        rating: castToType<double>(data['Rating']),
       );
 
   static UserCreditStruct? maybeFromMap(dynamic data) => data is Map
@@ -72,6 +101,9 @@ class UserCreditStruct extends FFFirebaseStruct {
         'TimeAdded': _timeAdded,
         'CreditUID': _creditUID,
         'Type': _type,
+        'ImageURL': _imageURL,
+        'WaitTime': _waitTime,
+        'Rating': _rating,
       }.withoutNulls;
 
   @override
@@ -95,6 +127,18 @@ class UserCreditStruct extends FFFirebaseStruct {
         'Type': serializeParam(
           _type,
           ParamType.String,
+        ),
+        'ImageURL': serializeParam(
+          _imageURL,
+          ParamType.String,
+        ),
+        'WaitTime': serializeParam(
+          _waitTime,
+          ParamType.double,
+        ),
+        'Rating': serializeParam(
+          _rating,
+          ParamType.double,
         ),
       }.withoutNulls;
 
@@ -125,6 +169,21 @@ class UserCreditStruct extends FFFirebaseStruct {
           ParamType.String,
           false,
         ),
+        imageURL: deserializeParam(
+          data['ImageURL'],
+          ParamType.String,
+          false,
+        ),
+        waitTime: deserializeParam(
+          data['WaitTime'],
+          ParamType.double,
+          false,
+        ),
+        rating: deserializeParam(
+          data['Rating'],
+          ParamType.double,
+          false,
+        ),
       );
 
   @override
@@ -137,12 +196,15 @@ class UserCreditStruct extends FFFirebaseStruct {
         location == other.location &&
         timeAdded == other.timeAdded &&
         creditUID == other.creditUID &&
-        type == other.type;
+        type == other.type &&
+        imageURL == other.imageURL &&
+        waitTime == other.waitTime &&
+        rating == other.rating;
   }
 
   @override
-  int get hashCode =>
-      const ListEquality().hash([name, location, timeAdded, creditUID, type]);
+  int get hashCode => const ListEquality().hash(
+      [name, location, timeAdded, creditUID, type, imageURL, waitTime, rating]);
 }
 
 UserCreditStruct createUserCreditStruct({
@@ -151,6 +213,9 @@ UserCreditStruct createUserCreditStruct({
   DateTime? timeAdded,
   String? creditUID,
   String? type,
+  String? imageURL,
+  double? waitTime,
+  double? rating,
   Map<String, dynamic> fieldValues = const {},
   bool clearUnsetFields = true,
   bool create = false,
@@ -162,6 +227,9 @@ UserCreditStruct createUserCreditStruct({
       timeAdded: timeAdded,
       creditUID: creditUID,
       type: type,
+      imageURL: imageURL,
+      waitTime: waitTime,
+      rating: rating,
       firestoreUtilData: FirestoreUtilData(
         clearUnsetFields: clearUnsetFields,
         create: create,

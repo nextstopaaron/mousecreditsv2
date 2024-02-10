@@ -1,32 +1,3 @@
 {
-  "indexes": [
-    {
-      "collectionGroup": "Credits",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "Users",
-          "arrayConfig": "CONTAINS"
-        },
-        {
-          "fieldPath": "Name",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "Badges",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "Users",
-          "arrayConfig": "CONTAINS"
-        },
-        {
-          "fieldPath": "Name",
-          "order": "ASCENDING"
-        }
-      ]
-    }
-  ]
+  "indexes": []
 }

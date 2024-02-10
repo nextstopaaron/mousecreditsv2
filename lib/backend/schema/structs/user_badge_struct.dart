@@ -13,16 +13,18 @@ class UserBadgeStruct extends FFFirebaseStruct {
     String? description,
     String? location,
     String? name,
-    String? imageURL,
     String? badgeUID,
     DateTime? timeAdded,
+    String? imageURL,
+    int? credReqCounter,
     FirestoreUtilData firestoreUtilData = const FirestoreUtilData(),
   })  : _description = description,
         _location = location,
         _name = name,
-        _imageURL = imageURL,
         _badgeUID = badgeUID,
         _timeAdded = timeAdded,
+        _imageURL = imageURL,
+        _credReqCounter = credReqCounter,
         super(firestoreUtilData);
 
   // "Description" field.
@@ -43,12 +45,6 @@ class UserBadgeStruct extends FFFirebaseStruct {
   set name(String? val) => _name = val;
   bool hasName() => _name != null;
 
-  // "ImageURL" field.
-  String? _imageURL;
-  String get imageURL => _imageURL ?? '';
-  set imageURL(String? val) => _imageURL = val;
-  bool hasImageURL() => _imageURL != null;
-
   // "BadgeUID" field.
   String? _badgeUID;
   String get badgeUID => _badgeUID ?? '';
@@ -61,13 +57,28 @@ class UserBadgeStruct extends FFFirebaseStruct {
   set timeAdded(DateTime? val) => _timeAdded = val;
   bool hasTimeAdded() => _timeAdded != null;
 
+  // "ImageURL" field.
+  String? _imageURL;
+  String get imageURL => _imageURL ?? '';
+  set imageURL(String? val) => _imageURL = val;
+  bool hasImageURL() => _imageURL != null;
+
+  // "CredReqCounter" field.
+  int? _credReqCounter;
+  int get credReqCounter => _credReqCounter ?? 0;
+  set credReqCounter(int? val) => _credReqCounter = val;
+  void incrementCredReqCounter(int amount) =>
+      _credReqCounter = credReqCounter + amount;
+  bool hasCredReqCounter() => _credReqCounter != null;
+
   static UserBadgeStruct fromMap(Map<String, dynamic> data) => UserBadgeStruct(
         description: data['Description'] as String?,
         location: data['Location'] as String?,
         name: data['Name'] as String?,
-        imageURL: data['ImageURL'] as String?,
         badgeUID: data['BadgeUID'] as String?,
         timeAdded: data['TimeAdded'] as DateTime?,
+        imageURL: data['ImageURL'] as String?,
+        credReqCounter: castToType<int>(data['CredReqCounter']),
       );
 
   static UserBadgeStruct? maybeFromMap(dynamic data) => data is Map
@@ -78,9 +89,10 @@ class UserBadgeStruct extends FFFirebaseStruct {
         'Description': _description,
         'Location': _location,
         'Name': _name,
-        'ImageURL': _imageURL,
         'BadgeUID': _badgeUID,
         'TimeAdded': _timeAdded,
+        'ImageURL': _imageURL,
+        'CredReqCounter': _credReqCounter,
       }.withoutNulls;
 
   @override
@@ -97,10 +109,6 @@ class UserBadgeStruct extends FFFirebaseStruct {
           _name,
           ParamType.String,
         ),
-        'ImageURL': serializeParam(
-          _imageURL,
-          ParamType.String,
-        ),
         'BadgeUID': serializeParam(
           _badgeUID,
           ParamType.String,
@@ -108,6 +116,14 @@ class UserBadgeStruct extends FFFirebaseStruct {
         'TimeAdded': serializeParam(
           _timeAdded,
           ParamType.DateTime,
+        ),
+        'ImageURL': serializeParam(
+          _imageURL,
+          ParamType.String,
+        ),
+        'CredReqCounter': serializeParam(
+          _credReqCounter,
+          ParamType.int,
         ),
       }.withoutNulls;
 
@@ -128,11 +144,6 @@ class UserBadgeStruct extends FFFirebaseStruct {
           ParamType.String,
           false,
         ),
-        imageURL: deserializeParam(
-          data['ImageURL'],
-          ParamType.String,
-          false,
-        ),
         badgeUID: deserializeParam(
           data['BadgeUID'],
           ParamType.String,
@@ -141,6 +152,16 @@ class UserBadgeStruct extends FFFirebaseStruct {
         timeAdded: deserializeParam(
           data['TimeAdded'],
           ParamType.DateTime,
+          false,
+        ),
+        imageURL: deserializeParam(
+          data['ImageURL'],
+          ParamType.String,
+          false,
+        ),
+        credReqCounter: deserializeParam(
+          data['CredReqCounter'],
+          ParamType.int,
           false,
         ),
       );
@@ -154,23 +175,32 @@ class UserBadgeStruct extends FFFirebaseStruct {
         description == other.description &&
         location == other.location &&
         name == other.name &&
-        imageURL == other.imageURL &&
         badgeUID == other.badgeUID &&
-        timeAdded == other.timeAdded;
+        timeAdded == other.timeAdded &&
+        imageURL == other.imageURL &&
+        credReqCounter == other.credReqCounter;
   }
 
   @override
-  int get hashCode => const ListEquality()
-      .hash([description, location, name, imageURL, badgeUID, timeAdded]);
+  int get hashCode => const ListEquality().hash([
+        description,
+        location,
+        name,
+        badgeUID,
+        timeAdded,
+        imageURL,
+        credReqCounter
+      ]);
 }
 
 UserBadgeStruct createUserBadgeStruct({
   String? description,
   String? location,
   String? name,
-  String? imageURL,
   String? badgeUID,
   DateTime? timeAdded,
+  String? imageURL,
+  int? credReqCounter,
   Map<String, dynamic> fieldValues = const {},
   bool clearUnsetFields = true,
   bool create = false,
@@ -180,9 +210,10 @@ UserBadgeStruct createUserBadgeStruct({
       description: description,
       location: location,
       name: name,
-      imageURL: imageURL,
       badgeUID: badgeUID,
       timeAdded: timeAdded,
+      imageURL: imageURL,
+      credReqCounter: credReqCounter,
       firestoreUtilData: FirestoreUtilData(
         clearUnsetFields: clearUnsetFields,
         create: create,

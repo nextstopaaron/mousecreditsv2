@@ -4,7 +4,7 @@ import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import '/pages/components/delete/delete_widget.dart';
+import '/pages/delete/delete_widget.dart';
 import '/pages/forgot/forgot_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

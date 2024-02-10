@@ -10,22 +10,32 @@ import '/flutter_flow/flutter_flow_util.dart';
 
 class BadgeStruct extends FFFirebaseStruct {
   BadgeStruct({
-    List<String>? credReq,
     String? description,
-    String? location,
     String? name,
-    String? uid,
-    DateTime? createdDate,
+    List<String>? credReq,
+    String? location,
     String? imageURL,
+    String? uid,
     FirestoreUtilData firestoreUtilData = const FirestoreUtilData(),
-  })  : _credReq = credReq,
-        _description = description,
-        _location = location,
+  })  : _description = description,
         _name = name,
-        _uid = uid,
-        _createdDate = createdDate,
+        _credReq = credReq,
+        _location = location,
         _imageURL = imageURL,
+        _uid = uid,
         super(firestoreUtilData);
+
+  // "Description" field.
+  String? _description;
+  String get description => _description ?? '';
+  set description(String? val) => _description = val;
+  bool hasDescription() => _description != null;
+
+  // "Name" field.
+  String? _name;
+  String get name => _name ?? '';
+  set name(String? val) => _name = val;
+  bool hasName() => _name != null;
 
   // "CredReq" field.
   List<String>? _credReq;
@@ -35,35 +45,11 @@ class BadgeStruct extends FFFirebaseStruct {
       updateFn(_credReq ??= []);
   bool hasCredReq() => _credReq != null;
 
-  // "Description" field.
-  String? _description;
-  String get description => _description ?? '';
-  set description(String? val) => _description = val;
-  bool hasDescription() => _description != null;
-
   // "Location" field.
   String? _location;
   String get location => _location ?? '';
   set location(String? val) => _location = val;
   bool hasLocation() => _location != null;
-
-  // "Name" field.
-  String? _name;
-  String get name => _name ?? '';
-  set name(String? val) => _name = val;
-  bool hasName() => _name != null;
-
-  // "UID" field.
-  String? _uid;
-  String get uid => _uid ?? '';
-  set uid(String? val) => _uid = val;
-  bool hasUid() => _uid != null;
-
-  // "CreatedDate" field.
-  DateTime? _createdDate;
-  DateTime? get createdDate => _createdDate;
-  set createdDate(DateTime? val) => _createdDate = val;
-  bool hasCreatedDate() => _createdDate != null;
 
   // "ImageURL" field.
   String? _imageURL;
@@ -71,76 +57,66 @@ class BadgeStruct extends FFFirebaseStruct {
   set imageURL(String? val) => _imageURL = val;
   bool hasImageURL() => _imageURL != null;
 
+  // "UID" field.
+  String? _uid;
+  String get uid => _uid ?? '';
+  set uid(String? val) => _uid = val;
+  bool hasUid() => _uid != null;
+
   static BadgeStruct fromMap(Map<String, dynamic> data) => BadgeStruct(
-        credReq: getDataList(data['CredReq']),
         description: data['Description'] as String?,
-        location: data['Location'] as String?,
         name: data['Name'] as String?,
-        uid: data['UID'] as String?,
-        createdDate: data['CreatedDate'] as DateTime?,
+        credReq: getDataList(data['CredReq']),
+        location: data['Location'] as String?,
         imageURL: data['ImageURL'] as String?,
+        uid: data['UID'] as String?,
       );
 
   static BadgeStruct? maybeFromMap(dynamic data) =>
       data is Map ? BadgeStruct.fromMap(data.cast<String, dynamic>()) : null;
 
   Map<String, dynamic> toMap() => {
-        'CredReq': _credReq,
         'Description': _description,
-        'Location': _location,
         'Name': _name,
-        'UID': _uid,
-        'CreatedDate': _createdDate,
+        'CredReq': _credReq,
+        'Location': _location,
         'ImageURL': _imageURL,
+        'UID': _uid,
       }.withoutNulls;
 
   @override
   Map<String, dynamic> toSerializableMap() => {
-        'CredReq': serializeParam(
-          _credReq,
-          ParamType.String,
-          true,
-        ),
         'Description': serializeParam(
           _description,
-          ParamType.String,
-        ),
-        'Location': serializeParam(
-          _location,
           ParamType.String,
         ),
         'Name': serializeParam(
           _name,
           ParamType.String,
         ),
-        'UID': serializeParam(
-          _uid,
+        'CredReq': serializeParam(
+          _credReq,
           ParamType.String,
+          true,
         ),
-        'CreatedDate': serializeParam(
-          _createdDate,
-          ParamType.DateTime,
+        'Location': serializeParam(
+          _location,
+          ParamType.String,
         ),
         'ImageURL': serializeParam(
           _imageURL,
+          ParamType.String,
+        ),
+        'UID': serializeParam(
+          _uid,
           ParamType.String,
         ),
       }.withoutNulls;
 
   static BadgeStruct fromSerializableMap(Map<String, dynamic> data) =>
       BadgeStruct(
-        credReq: deserializeParam<String>(
-          data['CredReq'],
-          ParamType.String,
-          true,
-        ),
         description: deserializeParam(
           data['Description'],
-          ParamType.String,
-          false,
-        ),
-        location: deserializeParam(
-          data['Location'],
           ParamType.String,
           false,
         ),
@@ -149,18 +125,23 @@ class BadgeStruct extends FFFirebaseStruct {
           ParamType.String,
           false,
         ),
-        uid: deserializeParam(
-          data['UID'],
+        credReq: deserializeParam<String>(
+          data['CredReq'],
           ParamType.String,
-          false,
+          true,
         ),
-        createdDate: deserializeParam(
-          data['CreatedDate'],
-          ParamType.DateTime,
+        location: deserializeParam(
+          data['Location'],
+          ParamType.String,
           false,
         ),
         imageURL: deserializeParam(
           data['ImageURL'],
+          ParamType.String,
+          false,
+        ),
+        uid: deserializeParam(
+          data['UID'],
           ParamType.String,
           false,
         ),
@@ -173,27 +154,25 @@ class BadgeStruct extends FFFirebaseStruct {
   bool operator ==(Object other) {
     const listEquality = ListEquality();
     return other is BadgeStruct &&
-        listEquality.equals(credReq, other.credReq) &&
         description == other.description &&
-        location == other.location &&
         name == other.name &&
-        uid == other.uid &&
-        createdDate == other.createdDate &&
-        imageURL == other.imageURL;
+        listEquality.equals(credReq, other.credReq) &&
+        location == other.location &&
+        imageURL == other.imageURL &&
+        uid == other.uid;
   }
 
   @override
   int get hashCode => const ListEquality()
-      .hash([credReq, description, location, name, uid, createdDate, imageURL]);
+      .hash([description, name, credReq, location, imageURL, uid]);
 }
 
 BadgeStruct createBadgeStruct({
   String? description,
-  String? location,
   String? name,
-  String? uid,
-  DateTime? createdDate,
+  String? location,
   String? imageURL,
+  String? uid,
   Map<String, dynamic> fieldValues = const {},
   bool clearUnsetFields = true,
   bool create = false,
@@ -201,11 +180,10 @@ BadgeStruct createBadgeStruct({
 }) =>
     BadgeStruct(
       description: description,
-      location: location,
       name: name,
-      uid: uid,
-      createdDate: createdDate,
+      location: location,
       imageURL: imageURL,
+      uid: uid,
       firestoreUtilData: FirestoreUtilData(
         clearUnsetFields: clearUnsetFields,
         create: create,

@@ -1,12 +1,15 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
+import '/flutter_flow/flutter_flow_choice_chips.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import '/pages/components/alreadyadded/alreadyadded_widget.dart';
-import '/pages/components/nonetoshow/nonetoshow_widget.dart';
+import '/flutter_flow/form_field_controller.dart';
+import '/pages/confirm_cred/confirm_cred_widget.dart';
+import '/pages/confirm_fav/confirm_fav_widget.dart';
+import '/flutter_flow/custom_functions.dart' as functions;
 import 'package:aligned_tooltip/aligned_tooltip.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +17,6 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
-import 'package:text_search/text_search.dart';
 import 'add_cred_model.dart';
 export 'add_cred_model.dart';
 
@@ -32,27 +34,7 @@ class _AddCredWidgetState extends State<AddCredWidget>
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   final animationsMap = {
-    'listViewOnPageLoadAnimation1': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        VisibilityEffect(duration: 150.ms),
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 150.ms,
-          duration: 600.ms,
-          begin: 0.0,
-          end: 1.0,
-        ),
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 150.ms,
-          duration: 600.ms,
-          begin: const Offset(0.0, 170.0),
-          end: const Offset(0.0, 0.0),
-        ),
-      ],
-    ),
-    'listViewOnPageLoadAnimation2': AnimationInfo(
+    'listViewOnPageLoadAnimation': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
       effects: [
         VisibilityEffect(duration: 150.ms),
@@ -81,9 +63,8 @@ class _AddCredWidgetState extends State<AddCredWidget>
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      setState(() {
-        FFAppState().Searchview = 'Initialview';
-      });
+      setState(() {});
+      setState(() {});
     });
 
     _model.textController ??= TextEditingController();
@@ -112,13 +93,8 @@ class _AddCredWidgetState extends State<AddCredWidget>
 
     context.watch<FFAppState>();
 
-    return FutureBuilder<List<CreditsRecord>>(
-      future: FFAppState().creditMaster(
-        requestFn: () => queryCreditsRecordOnce().then((result) {
-          _model.firestoreRequestCompleted = true;
-          return result;
-        }),
-      ),
+    return StreamBuilder<CreditsRecord>(
+      stream: CreditsRecord.getDocument(FFAppState().CreditDocRef!),
       builder: (context, snapshot) {
         // Customize what your widget looks like when it's loading.
         if (!snapshot.hasData) {
@@ -137,7 +113,7 @@ class _AddCredWidgetState extends State<AddCredWidget>
             ),
           );
         }
-        List<CreditsRecord> addCredCreditsRecordList = snapshot.data!;
+        final addCredCreditsRecord = snapshot.data!;
         return GestureDetector(
           onTap: () => _model.unfocusNode.canRequestFocus
               ? FocusScope.of(context).requestFocus(_model.unfocusNode)
@@ -186,49 +162,20 @@ class _AddCredWidgetState extends State<AddCredWidget>
                       autovalidateMode: AutovalidateMode.disabled,
                       child: Padding(
                         padding: const EdgeInsetsDirectional.fromSTEB(
-                            15.0, 20.0, 15.0, 15.0),
+                            15.0, 20.0, 15.0, 10.0),
                         child: TextFormField(
                           controller: _model.textController,
                           focusNode: _model.textFieldFocusNode,
                           onChanged: (_) => EasyDebounce.debounce(
                             '_model.textController',
                             const Duration(milliseconds: 2000),
-                            () => setState(() {}),
-                          ),
-                          onFieldSubmitted: (_) async {
-                            if (_model.textController.text != '') {
-                              safeSetState(() {
-                                _model.simpleSearchResults1 = TextSearch(
-                                  addCredCreditsRecordList
-                                      .map(
-                                        (record) => TextSearchItem.fromTerms(
-                                            record, [record.name]),
-                                      )
-                                      .toList(),
-                                )
-                                    .search(_model.textController.text)
-                                    .map((r) => r.object)
-                                    .take(10)
-                                    .toList();
+                            () async {
+                              setState(() {
+                                FFAppState().CreditShow =
+                                    _model.textController.text;
                               });
-                              FFAppState().Searchview = 'Exp1view';
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    'Enter Experience',
-                                    style: TextStyle(
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryText,
-                                    ),
-                                  ),
-                                  duration: const Duration(milliseconds: 4000),
-                                  backgroundColor: FlutterFlowTheme.of(context)
-                                      .secondaryBackground,
-                                ),
-                              );
-                            }
-                          },
+                            },
+                          ),
                           autofocus: true,
                           textInputAction: TextInputAction.search,
                           obscureText: false,
@@ -275,10 +222,16 @@ class _AddCredWidgetState extends State<AddCredWidget>
                                 ? InkWell(
                                     onTap: () async {
                                       _model.textController?.clear();
+                                      setState(() {
+                                        FFAppState().CreditShow =
+                                            _model.textController.text;
+                                      });
                                       setState(() {});
                                     },
-                                    child: const Icon(
+                                    child: Icon(
                                       Icons.clear,
+                                      color: FlutterFlowTheme.of(context)
+                                          .secondaryText,
                                       size: 22,
                                     ),
                                   )
@@ -292,187 +245,236 @@ class _AddCredWidgetState extends State<AddCredWidget>
                     ),
                     Padding(
                       padding:
-                          const EdgeInsetsDirectional.fromSTEB(15.0, 0.0, 15.0, 10.0),
-                      child: FFButtonWidget(
-                        onPressed: () async {
-                          if (_model.textController.text != '') {
-                            safeSetState(() {
-                              _model.simpleSearchResults2 = TextSearch(
-                                addCredCreditsRecordList
-                                    .map(
-                                      (record) => TextSearchItem.fromTerms(
-                                          record, [record.name]),
-                                    )
-                                    .toList(),
-                              )
-                                  .search(_model.textController.text)
-                                  .map((r) => r.object)
-                                  .take(10)
-                                  .toList();
-                            });
-                            FFAppState().Searchview = 'Exp2view';
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'Enter Experience',
-                                  style: TextStyle(
+                          const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 10.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          FlutterFlowChoiceChips(
+                            options: const [ChipData('Hulk'), ChipData('Terminator')],
+                            onChanged: (val) async {
+                              setState(
+                                  () => _model.choiceChipsValue = val?.first);
+                              setState(() {
+                                FFAppState().CreditShow =
+                                    _model.choiceChipsValue!;
+                              });
+                            },
+                            selectedChipStyle: ChipStyle(
+                              backgroundColor: FlutterFlowTheme.of(context)
+                                  .secondaryBackground,
+                              textStyle: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .override(
+                                    fontFamily: 'Readex Pro',
                                     color: FlutterFlowTheme.of(context)
                                         .primaryText,
                                   ),
-                                ),
-                                duration: const Duration(milliseconds: 4000),
-                                backgroundColor: FlutterFlowTheme.of(context)
-                                    .secondaryBackground,
-                              ),
-                            );
-                          }
-                        },
-                        text: 'Search',
-                        options: FFButtonOptions(
-                          width: MediaQuery.sizeOf(context).width * 1.0,
-                          height: 40.0,
-                          padding: const EdgeInsetsDirectional.fromSTEB(
-                              24.0, 0.0, 24.0, 0.0),
-                          iconPadding: const EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color: FlutterFlowTheme.of(context).primary,
-                          textStyle:
-                              FlutterFlowTheme.of(context).titleSmall.override(
+                              iconColor:
+                                  FlutterFlowTheme.of(context).primaryText,
+                              iconSize: 18.0,
+                              elevation: 4.0,
+                              borderRadius: BorderRadius.circular(16.0),
+                            ),
+                            unselectedChipStyle: ChipStyle(
+                              backgroundColor: FlutterFlowTheme.of(context)
+                                  .primaryBackground,
+                              textStyle: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .override(
                                     fontFamily: 'Readex Pro',
-                                    color: Colors.white,
+                                    color: FlutterFlowTheme.of(context)
+                                        .secondaryText,
                                   ),
-                          elevation: 3.0,
-                          borderSide: const BorderSide(
-                            color: Colors.transparent,
-                            width: 1.0,
+                              iconColor:
+                                  FlutterFlowTheme.of(context).secondaryText,
+                              iconSize: 18.0,
+                              elevation: 0.0,
+                              borderRadius: BorderRadius.circular(16.0),
+                            ),
+                            chipSpacing: 12.0,
+                            rowSpacing: 12.0,
+                            multiselect: false,
+                            alignment: WrapAlignment.start,
+                            controller: _model.choiceChipsValueController ??=
+                                FormFieldController<List<String>>(
+                              [],
+                            ),
+                            wrapped: true,
                           ),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
+                        ],
                       ),
                     ),
-                    if (FFAppState().Searchview == 'Exp1view')
-                      Padding(
-                        padding:
-                            const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 24.0),
-                        child: Builder(
-                          builder: (context) {
-                            final credSearch =
-                                _model.simpleSearchResults1.toList();
-                            if (credSearch.isEmpty) {
-                              return const AlreadyaddedWidget();
-                            }
-                            return ListView.builder(
-                              padding: EdgeInsets.zero,
-                              primary: false,
-                              shrinkWrap: true,
-                              scrollDirection: Axis.vertical,
-                              itemCount: credSearch.length,
-                              itemBuilder: (context, credSearchIndex) {
-                                final credSearchItem =
-                                    credSearch[credSearchIndex];
-                                return Padding(
-                                  padding: const EdgeInsetsDirectional.fromSTEB(
-                                      16.0, 0.0, 16.0, 12.0),
-                                  child: Container(
-                                    width: double.infinity,
-                                    constraints: const BoxConstraints(
-                                      maxWidth: 570.0,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondaryBackground,
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      border: Border.all(
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryBackground,
-                                        width: 2.0,
-                                      ),
-                                    ),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Padding(
-                                          padding:
-                                              const EdgeInsetsDirectional.fromSTEB(
-                                                  16.0, 12.0, 16.0, 12.0),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        0.0, 0.0, 10.0, 0.0),
-                                                child: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    AlignedTooltip(
-                                                      content: Padding(
-                                                          padding:
-                                                              const EdgeInsets.all(
-                                                                  4.0),
+                    SliderTheme(
+                      data: const SliderThemeData(
+                        showValueIndicator: ShowValueIndicator.always,
+                      ),
+                      child: Slider(
+                        activeColor: FlutterFlowTheme.of(context).primary,
+                        inactiveColor: FlutterFlowTheme.of(context).alternate,
+                        min: 0.0,
+                        max: 10.0,
+                        value: _model.sliderValue1 ??= 5.0,
+                        label: _model.sliderValue1.toString(),
+                        onChanged: (newValue) {
+                          newValue = double.parse(newValue.toStringAsFixed(2));
+                          setState(() => _model.sliderValue1 = newValue);
+                        },
+                      ),
+                    ),
+                    SliderTheme(
+                      data: const SliderThemeData(
+                        showValueIndicator: ShowValueIndicator.always,
+                      ),
+                      child: Slider(
+                        activeColor: FlutterFlowTheme.of(context).primary,
+                        inactiveColor: FlutterFlowTheme.of(context).alternate,
+                        min: 5.0,
+                        max: 60.0,
+                        value: _model.sliderValue2 ??= 15.0,
+                        label: _model.sliderValue2.toString(),
+                        onChanged: (newValue) {
+                          newValue = double.parse(newValue.toStringAsFixed(2));
+                          setState(() => _model.sliderValue2 = newValue);
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 24.0),
+                      child: ListView(
+                        padding: EdgeInsets.zero,
+                        primary: false,
+                        shrinkWrap: true,
+                        scrollDirection: Axis.vertical,
+                        children: [
+                          Builder(
+                            builder: (context) {
+                              final creditList =
+                                  addCredCreditsRecord.creditMap.toList();
+                              return Column(
+                                mainAxisSize: MainAxisSize.max,
+                                children: List.generate(creditList.length,
+                                    (creditListIndex) {
+                                  final creditListItem =
+                                      creditList[creditListIndex];
+                                  return Visibility(
+                                    visible: functions.strCheck(
+                                            creditListItem.name,
+                                            FFAppState().CreditShow) ??
+                                        true,
+                                    child: Padding(
+                                      padding: const EdgeInsetsDirectional.fromSTEB(
+                                          16.0, 0.0, 16.0, 12.0),
+                                      child: Container(
+                                        width: double.infinity,
+                                        constraints: const BoxConstraints(
+                                          maxWidth: 570.0,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: FlutterFlowTheme.of(context)
+                                              .secondaryBackground,
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                          border: Border.all(
+                                            color: FlutterFlowTheme.of(context)
+                                                .primaryBackground,
+                                            width: 2.0,
+                                          ),
+                                        ),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsetsDirectional
+                                                  .fromSTEB(
+                                                      16.0, 12.0, 16.0, 12.0),
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.max,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsetsDirectional
+                                                            .fromSTEB(0.0, 0.0,
+                                                                10.0, 0.0),
+                                                    child: Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        AlignedTooltip(
+                                                          content: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(4.0),
+                                                              child: Text(
+                                                                creditListItem
+                                                                    .name,
+                                                                style: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyLarge,
+                                                              )),
+                                                          offset: 4.0,
+                                                          preferredDirection:
+                                                              AxisDirection
+                                                                  .down,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      8.0),
+                                                          backgroundColor:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .secondaryBackground,
+                                                          elevation: 4.0,
+                                                          tailBaseWidth: 24.0,
+                                                          tailLength: 12.0,
+                                                          waitDuration:
+                                                              const Duration(
+                                                                  milliseconds:
+                                                                      100),
+                                                          showDuration:
+                                                              const Duration(
+                                                                  milliseconds:
+                                                                      1500),
+                                                          triggerMode:
+                                                              TooltipTriggerMode
+                                                                  .tap,
                                                           child: Text(
-                                                            credSearchItem.name,
+                                                            creditListItem.name
+                                                                .maybeHandleOverflow(
+                                                              maxChars: 20,
+                                                              replacement: '…',
+                                                            ),
                                                             style: FlutterFlowTheme
                                                                     .of(context)
                                                                 .bodyLarge,
-                                                          )),
-                                                      offset: 4.0,
-                                                      preferredDirection:
-                                                          AxisDirection.down,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8.0),
-                                                      backgroundColor:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .secondaryBackground,
-                                                      elevation: 4.0,
-                                                      tailBaseWidth: 24.0,
-                                                      tailLength: 12.0,
-                                                      waitDuration: const Duration(
-                                                          milliseconds: 100),
-                                                      showDuration: const Duration(
-                                                          milliseconds: 1500),
-                                                      triggerMode:
-                                                          TooltipTriggerMode
-                                                              .tap,
-                                                      child: Text(
-                                                        credSearchItem.name
-                                                            .maybeHandleOverflow(
-                                                          maxChars: 20,
-                                                          replacement: '…',
+                                                          ),
                                                         ),
-                                                        style:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyLarge,
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  0.0,
-                                                                  4.0,
-                                                                  0.0,
-                                                                  0.0),
-                                                      child: Text(
-                                                        credSearchItem.location
-                                                            .maybeHandleOverflow(
-                                                          maxChars: 20,
-                                                          replacement: '…',
-                                                        ),
-                                                        style:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsetsDirectional
+                                                                  .fromSTEB(
+                                                                      0.0,
+                                                                      4.0,
+                                                                      0.0,
+                                                                      0.0),
+                                                          child: Text(
+                                                            creditListItem
+                                                                .location
+                                                                .maybeHandleOverflow(
+                                                              maxChars: 20,
+                                                              replacement: '…',
+                                                            ),
+                                                            style: FlutterFlowTheme
+                                                                    .of(context)
                                                                 .labelMedium
                                                                 .override(
                                                                   fontFamily:
@@ -481,465 +483,301 @@ class _AddCredWidgetState extends State<AddCredWidget>
                                                                           context)
                                                                       .primaryText,
                                                                 ),
-                                                      ),
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
-                                                  ],
-                                                ),
-                                              ),
-                                              Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsetsDirectional
-                                                            .fromSTEB(0.0, 0.0,
-                                                                10.0, 0.0),
-                                                    child: FFButtonWidget(
-                                                      onPressed: () async {
-                                                        final firestoreBatch =
-                                                            FirebaseFirestore
-                                                                .instance
-                                                                .batch();
-                                                        try {
-                                                          // Add User
-
-                                                          firestoreBatch.update(
-                                                              credSearchItem
-                                                                  .reference,
-                                                              {
+                                                  ),
+                                                  Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Builder(
+                                                        builder: (context) =>
+                                                            Padding(
+                                                          padding:
+                                                              const EdgeInsetsDirectional
+                                                                  .fromSTEB(
+                                                                      0.0,
+                                                                      0.0,
+                                                                      10.0,
+                                                                      0.0),
+                                                          child: FFButtonWidget(
+                                                            onPressed:
+                                                                () async {
+                                                              await currentUserReference!
+                                                                  .update({
                                                                 ...mapToFirestore(
                                                                   {
                                                                     'Favorites':
                                                                         FieldValue
                                                                             .arrayUnion([
-                                                                      currentUserReference
+                                                                      getUserFavsFirestoreData(
+                                                                        updateUserFavsStruct(
+                                                                          UserFavsStruct(
+                                                                            name:
+                                                                                creditListItem.name,
+                                                                            location:
+                                                                                creditListItem.location,
+                                                                            creditUID:
+                                                                                creditListItem.uid,
+                                                                            type:
+                                                                                creditListItem.type,
+                                                                          ),
+                                                                          clearUnsetFields:
+                                                                              false,
+                                                                        ),
+                                                                        true,
+                                                                      )
                                                                     ]),
+                                                                    'FavoritesCount':
+                                                                        FieldValue
+                                                                            .increment(1),
                                                                   },
                                                                 ),
                                                               });
-                                                          // Add Credit
+                                                              await showDialog(
+                                                                context:
+                                                                    context,
+                                                                builder:
+                                                                    (dialogContext) {
+                                                                  return Dialog(
+                                                                    elevation:
+                                                                        0,
+                                                                    insetPadding:
+                                                                        EdgeInsets
+                                                                            .zero,
+                                                                    backgroundColor:
+                                                                        Colors
+                                                                            .transparent,
+                                                                    alignment: const AlignmentDirectional(
+                                                                            0.0,
+                                                                            0.0)
+                                                                        .resolve(
+                                                                            Directionality.of(context)),
+                                                                    child:
+                                                                        GestureDetector(
+                                                                      onTap: () => _model
+                                                                              .unfocusNode
+                                                                              .canRequestFocus
+                                                                          ? FocusScope.of(context).requestFocus(_model
+                                                                              .unfocusNode)
+                                                                          : FocusScope.of(context)
+                                                                              .unfocus(),
+                                                                      child:
+                                                                          ConfirmFavWidget(
+                                                                        credname:
+                                                                            creditListItem.name,
+                                                                      ),
+                                                                    ),
+                                                                  );
+                                                                },
+                                                              ).then((value) =>
+                                                                  setState(
+                                                                      () {}));
+                                                            },
+                                                            text: 'Fav',
+                                                            options:
+                                                                FFButtonOptions(
+                                                              width: 35.0,
+                                                              height: 40.0,
+                                                              padding:
+                                                                  const EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          5.0,
+                                                                          0.0,
+                                                                          5.0,
+                                                                          0.0),
+                                                              iconPadding:
+                                                                  const EdgeInsets
+                                                                      .all(4.0),
+                                                              color: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .secondary,
+                                                              textStyle:
+                                                                  FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .labelSmall
+                                                                      .override(
+                                                                        fontFamily:
+                                                                            'Readex Pro',
+                                                                        color: FlutterFlowTheme.of(context)
+                                                                            .primaryBackground,
+                                                                        fontSize:
+                                                                            8.0,
+                                                                      ),
+                                                              elevation: 3.0,
+                                                              borderSide:
+                                                                  const BorderSide(
+                                                                color: Colors
+                                                                    .transparent,
+                                                                width: 1.0,
+                                                              ),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8.0),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Builder(
+                                                        builder: (context) =>
+                                                            FFButtonWidget(
+                                                          onPressed: () async {
+                                                            final firestoreBatch =
+                                                                FirebaseFirestore
+                                                                    .instance
+                                                                    .batch();
+                                                            try {
+                                                              firestoreBatch.update(
+                                                                  currentUserReference!,
+                                                                  {
+                                                                    ...mapToFirestore(
+                                                                      {
+                                                                        'Credits':
+                                                                            FieldValue.arrayUnion([
+                                                                          getUserCreditFirestoreData(
+                                                                            updateUserCreditStruct(
+                                                                              UserCreditStruct(
+                                                                                name: creditListItem.name,
+                                                                                location: creditListItem.location,
+                                                                                timeAdded: getCurrentTimestamp,
+                                                                                creditUID: creditListItem.uid,
+                                                                                type: creditListItem.type,
+                                                                                waitTime: _model.sliderValue1,
+                                                                                rating: _model.sliderValue2,
+                                                                              ),
+                                                                              clearUnsetFields: false,
+                                                                            ),
+                                                                            true,
+                                                                          )
+                                                                        ]),
+                                                                      },
+                                                                    ),
+                                                                  });
 
-                                                          firestoreBatch.update(
-                                                              currentUserReference!,
-                                                              createUsersRecordData(
-                                                                email: '',
-                                                              ));
-                                                          setState(() {
-                                                            FFAppState()
-                                                                .clearCreditMasterCache();
-                                                            _model.firestoreRequestCompleted =
-                                                                false;
-                                                          });
-                                                        } finally {
-                                                          await firestoreBatch
-                                                              .commit();
-                                                        }
-                                                      },
-                                                      text: 'Fav',
-                                                      options: FFButtonOptions(
-                                                        width: 35.0,
-                                                        height: 40.0,
-                                                        padding:
-                                                            const EdgeInsetsDirectional
-                                                                .fromSTEB(
-                                                                    5.0,
-                                                                    0.0,
-                                                                    5.0,
-                                                                    0.0),
-                                                        iconPadding:
-                                                            const EdgeInsets.all(4.0),
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .secondary,
-                                                        textStyle:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .labelSmall
-                                                                .override(
-                                                                  fontFamily:
-                                                                      'Readex Pro',
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .primaryBackground,
-                                                                  fontSize: 8.0,
-                                                                ),
-                                                        elevation: 3.0,
-                                                        borderSide: const BorderSide(
-                                                          color: Colors
-                                                              .transparent,
-                                                          width: 1.0,
-                                                        ),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(8.0),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  FFButtonWidget(
-                                                    onPressed: () {
-                                                      print(
-                                                          'Button pressed ...');
-                                                    },
-                                                    text: 'Add Credit',
-                                                    options: FFButtonOptions(
-                                                      height: 40.0,
-                                                      padding:
-                                                          const EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  5.0,
-                                                                  0.0,
-                                                                  5.0,
-                                                                  0.0),
-                                                      iconPadding:
-                                                          const EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  0.0,
-                                                                  0.0,
-                                                                  0.0,
-                                                                  0.0),
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primary,
-                                                      textStyle:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .labelSmall
-                                                              .override(
-                                                                fontFamily:
-                                                                    'Readex Pro',
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .primaryBackground,
-                                                              ),
-                                                      elevation: 3.0,
-                                                      borderSide: const BorderSide(
-                                                        color:
-                                                            Colors.transparent,
-                                                        width: 1.0,
-                                                      ),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8.0),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            ).animateOnPageLoad(
-                                animationsMap['listViewOnPageLoadAnimation1']!);
-                          },
-                        ),
-                      ),
-                    if (FFAppState().Searchview == 'Exp2view')
-                      Padding(
-                        padding:
-                            const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 24.0),
-                        child: Builder(
-                          builder: (context) {
-                            final credSearch =
-                                _model.simpleSearchResults2.toList();
-                            if (credSearch.isEmpty) {
-                              return const AlreadyaddedWidget();
-                            }
-                            return ListView.builder(
-                              padding: EdgeInsets.zero,
-                              primary: false,
-                              shrinkWrap: true,
-                              scrollDirection: Axis.vertical,
-                              itemCount: credSearch.length,
-                              itemBuilder: (context, credSearchIndex) {
-                                final credSearchItem =
-                                    credSearch[credSearchIndex];
-                                return Padding(
-                                  padding: const EdgeInsetsDirectional.fromSTEB(
-                                      16.0, 0.0, 16.0, 12.0),
-                                  child: Container(
-                                    width: double.infinity,
-                                    constraints: const BoxConstraints(
-                                      maxWidth: 570.0,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondaryBackground,
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      border: Border.all(
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryBackground,
-                                        width: 2.0,
-                                      ),
-                                    ),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Padding(
-                                          padding:
-                                              const EdgeInsetsDirectional.fromSTEB(
-                                                  16.0, 12.0, 16.0, 12.0),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        0.0, 0.0, 10.0, 0.0),
-                                                child: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    AlignedTooltip(
-                                                      content: Padding(
-                                                          padding:
-                                                              const EdgeInsets.all(
-                                                                  4.0),
-                                                          child: Text(
-                                                            credSearchItem.name,
-                                                            style: FlutterFlowTheme
+                                                              firestoreBatch.update(
+                                                                  currentUserReference!,
+                                                                  {
+                                                                    ...mapToFirestore(
+                                                                      {
+                                                                        'CreditCount':
+                                                                            FieldValue.increment(1.0),
+                                                                      },
+                                                                    ),
+                                                                  });
+                                                              await showDialog(
+                                                                context:
+                                                                    context,
+                                                                builder:
+                                                                    (dialogContext) {
+                                                                  return Dialog(
+                                                                    elevation:
+                                                                        0,
+                                                                    insetPadding:
+                                                                        EdgeInsets
+                                                                            .zero,
+                                                                    backgroundColor:
+                                                                        Colors
+                                                                            .transparent,
+                                                                    alignment: const AlignmentDirectional(
+                                                                            0.0,
+                                                                            0.0)
+                                                                        .resolve(
+                                                                            Directionality.of(context)),
+                                                                    child:
+                                                                        GestureDetector(
+                                                                      onTap: () => _model
+                                                                              .unfocusNode
+                                                                              .canRequestFocus
+                                                                          ? FocusScope.of(context).requestFocus(_model
+                                                                              .unfocusNode)
+                                                                          : FocusScope.of(context)
+                                                                              .unfocus(),
+                                                                      child:
+                                                                          ConfirmCredWidget(
+                                                                        credname:
+                                                                            creditListItem.name,
+                                                                      ),
+                                                                    ),
+                                                                  );
+                                                                },
+                                                              ).then((value) =>
+                                                                  setState(
+                                                                      () {}));
+                                                            } finally {
+                                                              await firestoreBatch
+                                                                  .commit();
+                                                            }
+                                                          },
+                                                          text: 'Add Credit',
+                                                          options:
+                                                              FFButtonOptions(
+                                                            height: 40.0,
+                                                            padding:
+                                                                const EdgeInsetsDirectional
+                                                                    .fromSTEB(
+                                                                        5.0,
+                                                                        0.0,
+                                                                        5.0,
+                                                                        0.0),
+                                                            iconPadding:
+                                                                const EdgeInsetsDirectional
+                                                                    .fromSTEB(
+                                                                        0.0,
+                                                                        0.0,
+                                                                        0.0,
+                                                                        0.0),
+                                                            color: FlutterFlowTheme
                                                                     .of(context)
-                                                                .bodyLarge,
-                                                          )),
-                                                      offset: 4.0,
-                                                      preferredDirection:
-                                                          AxisDirection.down,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8.0),
-                                                      backgroundColor:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .secondaryBackground,
-                                                      elevation: 4.0,
-                                                      tailBaseWidth: 24.0,
-                                                      tailLength: 12.0,
-                                                      waitDuration: const Duration(
-                                                          milliseconds: 100),
-                                                      showDuration: const Duration(
-                                                          milliseconds: 1500),
-                                                      triggerMode:
-                                                          TooltipTriggerMode
-                                                              .tap,
-                                                      child: Text(
-                                                        credSearchItem.name
-                                                            .maybeHandleOverflow(
-                                                          maxChars: 20,
-                                                          replacement: '…',
-                                                        ),
-                                                        style:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyLarge,
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  0.0,
-                                                                  4.0,
-                                                                  0.0,
-                                                                  0.0),
-                                                      child: Text(
-                                                        credSearchItem.location
-                                                            .maybeHandleOverflow(
-                                                          maxChars: 20,
-                                                          replacement: '…',
-                                                        ),
-                                                        style:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .labelMedium
-                                                                .override(
-                                                                  fontFamily:
-                                                                      'Readex Pro',
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .primaryText,
-                                                                ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceAround,
-                                                children: [
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsetsDirectional
-                                                            .fromSTEB(0.0, 0.0,
-                                                                10.0, 0.0),
-                                                    child: FFButtonWidget(
-                                                      onPressed: () {
-                                                        print(
-                                                            'Button pressed ...');
-                                                      },
-                                                      text: 'Fav',
-                                                      options: FFButtonOptions(
-                                                        width: 35.0,
-                                                        height: 40.0,
-                                                        padding:
-                                                            const EdgeInsetsDirectional
-                                                                .fromSTEB(
-                                                                    5.0,
-                                                                    0.0,
-                                                                    5.0,
-                                                                    0.0),
-                                                        iconPadding:
-                                                            const EdgeInsets.all(4.0),
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .secondary,
-                                                        textStyle:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .labelSmall
-                                                                .override(
-                                                                  fontFamily:
-                                                                      'Readex Pro',
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .primaryBackground,
-                                                                  fontSize: 8.0,
-                                                                ),
-                                                        elevation: 3.0,
-                                                        borderSide: const BorderSide(
-                                                          color: Colors
-                                                              .transparent,
-                                                          width: 1.0,
-                                                        ),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(8.0),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  FFButtonWidget(
-                                                    onPressed: () {
-                                                      print(
-                                                          'Button pressed ...');
-                                                    },
-                                                    text: 'Add Credit',
-                                                    options: FFButtonOptions(
-                                                      height: 40.0,
-                                                      padding:
-                                                          const EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  5.0,
-                                                                  0.0,
-                                                                  5.0,
-                                                                  0.0),
-                                                      iconPadding:
-                                                          const EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  0.0,
-                                                                  0.0,
-                                                                  0.0,
-                                                                  0.0),
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primary,
-                                                      textStyle:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .labelSmall
-                                                              .override(
-                                                                fontFamily:
-                                                                    'Readex Pro',
-                                                                color: FlutterFlowTheme.of(
+                                                                .primary,
+                                                            textStyle:
+                                                                FlutterFlowTheme.of(
                                                                         context)
-                                                                    .primaryBackground,
-                                                              ),
-                                                      elevation: 3.0,
-                                                      borderSide: const BorderSide(
-                                                        color:
-                                                            Colors.transparent,
-                                                        width: 1.0,
+                                                                    .labelSmall
+                                                                    .override(
+                                                                      fontFamily:
+                                                                          'Readex Pro',
+                                                                      color: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .primaryBackground,
+                                                                    ),
+                                                            elevation: 3.0,
+                                                            borderSide:
+                                                                const BorderSide(
+                                                              color: Colors
+                                                                  .transparent,
+                                                              width: 1.0,
+                                                            ),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8.0),
+                                                          ),
+                                                        ),
                                                       ),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8.0),
-                                                    ),
+                                                    ],
                                                   ),
                                                 ],
                                               ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            ).animateOnPageLoad(
-                                animationsMap['listViewOnPageLoadAnimation2']!);
-                          },
-                        ),
-                      ),
-                    if (FFAppState().Searchview == 'Initialview')
-                      Padding(
-                        padding: const EdgeInsetsDirectional.fromSTEB(
-                            16.0, 0.0, 16.0, 12.0),
-                        child: Container(
-                          width: double.infinity,
-                          constraints: const BoxConstraints(
-                            maxWidth: 570.0,
-                          ),
-                          decoration: BoxDecoration(
-                            color: FlutterFlowTheme.of(context)
-                                .secondaryBackground,
-                            borderRadius: BorderRadius.circular(8.0),
-                            border: Border.all(
-                              color: FlutterFlowTheme.of(context)
-                                  .primaryBackground,
-                              width: 2.0,
-                            ),
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsetsDirectional.fromSTEB(
-                                    16.0, 12.0, 16.0, 12.0),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(
-                                      child: wrapWithModel(
-                                        model: _model.nonetoshowModel,
-                                        updateCallback: () => setState(() {}),
-                                        child: const NonetoshowWidget(),
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ),
-                            ],
+                                  );
+                                }),
+                              );
+                            },
                           ),
-                        ),
-                      ),
+                        ],
+                      ).animateOnPageLoad(
+                          animationsMap['listViewOnPageLoadAnimation']!),
+                    ),
                   ],
                 ),
               ),

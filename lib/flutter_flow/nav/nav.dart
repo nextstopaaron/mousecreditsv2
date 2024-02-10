@@ -129,11 +129,10 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => const CreateWidget(),
         ),
         FFRoute(
-          name: 'Testing',
-          path: '/testing',
-          builder: (context, params) => params.isEmpty
-              ? const NavBarPage(initialPage: 'Testing')
-              : const TestingWidget(),
+          name: 'Stats',
+          path: '/stats',
+          builder: (context, params) =>
+              params.isEmpty ? const NavBarPage(initialPage: 'Stats') : const StatsWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );

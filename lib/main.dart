@@ -9,7 +9,6 @@ import 'auth/firebase_auth/auth_util.dart';
 import 'backend/firebase/firebase_config.dart';
 import 'flutter_flow/flutter_flow_theme.dart';
 import 'flutter_flow/flutter_flow_util.dart';
-import 'flutter_flow/internationalization.dart';
 import 'index.dart';
 
 void main() async {
@@ -40,7 +39,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Locale? _locale;
   ThemeMode _themeMode = FlutterFlowTheme.themeMode;
 
   late Stream<BaseAuthUser> userStream;
@@ -72,10 +70,6 @@ class _MyAppState extends State<MyApp> {
     super.dispose();
   }
 
-  void setLocale(String language) {
-    setState(() => _locale = createLocale(language));
-  }
-
   void setThemeMode(ThemeMode mode) => setState(() {
         _themeMode = mode;
         FlutterFlowTheme.saveThemeMode(mode);
@@ -86,12 +80,10 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp.router(
       title: 'Mouse Credits',
       localizationsDelegates: const [
-        FFLocalizationsDelegate(),
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      locale: _locale,
       supportedLocales: const [Locale('en', '')],
       theme: ThemeData(
         brightness: Brightness.light,
@@ -134,7 +126,7 @@ class _NavBarPageState extends State<NavBarPage> {
       'AddCred': const AddCredWidget(),
       'AddBadge': const AddBadgeWidget(),
       'View': const ViewWidget(),
-      'Testing': const TestingWidget(),
+      'Stats': const StatsWidget(),
     };
     final currentIndex = tabs.keys.toList().indexOf(_currentPageName);
 
@@ -187,10 +179,10 @@ class _NavBarPageState extends State<NavBarPage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.twenty_mp,
-              size: 24.0,
+              Icons.query_stats,
+              size: 22.0,
             ),
-            label: 'Test',
+            label: 'View',
             tooltip: '',
           )
         ],

@@ -15,18 +15,19 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
-import 'view_model.dart';
-export 'view_model.dart';
+import 'stats_model.dart';
+export 'stats_model.dart';
 
-class ViewWidget extends StatefulWidget {
-  const ViewWidget({super.key});
+class StatsWidget extends StatefulWidget {
+  const StatsWidget({super.key});
 
   @override
-  State<ViewWidget> createState() => _ViewWidgetState();
+  State<StatsWidget> createState() => _StatsWidgetState();
 }
 
-class _ViewWidgetState extends State<ViewWidget> with TickerProviderStateMixin {
-  late ViewModel _model;
+class _StatsWidgetState extends State<StatsWidget>
+    with TickerProviderStateMixin {
+  late StatsModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -96,7 +97,7 @@ class _ViewWidgetState extends State<ViewWidget> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => ViewModel());
+    _model = createModel(context, () => StatsModel());
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {

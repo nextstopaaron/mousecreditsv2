@@ -1,4 +1,3 @@
-import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/form_field_controller.dart';
 import 'admin_widget.dart' show AdminWidget;
@@ -23,11 +22,12 @@ class AdminModel extends FlutterFlowModel<AdminWidget> {
   // State field(s) for DropDown widget.
   String? dropDownValue1;
   FormFieldController<String>? dropDownValueController1;
+  // Stores action output result for [Custom Action - genUID] action in Button widget.
+  String? uid;
   // State field(s) for TextField widget.
   FocusNode? textFieldFocusNode4;
   TextEditingController? textController4;
   String? Function(BuildContext, String?)? textController4Validator;
-  List<CreditsRecord> simpleSearchResults1 = [];
   // State field(s) for TextField widget.
   FocusNode? textFieldFocusNode5;
   TextEditingController? textController5;
@@ -39,28 +39,20 @@ class AdminModel extends FlutterFlowModel<AdminWidget> {
   // State field(s) for DropDown widget.
   String? dropDownValue2;
   FormFieldController<String>? dropDownValueController2;
+  // State field(s) for DropDown widget.
+  List<String>? dropDownValue3;
+  FormFieldController<List<String>>? dropDownValueController3;
   bool isDataUploading = false;
   FFUploadedFile uploadedLocalFile =
       FFUploadedFile(bytes: Uint8List.fromList([]));
   String uploadedFileUrl = '';
 
-  // State field(s) for DropDown widget.
-  String? dropDownValue3;
-  FormFieldController<String>? dropDownValueController3;
+  // Stores action output result for [Custom Action - genUID] action in Button widget.
+  String? uidb;
   // State field(s) for TextField widget.
-  final textFieldKey7 = GlobalKey();
   FocusNode? textFieldFocusNode7;
   TextEditingController? textController7;
-  String? textFieldSelectedOption7;
   String? Function(BuildContext, String?)? textController7Validator;
-  List<CreditsRecord> simpleSearchResults2 = [];
-  // Stores action output result for [Firestore Query - Query a collection] action in Button widget.
-  BadgesRecord? badgequery;
-  // State field(s) for DropDown widget.
-  String? dropDownValue4;
-  FormFieldController<String>? dropDownValueController4;
-  // Stores action output result for [Firestore Query - Query a collection] action in Button widget.
-  BadgesRecord? badgequeryremove;
 
   /// Initialization and disposal methods.
 
@@ -89,6 +81,7 @@ class AdminModel extends FlutterFlowModel<AdminWidget> {
     textController6?.dispose();
 
     textFieldFocusNode7?.dispose();
+    textController7?.dispose();
   }
 
   /// Action blocks are added here.

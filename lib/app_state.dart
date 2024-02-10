@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'flutter_flow/request_manager.dart';
 import '/backend/backend.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'flutter_flow/flutter_flow_util.dart';
 
 class FFAppState extends ChangeNotifier {
   static FFAppState _instance = FFAppState._internal();
@@ -67,20 +68,25 @@ class FFAppState extends ChangeNotifier {
     _CreditShow = value;
   }
 
-  final _creditMasterManager = FutureRequestManager<List<CreditsRecord>>();
-  Future<List<CreditsRecord>> creditMaster({
-    String? uniqueQueryKey,
-    bool? overrideCache,
-    required Future<List<CreditsRecord>> Function() requestFn,
-  }) =>
-      _creditMasterManager.performRequest(
-        uniqueQueryKey: uniqueQueryKey,
-        overrideCache: overrideCache,
-        requestFn: requestFn,
-      );
-  void clearCreditMasterCache() => _creditMasterManager.clear();
-  void clearCreditMasterCacheKey(String? uniqueKey) =>
-      _creditMasterManager.clearRequest(uniqueKey);
+  String _BadgeShow = '';
+  String get BadgeShow => _BadgeShow;
+  set BadgeShow(String value) {
+    _BadgeShow = value;
+  }
+
+  DocumentReference? _CreditDocRef =
+      FirebaseFirestore.instance.doc('/Credits/9e8IZH0GImDeZ2KczkCT');
+  DocumentReference? get CreditDocRef => _CreditDocRef;
+  set CreditDocRef(DocumentReference? value) {
+    _CreditDocRef = value;
+  }
+
+  DocumentReference? _BadgeDocRef =
+      FirebaseFirestore.instance.doc('/Badges/ISMg6EKc0US0bOY6PONp');
+  DocumentReference? get BadgeDocRef => _BadgeDocRef;
+  set BadgeDocRef(DocumentReference? value) {
+    _BadgeDocRef = value;
+  }
 
   final _creditCountManager = FutureRequestManager<int>();
   Future<int> creditCount({
@@ -96,77 +102,6 @@ class FFAppState extends ChangeNotifier {
   void clearCreditCountCache() => _creditCountManager.clear();
   void clearCreditCountCacheKey(String? uniqueKey) =>
       _creditCountManager.clearRequest(uniqueKey);
-
-  final _creditMasterSingleManager =
-      StreamRequestManager<List<CreditsRecord>>();
-  Stream<List<CreditsRecord>> creditMasterSingle({
-    String? uniqueQueryKey,
-    bool? overrideCache,
-    required Stream<List<CreditsRecord>> Function() requestFn,
-  }) =>
-      _creditMasterSingleManager.performRequest(
-        uniqueQueryKey: uniqueQueryKey,
-        overrideCache: overrideCache,
-        requestFn: requestFn,
-      );
-  void clearCreditMasterSingleCache() => _creditMasterSingleManager.clear();
-  void clearCreditMasterSingleCacheKey(String? uniqueKey) =>
-      _creditMasterSingleManager.clearRequest(uniqueKey);
-
-  final _locationsManager = StreamRequestManager<List<LocationsRecord>>();
-  Stream<List<LocationsRecord>> locations({
-    String? uniqueQueryKey,
-    bool? overrideCache,
-    required Stream<List<LocationsRecord>> Function() requestFn,
-  }) =>
-      _locationsManager.performRequest(
-        uniqueQueryKey: uniqueQueryKey,
-        overrideCache: overrideCache,
-        requestFn: requestFn,
-      );
-  void clearLocationsCache() => _locationsManager.clear();
-  void clearLocationsCacheKey(String? uniqueKey) =>
-      _locationsManager.clearRequest(uniqueKey);
-
-  final _badgesManager = StreamRequestManager<List<BadgesRecord>>();
-  Stream<List<BadgesRecord>> badges({
-    String? uniqueQueryKey,
-    bool? overrideCache,
-    required Stream<List<BadgesRecord>> Function() requestFn,
-  }) =>
-      _badgesManager.performRequest(
-        uniqueQueryKey: uniqueQueryKey,
-        overrideCache: overrideCache,
-        requestFn: requestFn,
-      );
-  void clearBadgesCache() => _badgesManager.clear();
-  void clearBadgesCacheKey(String? uniqueKey) =>
-      _badgesManager.clearRequest(uniqueKey);
-
-  final _typesManager = StreamRequestManager<List<TypesRecord>>();
-  Stream<List<TypesRecord>> types({
-    String? uniqueQueryKey,
-    bool? overrideCache,
-    required Stream<List<TypesRecord>> Function() requestFn,
-  }) =>
-      _typesManager.performRequest(
-        uniqueQueryKey: uniqueQueryKey,
-        overrideCache: overrideCache,
-        requestFn: requestFn,
-      );
-  void clearTypesCache() => _typesManager.clear();
-  void clearTypesCacheKey(String? uniqueKey) =>
-      _typesManager.clearRequest(uniqueKey);
-}
-
-LatLng? _latLngFromString(String? val) {
-  if (val == null) {
-    return null;
-  }
-  final split = val.split(',');
-  final lat = double.parse(split.first);
-  final lng = double.parse(split.last);
-  return LatLng(lat, lng);
 }
 
 void _safeInit(Function() initializeField) {

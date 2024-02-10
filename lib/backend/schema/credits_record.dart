@@ -15,61 +15,28 @@ class CreditsRecord extends FirestoreRecord {
     _initializeFields();
   }
 
-  // "Name" field.
-  String? _name;
-  String get name => _name ?? '';
-  bool hasName() => _name != null;
+  // "CreditCount" field.
+  int? _creditCount;
+  int get creditCount => _creditCount ?? 0;
+  bool hasCreditCount() => _creditCount != null;
+
+  // "CreditMap" field.
+  List<CreditStruct>? _creditMap;
+  List<CreditStruct> get creditMap => _creditMap ?? const [];
+  bool hasCreditMap() => _creditMap != null;
 
   // "Location" field.
   String? _location;
   String get location => _location ?? '';
   bool hasLocation() => _location != null;
 
-  // "Sub_location" field.
-  String? _subLocation;
-  String get subLocation => _subLocation ?? '';
-  bool hasSubLocation() => _subLocation != null;
-
-  // "Type" field.
-  String? _type;
-  String get type => _type ?? '';
-  bool hasType() => _type != null;
-
-  // "Users" field.
-  List<DocumentReference>? _users;
-  List<DocumentReference> get users => _users ?? const [];
-  bool hasUsers() => _users != null;
-
-  // "Favorites" field.
-  List<DocumentReference>? _favorites;
-  List<DocumentReference> get favorites => _favorites ?? const [];
-  bool hasFavorites() => _favorites != null;
-
-  // "Badges" field.
-  List<DocumentReference>? _badges;
-  List<DocumentReference> get badges => _badges ?? const [];
-  bool hasBadges() => _badges != null;
-
-  // "Popularity" field.
-  int? _popularity;
-  int get popularity => _popularity ?? 0;
-  bool hasPopularity() => _popularity != null;
-
-  // "CreatedTime" field.
-  DateTime? _createdTime;
-  DateTime? get createdTime => _createdTime;
-  bool hasCreatedTime() => _createdTime != null;
-
   void _initializeFields() {
-    _name = snapshotData['Name'] as String?;
+    _creditCount = castToType<int>(snapshotData['CreditCount']);
+    _creditMap = getStructList(
+      snapshotData['CreditMap'],
+      CreditStruct.fromMap,
+    );
     _location = snapshotData['Location'] as String?;
-    _subLocation = snapshotData['Sub_location'] as String?;
-    _type = snapshotData['Type'] as String?;
-    _users = getDataList(snapshotData['Users']);
-    _favorites = getDataList(snapshotData['Favorites']);
-    _badges = getDataList(snapshotData['Badges']);
-    _popularity = castToType<int>(snapshotData['Popularity']);
-    _createdTime = snapshotData['CreatedTime'] as DateTime?;
   }
 
   static CollectionReference get collection =>
@@ -107,21 +74,13 @@ class CreditsRecord extends FirestoreRecord {
 }
 
 Map<String, dynamic> createCreditsRecordData({
-  String? name,
+  int? creditCount,
   String? location,
-  String? subLocation,
-  String? type,
-  int? popularity,
-  DateTime? createdTime,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
-      'Name': name,
+      'CreditCount': creditCount,
       'Location': location,
-      'Sub_location': subLocation,
-      'Type': type,
-      'Popularity': popularity,
-      'CreatedTime': createdTime,
     }.withoutNulls,
   );
 
@@ -134,29 +93,14 @@ class CreditsRecordDocumentEquality implements Equality<CreditsRecord> {
   @override
   bool equals(CreditsRecord? e1, CreditsRecord? e2) {
     const listEquality = ListEquality();
-    return e1?.name == e2?.name &&
-        e1?.location == e2?.location &&
-        e1?.subLocation == e2?.subLocation &&
-        e1?.type == e2?.type &&
-        listEquality.equals(e1?.users, e2?.users) &&
-        listEquality.equals(e1?.favorites, e2?.favorites) &&
-        listEquality.equals(e1?.badges, e2?.badges) &&
-        e1?.popularity == e2?.popularity &&
-        e1?.createdTime == e2?.createdTime;
+    return e1?.creditCount == e2?.creditCount &&
+        listEquality.equals(e1?.creditMap, e2?.creditMap) &&
+        e1?.location == e2?.location;
   }
 
   @override
-  int hash(CreditsRecord? e) => const ListEquality().hash([
-        e?.name,
-        e?.location,
-        e?.subLocation,
-        e?.type,
-        e?.users,
-        e?.favorites,
-        e?.badges,
-        e?.popularity,
-        e?.createdTime
-      ]);
+  int hash(CreditsRecord? e) =>
+      const ListEquality().hash([e?.creditCount, e?.creditMap, e?.location]);
 
   @override
   bool isValidKey(Object? o) => o is CreditsRecord;

@@ -1,10 +1,9 @@
-import '/auth/firebase_auth/auth_util.dart';
-import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'submit_idea_model.dart';
 export 'submit_idea_model.dart';
 
@@ -126,15 +125,17 @@ class _SubmitIdeaWidgetState extends State<SubmitIdeaWidget> {
               children: [
                 FFButtonWidget(
                   onPressed: () async {
-                    await RequestsRecord.collection
-                        .doc()
-                        .set(createRequestsRecordData(
-                          description: _model.describeController.text,
-                          email: currentUserEmail,
-                        ));
-                    setState(() {
-                      _model.describeController?.clear();
-                    });
+                    await launchUrl(Uri(
+                        scheme: 'mailto',
+                        path: 'nextstopaaron@gmail.com',
+                        query: {
+                          'subject': 'New MC Credit / Badge Idea',
+                          'body': _model.describeController.text,
+                        }
+                            .entries
+                            .map((MapEntry<String, String> e) =>
+                                '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+                            .join('&')));
                     await showDialog(
                       context: context,
                       builder: (alertDialogContext) {

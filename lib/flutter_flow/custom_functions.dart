@@ -24,6 +24,17 @@ double? calPercentage(
   return (credsearned / credsavailable);
 }
 
+bool? arraycheckStr(
+  String? str1,
+  List<String>? array2,
+) {
+  // see if array contains string
+  if (str1 == null || array2 == null) {
+    return null;
+  }
+  return array2.contains(str1);
+}
+
 String? credStatus(
   double? credsearned,
   double? credsavailable,
@@ -38,6 +49,8 @@ String? credStatus(
   } else if (percentage >= 0.26 && percentage <= 0.50) {
     return "Novice";
   } else if (percentage >= 0.51 && percentage <= 1) {
+    return "Pro";
+  } else if (percentage > 1) {
     return "Pro";
   } else {
     return null;

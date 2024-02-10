@@ -45,11 +45,6 @@ class UsersRecord extends FirestoreRecord {
   String get phoneNumber => _phoneNumber ?? '';
   bool hasPhoneNumber() => _phoneNumber != null;
 
-  // "CreditCount" field.
-  int? _creditCount;
-  int get creditCount => _creditCount ?? 0;
-  bool hasCreditCount() => _creditCount != null;
-
   // "Credits" field.
   List<UserCreditStruct>? _credits;
   List<UserCreditStruct> get credits => _credits ?? const [];
@@ -65,15 +60,25 @@ class UsersRecord extends FirestoreRecord {
   int get badgeCount => _badgeCount ?? 0;
   bool hasBadgeCount() => _badgeCount != null;
 
+  // "Badges" field.
+  List<UserBadgeStruct>? _badges;
+  List<UserBadgeStruct> get badges => _badges ?? const [];
+  bool hasBadges() => _badges != null;
+
   // "FavoritesCount" field.
   int? _favoritesCount;
   int get favoritesCount => _favoritesCount ?? 0;
   bool hasFavoritesCount() => _favoritesCount != null;
 
-  // "Badges" field.
-  List<UserBadgeStruct>? _badges;
-  List<UserBadgeStruct> get badges => _badges ?? const [];
-  bool hasBadges() => _badges != null;
+  // "CreditCount" field.
+  double? _creditCount;
+  double get creditCount => _creditCount ?? 0.0;
+  bool hasCreditCount() => _creditCount != null;
+
+  // "Archive" field.
+  List<ArchiveStruct>? _archive;
+  List<ArchiveStruct> get archive => _archive ?? const [];
+  bool hasArchive() => _archive != null;
 
   void _initializeFields() {
     _email = snapshotData['email'] as String?;
@@ -82,7 +87,6 @@ class UsersRecord extends FirestoreRecord {
     _uid = snapshotData['uid'] as String?;
     _createdTime = snapshotData['created_time'] as DateTime?;
     _phoneNumber = snapshotData['phone_number'] as String?;
-    _creditCount = castToType<int>(snapshotData['CreditCount']);
     _credits = getStructList(
       snapshotData['Credits'],
       UserCreditStruct.fromMap,
@@ -92,15 +96,20 @@ class UsersRecord extends FirestoreRecord {
       UserFavsStruct.fromMap,
     );
     _badgeCount = castToType<int>(snapshotData['BadgeCount']);
-    _favoritesCount = castToType<int>(snapshotData['FavoritesCount']);
     _badges = getStructList(
       snapshotData['Badges'],
       UserBadgeStruct.fromMap,
     );
+    _favoritesCount = castToType<int>(snapshotData['FavoritesCount']);
+    _creditCount = castToType<double>(snapshotData['CreditCount']);
+    _archive = getStructList(
+      snapshotData['Archive'],
+      ArchiveStruct.fromMap,
+    );
   }
 
   static CollectionReference get collection =>
-      FirebaseFirestore.instance.collection('users');
+      FirebaseFirestore.instance.collection('Users');
 
   static Stream<UsersRecord> getDocument(DocumentReference ref) =>
       ref.snapshots().map((s) => UsersRecord.fromSnapshot(s));
@@ -139,9 +148,9 @@ Map<String, dynamic> createUsersRecordData({
   String? uid,
   DateTime? createdTime,
   String? phoneNumber,
-  int? creditCount,
   int? badgeCount,
   int? favoritesCount,
+  double? creditCount,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -151,9 +160,9 @@ Map<String, dynamic> createUsersRecordData({
       'uid': uid,
       'created_time': createdTime,
       'phone_number': phoneNumber,
-      'CreditCount': creditCount,
       'BadgeCount': badgeCount,
       'FavoritesCount': favoritesCount,
+      'CreditCount': creditCount,
     }.withoutNulls,
   );
 
@@ -172,12 +181,13 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
         e1?.uid == e2?.uid &&
         e1?.createdTime == e2?.createdTime &&
         e1?.phoneNumber == e2?.phoneNumber &&
-        e1?.creditCount == e2?.creditCount &&
         listEquality.equals(e1?.credits, e2?.credits) &&
         listEquality.equals(e1?.favorites, e2?.favorites) &&
         e1?.badgeCount == e2?.badgeCount &&
+        listEquality.equals(e1?.badges, e2?.badges) &&
         e1?.favoritesCount == e2?.favoritesCount &&
-        listEquality.equals(e1?.badges, e2?.badges);
+        e1?.creditCount == e2?.creditCount &&
+        listEquality.equals(e1?.archive, e2?.archive);
   }
 
   @override
@@ -188,12 +198,13 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
         e?.uid,
         e?.createdTime,
         e?.phoneNumber,
-        e?.creditCount,
         e?.credits,
         e?.favorites,
         e?.badgeCount,
+        e?.badges,
         e?.favoritesCount,
-        e?.badges
+        e?.creditCount,
+        e?.archive
       ]);
 
   @override
